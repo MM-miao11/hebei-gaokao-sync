@@ -59,6 +59,7 @@ if (!fs.existsSync(DATA_FILE)) {
  * 按 id 智能合并两个数组
  * - 以 id 为唯一标识
  * - 两边都有的项：保留 lastModified / updatedAt / createdAt 较新的版本
+ * - 软删除传播：如果任一版本标记了 deleted:true，合并结果保留 deleted:true
  * - 只在一边有的项：直接保留
  */
 function mergeById(local = [], remote = []) {
@@ -76,8 +77,18 @@ function mergeById(local = [], remote = []) {
     if (!id) return;
 
     const existing = map.get(id);
-    if (!existing || getTime(item) >= getTime(existing)) {
+    if (!existing) {
       map.set(id, item);
+    } else {
+      // 软删除优先：任一方标记 deleted，结果即 deleted
+      if (item.deleted || existing.deleted) {
+        const deleted = { ...existing, ...item };
+        deleted.deleted = true;
+        if (!deleted.deletedAt) deleted.deletedAt = item.deletedAt || existing.deletedAt;
+        map.set(id, deleted);
+      } else if (getTime(item) >= getTime(existing)) {
+        map.set(id, item);
+      }
     }
   });
 
@@ -114,14 +125,15 @@ app.post('/api/data', (req, res) => {
     device: incoming.device || current.device || 'unknown'
   };
 
-  // 记录合并摘要
+  // 记录合并摘要（统计活跃数据，排除已删除）
+  const countActive = (arr) => (arr || []).filter(x => !x.deleted).length;
   const summary = {
-    wordsBefore: (current.words || []).length,
-    wordsAfter: merged.words.length,
-    wordsIncoming: (incoming.words || []).length,
-    errorsBefore: (current.errors || []).length,
-    errorsAfter: merged.errors.length,
-    errorsIncoming: (incoming.errors || []).length
+    wordsBefore: countActive(current.words),
+    wordsAfter: countActive(merged.words),
+    wordsIncoming: countActive(incoming.words),
+    errorsBefore: countActive(current.errors),
+    errorsAfter: countActive(merged.errors),
+    errorsIncoming: countActive(incoming.errors)
   };
 
   if (writeData(merged)) {
@@ -139,7 +151,8 @@ app.post('/api/data', (req, res) => {
 // 健康检查
 app.get('/health', (req, res) => {
   const data = readData();
-  res.json({ ok: true, wordsCount: (data.words || []).length, lastModified: data.lastModified });
+  const activeWords = (data.words || []).filter(w => !w.deleted);
+  res.json({ ok: true, wordsCount: activeWords.length, lastModified: data.lastModified });
 });
 
 app.listen(PORT, () => {

@@ -1198,6 +1198,10 @@ function loadData(key){
     return data ? JSON.parse(data) : [];
   }catch(e){ return []; }
 }
+/* 只加载未删除的数据（用于UI渲染和计数） */
+function loadActive(key){
+  return loadData(key).filter(function(x){ return !x.deleted; });
+}
 function saveData(key, data){
   try{
     localStorage.setItem(key, JSON.stringify(data));
@@ -1350,9 +1354,9 @@ document.getElementById('confirm-ok-btn').onclick = function(){
 
 /* ========== 工作台首页 ========== */
 function renderDashboard(){
-  var words = loadData(KEYS.words);
-  var errors = loadData(KEYS.errors);
-  var practice = loadData(KEYS.practice);
+  var words = loadActive(KEYS.words);
+  var errors = loadActive(KEYS.errors);
+  var practice = loadActive(KEYS.practice);
   var today = todayStr();
 
   // 今日刷题量
@@ -1526,7 +1530,7 @@ function savePractice(){
 }
 
 function renderPractice(){
-  var practice = loadData(KEYS.practice);
+  var practice = loadActive(KEYS.practice);
   var today = todayStr();
 
   var todayPrac = practice.filter(function(p){ return p.date === today; });
@@ -1567,8 +1571,8 @@ function renderPractice(){
 function deletePractice(id){
   showConfirm('删除记录', '确定删除这条刷题记录吗？', function(){
     var practice = loadData(KEYS.practice);
-    practice = practice.filter(function(p){ return p.id !== id; });
-    saveData(KEYS.practice, practice);
+    var p = practice.find(function(x){ return x.id === id; });
+    if(p){ p.deleted = true; p.deletedAt = new Date().toISOString(); saveData(KEYS.practice, practice); }
     renderPractice();
     showToast('已删除');
   });
@@ -1860,7 +1864,7 @@ function clearErrorForm(){
 
 /* ========== 错题本管理 ========== */
 function renderErrors(){
-  var errors = loadData(KEYS.errors);
+  var errors = loadActive(KEYS.errors);
   var search = document.getElementById('err-search').value.toLowerCase();
   var filterType = document.getElementById('err-filter-type').value;
   var filterStatus = document.getElementById('err-filter-status').value;
@@ -1967,9 +1971,10 @@ function redoError(id){
 function deleteError(id){
   showConfirm('删除错题', '确定删除这道错题吗？删除后不可恢复。', function(){
     var errors = loadData(KEYS.errors);
-    errors = errors.filter(function(e){ return e.id !== id; });
-    saveData(KEYS.errors, errors);
+    var e = errors.find(function(x){ return x.id === id; });
+    if(e){ e.deleted = true; e.deletedAt = new Date().toISOString(); saveData(KEYS.errors, errors); }
     renderErrors();
+    renderDashboard();
     showToast('已删除');
   });
 }
@@ -2062,7 +2067,7 @@ function saveWord(){
 }
 
 function renderWords(){
-  var words = loadData(KEYS.words);
+  var words = loadActive(KEYS.words);
   var search = document.getElementById('word-search').value.toLowerCase();
   var filterCat = document.getElementById('word-filter-cat').value;
   var filterStar = document.getElementById('word-filter-star').value;
@@ -2139,9 +2144,10 @@ function toggleStar(id){
 function deleteWord(id){
   showConfirm('删除词语', '确定删除这个词语吗？删除后不可恢复。', function(){
     var words = loadData(KEYS.words);
-    words = words.filter(function(w){ return w.id !== id; });
-    saveData(KEYS.words, words);
+    var w = words.find(function(x){ return x.id === id; });
+    if(w){ w.deleted = true; w.deletedAt = new Date().toISOString(); saveData(KEYS.words, words); }
     renderWords();
+    renderDashboard();
     showToast('已删除');
   });
 }
@@ -2152,7 +2158,7 @@ var quizIndex = 0;
 var quizRevealed = { explanation:false, examples:false };
 
 function startQuiz(){
-  var words = loadData(KEYS.words);
+  var words = loadActive(KEYS.words);
   if(words.length === 0){
     showToast('暂无词语可供抽查');
     return;
@@ -2271,7 +2277,7 @@ function clearReviewForm(){
 }
 
 function renderReviews(){
-  var reviews = loadData(KEYS.reviews);
+  var reviews = loadActive(KEYS.reviews);
   var list = document.getElementById('review-list');
   if(reviews.length === 0){
     list.innerHTML = '<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11H3v10h6V11zM9 3H3v6h6V3zM21 3h-6v18h6V3zM21 11h-6v10h6v-10z"/></svg><p>暂无复盘记录</p></div>';
@@ -2320,8 +2326,8 @@ function editReview(id){
 function deleteReview(id){
   showConfirm('删除复盘', '确定删除这条复盘记录吗？', function(){
     var reviews = loadData(KEYS.reviews);
-    reviews = reviews.filter(function(r){ return r.id !== id; });
-    saveData(KEYS.reviews, reviews);
+    var r = reviews.find(function(x){ return x.id === id; });
+    if(r){ r.deleted = true; r.deletedAt = new Date().toISOString(); saveData(KEYS.reviews, reviews); }
     renderReviews();
     showToast('已删除');
   });
@@ -2329,10 +2335,10 @@ function deleteReview(id){
 
 /* ========== 设置 ========== */
 function renderSettings(){
-  var words = loadData(KEYS.words);
-  var errors = loadData(KEYS.errors);
-  var reviews = loadData(KEYS.reviews);
-  var practice = loadData(KEYS.practice);
+  var words = loadActive(KEYS.words);
+  var errors = loadActive(KEYS.errors);
+  var reviews = loadActive(KEYS.reviews);
+  var practice = loadActive(KEYS.practice);
   var total = words.length + errors.length + reviews.length + practice.length;
 
   var html = '词语积累：<strong>' + words.length + '</strong> 条<br>';
@@ -2347,10 +2353,10 @@ function exportData(){
   var data = {
     exportDate: new Date().toISOString(),
     version: '1.0',
-    words: loadData(KEYS.words),
-    errors: loadData(KEYS.errors),
-    reviews: loadData(KEYS.reviews),
-    practice: loadData(KEYS.practice)
+    words: loadActive(KEYS.words),
+    errors: loadActive(KEYS.errors),
+    reviews: loadActive(KEYS.reviews),
+    practice: loadActive(KEYS.practice)
   };
   var blob = new Blob([JSON.stringify(data, null, 2)], { type:'application/json' });
   var url = URL.createObjectURL(blob);
@@ -2388,7 +2394,7 @@ document.getElementById('import-file').addEventListener('change', function(e){
 });
 
 function exportErrorCSV(){
-  var errors = loadData(KEYS.errors);
+  var errors = loadActive(KEYS.errors);
   if(errors.length === 0){
     showToast('暂无错题可导出');
     return;
@@ -2511,7 +2517,15 @@ function _mergeArr(local, cloud){
   for(var j=0; j<local.length; j++){
     var l = local[j];
     var lid = l[idKey] || l.word || l.date || ('l'+j);
-    if(lid) map[lid] = l;  // 本地覆盖同名ID（当前设备上的版本优先）
+    if(lid){
+      /* 软删除传播：如果云端标记了 deleted 而本地没有，保留删除标记 */
+      var existing = map[lid];
+      if(existing && existing.deleted && !l.deleted){
+        l.deleted = true;
+        l.deletedAt = existing.deletedAt;
+      }
+      map[lid] = l;  // 本地覆盖同名ID（当前设备上的版本优先）
+    }
   }
   return Object.values(map);
 }
