@@ -1,0 +1,2635 @@
+<!DOCTYPE html>
+<!-- saved from url=(0077)file:///C:/Users/17376/WorkBuddy/2026-08-06-12-33-20/hebei_gongkao_yanyu.html -->
+<html lang="zh-CN"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>河北公考言语备考台</title>
+<style>
+/* ========== 全局重置 ========== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --sidebar-bg:#1a1a2e;
+  --sidebar-active:#4f7df3;
+  --sidebar-hover:#2a2a4a;
+  --sidebar-text:#a0a0b8;
+  --sidebar-text-active:#ffffff;
+  --main-bg:#f0f2f5;
+  --card-bg:#ffffff;
+  --text-primary:#1a1a2e;
+  --text-secondary:#6b7280;
+  --text-tertiary:#9ca3af;
+  --accent:#4f7df3;
+  --accent-light:#e8f0fe;
+  --accent-dark:#3b6bdb;
+  --danger:#ef4444;
+  --danger-light:#fef2f2;
+  --success:#22c55e;
+  --success-light:#f0fdf4;
+  --warning:#f59e0b;
+  --warning-light:#fffbeb;
+  --border:#e5e7eb;
+  --radius:12px;
+  --radius-sm:8px;
+  --shadow:0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md:0 4px 12px rgba(0,0,0,0.1);
+  --sidebar-w:240px;
+}
+html{font-size:16px;-webkit-text-size-adjust:100%;}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
+  background:var(--main-bg);
+  color:var(--text-primary);
+  line-height:1.6;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+input,textarea,select,button{font-family:inherit;font-size:inherit;}
+button{cursor:pointer;border:none;background:none;}
+input[type="text"],input[type="number"],textarea,select{
+  width:100%;padding:10px 14px;border:1px solid var(--border);
+  border-radius:var(--radius-sm);font-size:16px;background:#fff;
+  color:var(--text-primary);transition:border-color .2s;
+  -webkit-appearance:none;
+}
+input[type="text"]:focus,input[type="number"]:focus,textarea:focus,select:focus{
+  outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-light);
+}
+textarea{resize:vertical;min-height:80px;line-height:1.6;}
+input[type="file"]{display:none;}
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:3px;}
+::-webkit-scrollbar-track{background:transparent;}
+
+/* ========== 布局 ========== */
+.app{display:flex;min-height:100vh;}
+
+/* ========== 左侧导航 ========== */
+.sidebar{
+  width:var(--sidebar-w);background:var(--sidebar-bg);
+  position:fixed;top:0;left:0;bottom:0;z-index:100;
+  display:flex;flex-direction:column;
+  transition:transform .3s ease;
+}
+.sidebar-header{
+  padding:24px 20px 20px;border-bottom:1px solid rgba(255,255,255,0.08);
+}
+.sidebar-logo{display:flex;align-items:center;gap:10px;}
+.sidebar-logo svg{width:28px;height:28px;flex-shrink:0;}
+.sidebar-logo span{color:#fff;font-size:17px;font-weight:700;letter-spacing:.5px;}
+.sidebar-sub{color:var(--sidebar-text);font-size:12px;margin-top:8px;padding-left:38px;}
+.nav-list{flex:1;padding:12px 0;overflow-y:auto;}
+.nav-item{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 20px;color:var(--sidebar-text);
+  font-size:14px;cursor:pointer;transition:all .2s;
+  border-left:3px solid transparent;position:relative;
+}
+.nav-item:hover{background:var(--sidebar-hover);color:#d0d0e0;}
+.nav-item.active{
+  background:rgba(79,125,243,0.12);color:var(--sidebar-text-active);
+  border-left-color:var(--sidebar-active);
+}
+.nav-item svg{width:20px;height:20px;flex-shrink:0;}
+.nav-item .nav-badge{
+  margin-left:auto;background:var(--danger);color:#fff;
+  font-size:11px;padding:1px 7px;border-radius:10px;font-weight:600;
+}
+.sidebar-footer{
+  padding:16px 20px;border-top:1px solid rgba(255,255,255,0.08);
+  display:flex;gap:8px;
+}
+.sidebar-footer button{
+  flex:1;padding:8px;border-radius:var(--radius-sm);
+  font-size:12px;color:var(--sidebar-text);
+  border:1px solid rgba(255,255,255,0.1);transition:all .2s;
+  display:flex;align-items:center;justify-content:center;gap:4px;
+}
+.sidebar-footer button:hover{background:var(--sidebar-hover);color:#fff;}
+.sidebar-footer svg{width:14px;height:14px;}
+
+/* ========== 同步指示器 ========== */
+.sync-bar{
+  padding:8px 20px;border-top:1px solid rgba(255,255,255,0.08);
+  display:flex;align-items:center;gap:6px;
+  font-size:11px;color:var(--sidebar-text);
+}
+.sync-dot{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:16px;height:16px;font-size:12px;flex-shrink:0;
+}
+.sync-dot.spin{animation:spin 1s linear infinite;color:var(--sidebar-active);}
+.sync-dot.ok{color:var(--success);}
+.sync-dot.err{color:var(--danger);}
+.sync-dot.warn{color:var(--warning);font-weight:700;}
+@keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+
+/* ========== 主内容区 ========== */
+.main{
+  flex:1;margin-left:var(--sidebar-w);
+  padding:24px;max-width:100%;min-height:100vh;
+}
+.page{display:none;animation:fadeIn .3s ease;}
+.page.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+/* 移动端顶栏 */
+.mobile-header{
+  display:none;position:fixed;top:0;left:0;right:0;z-index:90;
+  background:var(--sidebar-bg);padding:12px 16px;
+  align-items:center;justify-content:space-between;
+}
+.mobile-header .menu-btn{width:32px;height:32px;display:flex;align-items:center;justify-content:center;}
+.mobile-header .menu-btn svg{width:24px;height:24px;color:#fff;}
+.mobile-header .title{color:#fff;font-size:16px;font-weight:600;}
+.mobile-header .logo-svg{width:24px;height:24px;}
+
+/* 遮罩层 */
+.overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.4);z-index:99;}
+
+/* ========== 页面标题 ========== */
+.page-header{margin-bottom:24px;}
+.page-title{font-size:22px;font-weight:700;color:var(--text-primary);}
+.page-desc{font-size:14px;color:var(--text-secondary);margin-top:4px;}
+
+/* ========== 今天要处理 ========== */
+.today-box{
+  background:linear-gradient(135deg,#fff5f5,#fff);
+  border:1px solid #fecaca;border-radius:var(--radius);
+  padding:20px;margin-bottom:24px;
+}
+.today-box-header{display:flex;align-items:center;gap:8px;margin-bottom:16px;}
+.today-box-header svg{width:22px;height:22px;color:var(--danger);}
+.today-box-header h3{font-size:16px;font-weight:700;color:var(--text-primary);}
+.today-box-header .count{
+  margin-left:auto;background:var(--danger);color:#fff;
+  font-size:12px;padding:2px 10px;border-radius:12px;font-weight:600;
+}
+.today-list{display:flex;flex-direction:column;gap:10px;}
+.today-item{
+  display:flex;align-items:center;gap:12px;padding:12px 14px;
+  background:#fff;border:1px solid var(--border);border-radius:var(--radius-sm);
+  transition:box-shadow .2s;
+}
+.today-item:hover{box-shadow:var(--shadow-md);}
+.today-item.overdue{border-left:3px solid var(--danger);}
+.today-item .ti-icon{
+  width:36px;height:36px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.today-item .ti-icon svg{width:18px;height:18px;}
+.ti-icon.err{background:var(--danger-light);color:var(--danger);}
+.ti-icon.word{background:var(--warning-light);color:var(--warning);}
+.ti-icon.prac{background:var(--accent-light);color:var(--accent);}
+.today-item .ti-content{flex:1;min-width:0;}
+.today-item .ti-title{font-size:14px;font-weight:600;color:var(--text-primary);}
+.today-item .ti-title .tag-overdue{
+  display:inline-block;background:var(--danger);color:#fff;
+  font-size:11px;padding:1px 6px;border-radius:4px;margin-left:6px;font-weight:500;
+}
+.today-item .ti-desc{font-size:12px;color:var(--text-secondary);margin-top:2px;}
+.today-item .ti-btn{
+  padding:6px 14px;border-radius:6px;font-size:13px;font-weight:600;
+  background:var(--accent);color:#fff;white-space:nowrap;flex-shrink:0;
+  transition:background .2s;
+}
+.today-item .ti-btn:hover{background:var(--accent-dark);}
+.today-empty{text-align:center;padding:20px;color:var(--text-tertiary);font-size:14px;}
+.today-empty svg{width:40px;height:40px;margin-bottom:8px;opacity:.4;}
+
+/* ========== 统计卡片 ========== */
+.stats-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;
+}
+.stat-card{
+  background:var(--card-bg);border-radius:var(--radius);padding:20px;
+  box-shadow:var(--shadow);display:flex;align-items:center;gap:16px;
+  transition:transform .2s,box-shadow .2s;
+}
+.stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);}
+.stat-icon{
+  width:48px;height:48px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.stat-icon svg{width:24px;height:24px;}
+.stat-icon.blue{background:var(--accent-light);color:var(--accent);}
+.stat-icon.red{background:var(--danger-light);color:var(--danger);}
+.stat-icon.green{background:var(--success-light);color:var(--success);}
+.stat-icon.orange{background:var(--warning-light);color:var(--warning);}
+.stat-info .stat-num{font-size:28px;font-weight:800;color:var(--text-primary);line-height:1.2;}
+.stat-info .stat-label{font-size:13px;color:var(--text-secondary);}
+
+/* ========== 卡片通用 ========== */
+.card{
+  background:var(--card-bg);border-radius:var(--radius);padding:20px;
+  box-shadow:var(--shadow);margin-bottom:20px;
+}
+.card-title{
+  font-size:16px;font-weight:700;margin-bottom:16px;
+  display:flex;align-items:center;gap:8px;
+}
+.card-title svg{width:18px;height:18px;color:var(--accent);}
+
+/* ========== 表单 ========== */
+.form-group{margin-bottom:16px;}
+.form-label{display:block;font-size:13px;font-weight:600;color:var(--text-secondary);margin-bottom:6px;}
+.form-label .required{color:var(--danger);}
+.form-row{display:flex;gap:12px;}
+.form-row .form-group{flex:1;}
+.form-actions{display:flex;gap:12px;margin-top:20px;}
+.btn{
+  padding:10px 20px;border-radius:var(--radius-sm);font-size:14px;font-weight:600;
+  display:inline-flex;align-items:center;gap:6px;transition:all .2s;border:none;
+}
+.btn svg{width:16px;height:16px;}
+.btn-primary{background:var(--accent);color:#fff;}
+.btn-primary:hover{background:var(--accent-dark);}
+.btn-outline{background:#fff;color:var(--text-primary);border:1px solid var(--border);}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent);}
+.btn-danger{background:var(--danger);color:#fff;}
+.btn-danger:hover{background:#dc2626;}
+.btn-success{background:var(--success);color:#fff;}
+.btn-ghost{background:transparent;color:var(--text-secondary);padding:6px 12px;}
+.btn-ghost:hover{background:var(--main-bg);}
+.btn-sm{padding:6px 14px;font-size:13px;}
+
+/* ========== 词语卡片 ========== */
+.word-card{
+  background:var(--card-bg);border-radius:var(--radius);padding:18px;
+  box-shadow:var(--shadow);margin-bottom:14px;
+  border-left:4px solid var(--accent);transition:box-shadow .2s;
+}
+.word-card.starred{border-left-color:var(--warning);}
+.word-card:hover{box-shadow:var(--shadow-md);}
+.word-card-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
+.word-card .word-text{font-size:20px;font-weight:700;color:var(--text-primary);}
+.word-card .word-cat{
+  font-size:11px;padding:2px 8px;border-radius:4px;font-weight:600;
+}
+.word-cat.chengyu{background:#fef3c7;color:#92400e;}
+.word-cat.shici{background:#dbeafe;color:#1e40af;}
+.word-cat.xuci{background:#fce7f3;color:#9d174d;}
+.word-cat.qita{background:#f3f4f6;color:#4b5563;}
+.word-card .word-src{font-size:12px;color:var(--text-tertiary);}
+.word-card .star-btn{margin-left:auto;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:6px;}
+.word-card .star-btn svg{width:18px;height:18px;color:#d1d5db;}
+.word-card .star-btn.starred svg{color:var(--warning);fill:var(--warning);}
+.word-explanation{
+  background:var(--main-bg);padding:12px 14px;border-radius:var(--radius-sm);
+  font-size:14px;color:var(--text-primary);line-height:1.7;margin-bottom:12px;
+  white-space:pre-wrap;
+}
+.word-examples{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
+.word-example{
+  display:flex;gap:8px;font-size:13px;color:var(--text-secondary);
+  padding:8px 12px;background:var(--accent-light);border-radius:6px;line-height:1.6;
+}
+.word-example .ex-num{
+  width:20px;height:20px;border-radius:50%;background:var(--accent);color:#fff;
+  font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:700;
+}
+.word-card-footer{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.word-level{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--text-tertiary);}
+.word-level .level-dots{display:flex;gap:3px;}
+.word-level .dot{width:8px;height:8px;border-radius:50%;background:#e5e7eb;}
+.word-level .dot.filled{background:var(--success);}
+.word-card-footer .actions{margin-left:auto;display:flex;gap:6px;}
+
+/* ========== 错题卡片 ========== */
+.error-card{
+  background:var(--card-bg);border-radius:var(--radius);padding:18px;
+  box-shadow:var(--shadow);margin-bottom:14px;transition:box-shadow .2s;
+}
+.error-card:hover{box-shadow:var(--shadow-md);}
+.error-card.reviewed{opacity:.7;}
+.error-card-header{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+.error-type-tag{
+  font-size:11px;padding:2px 8px;border-radius:4px;font-weight:600;
+}
+.error-type-tag.zt{background:#dbeafe;color:#1e40af;}
+.error-type-tag.py{background:#dcfce7;color:#166534;}
+.error-type-tag.pc{background:#fef3c7;color:#92400e;}
+.error-type-tag.xw{background:#fce7f3;color:#9d174d;}
+.error-type-tag.xj{background:#f3e8ff;color:#6b21a8;}
+.error-src-tag{font-size:11px;padding:2px 8px;border-radius:4px;font-weight:600;background:var(--main-bg);color:var(--text-secondary);}
+.error-date{font-size:12px;color:var(--text-tertiary);margin-left:auto;}
+.error-question{font-size:14px;line-height:1.7;color:var(--text-primary);margin-bottom:12px;white-space:pre-wrap;}
+.error-options{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;}
+.error-option{
+  display:flex;gap:8px;font-size:13px;padding:8px 12px;
+  background:var(--main-bg);border-radius:6px;line-height:1.5;
+}
+.error-option .opt-letter{
+  width:22px;height:22px;border-radius:50%;background:#e5e7eb;color:var(--text-primary);
+  font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:700;
+}
+.error-option.correct .opt-letter{background:var(--success);color:#fff;}
+.error-option.wrong .opt-letter{background:var(--danger);color:#fff;}
+.error-option.hidden-answer .opt-text{filter:blur(4px);cursor:pointer;}
+.error-answer-row{display:flex;gap:16px;font-size:13px;margin-bottom:10px;flex-wrap:wrap;}
+.error-answer-row .ans-item{display:flex;align-items:center;gap:4px;}
+.error-answer-row .ans-label{color:var(--text-tertiary);}
+.error-answer-row .ans-correct{color:var(--success);font-weight:700;}
+.error-answer-row .ans-mine{color:var(--danger);font-weight:700;}
+.error-analysis{
+  background:var(--warning-light);padding:10px 14px;border-radius:var(--radius-sm);
+  font-size:13px;color:var(--text-primary);line-height:1.6;margin-bottom:10px;
+  border-left:3px solid var(--warning);
+}
+.error-reason{
+  background:var(--danger-light);padding:10px 14px;border-radius:var(--radius-sm);
+  font-size:13px;color:var(--text-primary);line-height:1.6;margin-bottom:10px;
+  border-left:3px solid var(--danger);
+}
+.error-image{margin-bottom:10px;}
+.error-image img{max-width:100%;border-radius:var(--radius-sm);border:1px solid var(--border);}
+.error-card-footer{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.error-card-footer .actions{margin-left:auto;display:flex;gap:6px;}
+.redo-badge{
+  font-size:11px;padding:2px 8px;border-radius:4px;font-weight:600;
+  background:var(--warning-light);color:var(--warning);
+}
+
+/* ========== 刷题统计 ========== */
+.practice-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px;}
+.practice-chart{display:flex;align-items:flex-end;gap:8px;height:160px;padding:16px 0;}
+.chart-bar{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;}
+.chart-bar-fill{width:100%;background:var(--accent);border-radius:4px 4px 0 0;min-height:4px;transition:height .3s;position:relative;}
+.chart-bar-fill .bar-val{position:absolute;top:-20px;left:50%;transform:translateX(-50%);font-size:11px;color:var(--text-secondary);font-weight:600;}
+.chart-bar .bar-label{font-size:11px;color:var(--text-tertiary);}
+
+/* ========== 复盘记录 ========== */
+.review-card{
+  background:var(--card-bg);border-radius:var(--radius);padding:18px;
+  box-shadow:var(--shadow);margin-bottom:14px;border-left:4px solid var(--accent);
+}
+.review-card .review-date{font-size:15px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.review-card .review-section{margin-bottom:10px;}
+.review-card .rs-label{font-size:12px;font-weight:600;color:var(--accent);margin-bottom:4px;}
+.review-card .rs-content{font-size:14px;color:var(--text-primary);line-height:1.7;white-space:pre-wrap;}
+
+/* ========== 搜索筛选 ========== */
+.toolbar{display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap;align-items:center;}
+.toolbar .search-box{flex:1;min-width:200px;position:relative;}
+.toolbar .search-box svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--text-tertiary);}
+.toolbar .search-box input{padding-left:38px;}
+.toolbar select{width:auto;min-width:120px;}
+
+/* ========== 空状态 ========== */
+.empty-state{text-align:center;padding:40px 20px;color:var(--text-tertiary);}
+.empty-state svg{width:48px;height:48px;margin-bottom:12px;opacity:.3;}
+.empty-state p{font-size:14px;}
+.empty-state .btn{margin-top:16px;}
+
+/* ========== 提示条 ========== */
+.tip-bar{
+  background:var(--accent-light);border-radius:var(--radius);
+  padding:12px 16px;font-size:13px;color:var(--accent-dark);
+  display:flex;align-items:center;gap:8px;margin-bottom:16px;
+}
+.tip-bar svg{width:18px;height:18px;flex-shrink:0;}
+.tip-bar.warn{background:var(--warning-light);color:#92400e;}
+
+/* ========== 数据计数提示 ========== */
+.data-count-tip{
+  background:var(--warning-light);border:1px solid #fde68a;
+  border-radius:var(--radius-sm);padding:10px 14px;
+  font-size:13px;color:#92400e;display:flex;align-items:center;gap:8px;margin-bottom:16px;
+}
+.data-count-tip svg{width:16px;height:16px;flex-shrink:0;}
+
+/* ========== 模态框 ========== */
+.modal-overlay{
+  display:none;position:fixed;top:0;left:0;right:0;bottom:0;
+  background:rgba(0,0,0,0.5);z-index:200;
+  align-items:center;justify-content:center;padding:20px;
+}
+.modal-overlay.show{display:flex;}
+.modal{
+  background:#fff;border-radius:var(--radius);padding:24px;
+  max-width:420px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.3);
+  animation:modalIn .3s ease;
+}
+@keyframes modalIn{from{opacity:0;transform:scale(.95);}to{opacity:1;transform:scale(1);}}
+.modal h3{font-size:18px;font-weight:700;margin-bottom:12px;}
+.modal p{font-size:14px;color:var(--text-secondary);margin-bottom:20px;line-height:1.6;}
+.modal-actions{display:flex;gap:12px;justify-content:flex-end;}
+
+/* ========== 图片上传 ========== */
+.upload-area{
+  border:2px dashed var(--border);border-radius:var(--radius);
+  padding:32px 20px;text-align:center;cursor:pointer;transition:all .2s;
+}
+.upload-area:hover{border-color:var(--accent);background:var(--accent-light);}
+.upload-area svg{width:40px;height:40px;color:var(--text-tertiary);margin-bottom:8px;}
+.upload-area p{font-size:14px;color:var(--text-secondary);}
+.upload-area .hint{font-size:12px;color:var(--text-tertiary);margin-top:4px;}
+.upload-preview{margin-top:12px;position:relative;}
+.upload-preview img{max-width:100%;max-height:300px;border-radius:var(--radius-sm);border:1px solid var(--border);}
+.upload-preview .remove-img{
+  position:absolute;top:8px;right:8px;width:28px;height:28px;
+  background:rgba(0,0,0,0.6);border-radius:50%;display:flex;
+  align-items:center;justify-content:center;
+}
+.upload-preview .remove-img svg{width:16px;height:16px;color:#fff;}
+
+/* ========== 随机抽查 ========== */
+.quiz-modal{
+  background:#fff;border-radius:var(--radius);padding:28px;
+  max-width:500px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.3);
+  animation:modalIn .3s ease;
+}
+.quiz-word{font-size:28px;font-weight:800;text-align:center;margin-bottom:20px;color:var(--text-primary);}
+ quiz-info{text-align:center;font-size:13px;color:var(--text-tertiary);margin-bottom:16px;}
+.quiz-content{background:var(--main-bg);border-radius:var(--radius-sm);padding:16px;margin-bottom:16px;min-height:80px;}
+.quiz-content .qc-label{font-size:12px;font-weight:600;color:var(--accent);margin-bottom:6px;}
+.quiz-content .qc-text{font-size:14px;line-height:1.7;color:var(--text-primary);white-space:pre-wrap;}
+.quiz-hidden{filter:blur(6px);cursor:pointer;user-select:none;}
+.quiz-actions{display:flex;gap:10px;justify-content:center;margin-top:16px;}
+
+/* ========== 进度条 ========== */
+.progress-ring{display:inline-flex;align-items:center;justify-content:center;position:relative;}
+.progress-ring svg{transform:rotate(-90deg);}
+.progress-ring .ring-text{
+  position:absolute;font-size:14px;font-weight:700;color:var(--text-primary);
+}
+
+/* ========== Toast ========== */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+  background:var(--text-primary);color:#fff;padding:10px 20px;
+  border-radius:var(--radius-sm);font-size:14px;z-index:300;
+  opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(-4px);}
+
+/* ========== OCR 进度 ========== */
+.ocr-spinner{animation:ocrSpin 1.5s linear infinite;}
+@keyframes ocrSpin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+
+/* ========== 响应式 ========== */
+@media(max-width:1024px){
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .practice-stats{grid-template-columns:repeat(3,1fr);}
+}
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%);}
+  .sidebar.open{transform:translateX(0);}
+  .main{margin-left:0;padding:60px 16px 80px;}
+  .mobile-header{display:flex;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);gap:10px;}
+  .stat-card{padding:14px;gap:10px;}
+  .stat-icon{width:40px;height:40px;}
+  .stat-icon svg{width:20px;height:20px;}
+  .stat-info .stat-num{font-size:22px;}
+  .form-row{flex-direction:column;gap:0;}
+  .card{padding:16px;}
+  .word-card,.error-card,.review-card{padding:14px;}
+  .toolbar{flex-direction:column;align-items:stretch;}
+  .toolbar select{width:100%;}
+  .practice-stats{grid-template-columns:1fr;gap:10px;}
+  .practice-chart{height:120px;gap:4px;}
+  .chart-bar .bar-label{font-size:10px;}
+  .modal{padding:20px;}
+  body{padding-bottom:env(safe-area-inset-bottom);}
+}
+@media(max-width:480px){
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  .page-title{font-size:18px;}
+  .word-card .word-text{font-size:17px;}
+}
+</style>
+</head>
+<body>
+
+<!-- 移动端顶栏 -->
+<div class="mobile-header">
+  <div class="menu-btn" onclick="toggleSidebar()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+  </div>
+  <span class="title">河北公考言语备考台</span>
+  <svg class="logo-svg" viewBox="0 0 24 24" fill="none" stroke="#4f7df3" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+</div>
+
+<!-- 遮罩 -->
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+<div class="app">
+<!-- ========== 左侧导航 ========== -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#4f7df3" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+      <span>言语备考台</span>
+    </div>
+    <div class="sidebar-sub">河北公务员考试专属</div>
+  </div>
+  <nav class="nav-list">
+    <div class="nav-item active" data-page="dashboard" onclick="switchPage(&#39;dashboard&#39;)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect></svg>
+      <span>工作台首页</span>
+    </div>
+    <div class="nav-item" data-page="practice" onclick="switchPage(&#39;practice&#39;)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+      <span>言语题库刷题</span>
+    </div>
+    <div class="nav-item" data-page="photo" onclick="switchPage(&#39;photo&#39;)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+      <span>拍照错题录入</span>
+    </div>
+    <div class="nav-item" data-page="errorbook" onclick="switchPage(&#39;errorbook&#39;)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+      <span>错题本管理</span>
+      <span class="nav-badge" id="nav-error-count" style="display:none">0</span>
+    </div>
+    <div class="nav-item" data-page="vocabulary" onclick="switchPage(&#39;vocabulary&#39;)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+      <span>词语积累库</span>
+    </div>
+    <div class="nav-item" data-page="review" onclick="switchPage(&#39;review&#39;)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11H3v10h6V11zM9 3H3v6h6V3zM21 3h-6v18h6V3zM21 11h-6v10h6v-10z"></path></svg>
+      <span>备考复盘记录</span>
+    </div>
+    <div class="nav-item" data-page="settings" onclick="switchPage(&#39;settings&#39;)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+      <span>工作台设置</span>
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    <button onclick="exportData()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+      导出备份
+    </button>
+    <button onclick="document.getElementById(&#39;import-file&#39;).click()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+      导入恢复
+    </button>
+  </div>
+  <div class="sync-bar" id="sync-status" onclick="syncPull()">
+    <span class="sync-dot">☁</span><span>自动同步</span>
+  </div>
+</aside>
+
+<!-- ========== 主内容区 ========== -->
+<main class="main">
+
+<!-- ==================== 工作台首页 ==================== -->
+<div class="page active" id="page-dashboard">
+  <div class="page-header">
+    <div class="page-title">工作台首页</div>
+    <div class="page-desc">河北公务员言语理解与表达备考总览</div>
+  </div>
+
+  <!-- 今天要处理 -->
+  <div class="today-box" id="today-box">
+    <div class="today-box-header">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+      <h3>今天要处理</h3>
+      <span class="count" id="today-count">0</span>
+    </div>
+    <div class="today-list" id="today-list"><div class="today-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg><p>今天的任务都完成啦，继续保持！</p></div></div>
+  </div>
+
+  <!-- 统计卡片 -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon blue">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+      </div>
+      <div class="stat-info">
+        <div class="stat-num" id="stat-today-practice">20</div>
+        <div class="stat-label">今日刷题量</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon red">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+      </div>
+      <div class="stat-info">
+        <div class="stat-num" id="stat-error-total">0</div>
+        <div class="stat-label">错题总数</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon green">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+      </div>
+      <div class="stat-info">
+        <div class="stat-num" id="stat-word-total">33</div>
+        <div class="stat-label">词语积累</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon orange">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+      </div>
+      <div class="stat-info">
+        <div class="stat-num" id="stat-unreviewed">0</div>
+        <div class="stat-label">未复盘错题</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 快捷入口 -->
+  <div class="card">
+    <div class="card-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+      快捷入口
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+      <button class="btn btn-primary" onclick="switchPage(&#39;photo&#39;)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+        拍照录入错题
+      </button>
+      <button class="btn btn-outline" onclick="switchPage(&#39;vocabulary&#39;)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+        添加词语
+      </button>
+      <button class="btn btn-outline" onclick="startQuiz()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        随机抽查背诵
+      </button>
+      <button class="btn btn-outline" onclick="switchPage(&#39;practice&#39;)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+        开始刷题
+      </button>
+    </div>
+  </div>
+
+  <!-- 学习进度 -->
+  <div class="card">
+    <div class="card-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+      近7日刷题趋势
+    </div>
+    <div id="practice-chart-container"><div class="practice-chart"><div class="chart-bar"><div class="chart-bar-fill" style="height:4px"></div><div class="bar-label">07-31</div></div><div class="chart-bar"><div class="chart-bar-fill" style="height:4px"></div><div class="bar-label">08-01</div></div><div class="chart-bar"><div class="chart-bar-fill" style="height:4px"></div><div class="bar-label">08-02</div></div><div class="chart-bar"><div class="chart-bar-fill" style="height:4px"></div><div class="bar-label">08-03</div></div><div class="chart-bar"><div class="chart-bar-fill" style="height:4px"></div><div class="bar-label">08-04</div></div><div class="chart-bar"><div class="chart-bar-fill" style="height:4px"></div><div class="bar-label">08-05</div></div><div class="chart-bar"><div class="chart-bar-fill" style="height:120px"><span class="bar-val">20</span></div><div class="bar-label">08-06</div></div></div></div>
+  </div>
+</div>
+
+<!-- ==================== 言语题库刷题 ==================== -->
+<div class="page" id="page-practice">
+  <div class="page-header">
+    <div class="page-title">言语题库刷题</div>
+    <div class="page-desc">记录每日刷题量与正确率，追踪学习进度</div>
+  </div>
+
+  <div class="practice-stats">
+    <div class="card" style="margin-bottom:0;">
+      <div style="font-size:13px;color:var(--text-secondary);margin-bottom:6px;">今日刷题</div>
+      <div style="font-size:32px;font-weight:800;color:var(--accent);" id="prac-today-count">0</div>
+      <div style="font-size:12px;color:var(--text-tertiary);margin-top:4px;">题</div>
+    </div>
+    <div class="card" style="margin-bottom:0;">
+      <div style="font-size:13px;color:var(--text-secondary);margin-bottom:6px;">累计刷题</div>
+      <div style="font-size:32px;font-weight:800;color:var(--text-primary);" id="prac-total-count">0</div>
+      <div style="font-size:12px;color:var(--text-tertiary);margin-top:4px;">题</div>
+    </div>
+    <div class="card" style="margin-bottom:0;">
+      <div style="font-size:13px;color:var(--text-secondary);margin-bottom:6px;">平均正确率</div>
+      <div style="font-size:32px;font-weight:800;color:var(--success);" id="prac-accuracy">0%</div>
+      <div style="font-size:12px;color:var(--text-tertiary);margin-top:4px;">总体</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+      记录本次刷题
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">题型分类</label>
+        <select id="prac-type">
+          <option value="逻辑填空">逻辑填空</option>
+          <option value="片段阅读">片段阅读</option>
+          <option value="语句排序">语句排序</option>
+          <option value="下文推断">下文推断</option>
+          <option value="细节理解">细节理解</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">刷题数量 <span class="required">*</span></label>
+        <input type="number" id="prac-count" placeholder="如：30" min="1">
+      </div>
+      <div class="form-group">
+        <label class="form-label">正确数量</label>
+        <input type="number" id="prac-correct" placeholder="如：24" min="0">
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="savePractice()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        保存记录
+      </button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+      刷题记录
+    </div>
+    <div id="practice-list"></div>
+  </div>
+</div>
+
+<!-- ==================== 拍照错题录入 ==================== -->
+<div class="page" id="page-photo">
+  <div class="page-header">
+    <div class="page-title">拍照错题录入</div>
+    <div class="page-desc">上传错题图片，手动录入题目内容，支持关联词语积累</div>
+  </div>
+
+  <div class="tip-bar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+    <span>上传错题图片后，点击下方「识别文字」按钮自动提取题干和选项到输入框，也可手动录入。</span>
+  </div>
+
+  <div class="card">
+    <div class="card-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+      错题图片
+    </div>
+    <div class="upload-area" id="upload-area" onclick="document.getElementById(&#39;photo-input&#39;).click()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+      <p>点击上传错题图片</p>
+      <p class="hint">支持拍照或从相册选择，图片会压缩保存</p>
+    </div>
+    <input type="file" id="photo-input" accept="image/*">
+    <div class="upload-preview" id="upload-preview" style="display:none;">
+      <img id="preview-img" src="file:///C:/Users/17376/WorkBuddy/2026-08-06-12-33-20/hebei_gongkao_yanyu.html" alt="预览">
+      <div class="remove-img" onclick="removeImage()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </div>
+    </div>
+    <div id="ocr-actions" style="display:none;margin-top:12px;">
+      <button class="btn btn-primary" id="ocr-btn" onclick="startOCR()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+        识别文字
+      </button>
+      <span style="font-size:12px;color:var(--text-tertiary);margin-left:8px;">自动提取题干和选项，需联网加载识别引擎（首次约10MB）</span>
+    </div>
+    <div id="ocr-progress" style="display:none;margin-top:12px;padding:14px;background:var(--accent-light);border-radius:var(--radius-sm);">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" class="ocr-spinner"><circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-dashoffset="32"><animate attributeName="stroke-dashoffset" values="32;0" dur="1.5s" repeatCount="indefinite"></animate></circle></svg>
+        <span style="font-size:13px;font-weight:600;color:var(--accent-dark);" id="ocr-status-text">正在加载识别引擎…</span>
+      </div>
+      <div style="height:4px;background:rgba(79,125,243,0.2);border-radius:2px;overflow:hidden;">
+        <div id="ocr-progress-bar" style="height:100%;background:var(--accent);border-radius:2px;width:0%;transition:width .3s;"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+      题目信息录入
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">题型分类 <span class="required">*</span></label>
+        <select id="err-type">
+          <option value="逻辑填空">逻辑填空</option>
+          <option value="片段阅读">片段阅读</option>
+          <option value="语句排序">语句排序</option>
+          <option value="下文推断">下文推断</option>
+          <option value="细节理解">细节理解</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">题目来源</label>
+        <select id="err-source">
+          <option value="真题">河北真题</option>
+          <option value="模拟题">模拟题</option>
+          <option value="其他">其他</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">来源详情</label>
+        <input type="text" id="err-source-detail" placeholder="如：2024年河北第35题">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">题干内容 <span class="required">*</span></label>
+      <textarea id="err-question" rows="4" placeholder="录入题目题干文本..."></textarea>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">选项A</label>
+        <input type="text" id="err-opt-a" placeholder="选项A内容">
+      </div>
+      <div class="form-group">
+        <label class="form-label">选项B</label>
+        <input type="text" id="err-opt-b" placeholder="选项B内容">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">选项C</label>
+        <input type="text" id="err-opt-c" placeholder="选项C内容">
+      </div>
+      <div class="form-group">
+        <label class="form-label">选项D</label>
+        <input type="text" id="err-opt-d" placeholder="选项D内容">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">正确答案</label>
+        <select id="err-correct">
+          <option value="">未选</option>
+          <option value="A">A</option>
+          <option value="B">B</option>
+          <option value="C">C</option>
+          <option value="D">D</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">我的答案</label>
+        <select id="err-my-answer">
+          <option value="">未选</option>
+          <option value="A">A</option>
+          <option value="B">B</option>
+          <option value="C">C</option>
+          <option value="D">D</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">错因分析</label>
+      <textarea id="err-reason" rows="2" placeholder="记录做错的原因，如：词语辨析不清、未注意转折词..."></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">题目解析</label>
+      <textarea id="err-analysis" rows="3" placeholder="录入题目解析..."></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">提取词语到积累库（可选）</label>
+      <input type="text" id="err-extract-word" placeholder="输入要积累的词语/成语，保存后自动跳转补充释义例句">
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="saveError()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        保存错题
+      </button>
+      <button class="btn btn-outline" onclick="clearErrorForm()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+        清空表单
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 错题本管理 ==================== -->
+<div class="page" id="page-errorbook">
+  <div class="page-header">
+    <div class="page-title">错题本管理</div>
+    <div class="page-desc">所有言语错题汇总，支持筛选、复盘、重做标记</div>
+  </div>
+
+  <div class="toolbar">
+    <div class="search-box">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      <input type="text" id="err-search" placeholder="搜索题干内容..." oninput="renderErrors()">
+    </div>
+    <select id="err-filter-type" onchange="renderErrors()">
+      <option value="">全部题型</option>
+      <option value="逻辑填空">逻辑填空</option>
+      <option value="片段阅读">片段阅读</option>
+      <option value="语句排序">语句排序</option>
+      <option value="下文推断">下文推断</option>
+      <option value="细节理解">细节理解</option>
+    </select>
+    <select id="err-filter-status" onchange="renderErrors()">
+      <option value="">全部状态</option>
+      <option value="unreviewed">未复盘</option>
+      <option value="reviewed">已复盘</option>
+      <option value="redo">待重做</option>
+    </select>
+  </div>
+
+  <div id="error-list"></div>
+</div>
+
+<!-- ==================== 词语积累库 ==================== -->
+<div class="page" id="page-vocabulary">
+  <div class="page-header">
+    <div class="page-title">词语积累库</div>
+    <div class="page-desc">言语易错词语专项积累：填空+释义+三例句</div>
+  </div>
+
+  <div class="toolbar">
+    <div class="search-box">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      <input type="text" id="word-search" placeholder="搜索词语..." oninput="renderWords()">
+    </div>
+    <select id="word-filter-cat" onchange="renderWords()">
+      <option value="">全部分类</option>
+      <option value="成语">成语</option>
+      <option value="实词">实词</option>
+      <option value="虚词">虚词</option>
+      <option value="其他">其他</option>
+    </select>
+    <select id="word-filter-star" onchange="renderWords()">
+      <option value="">全部</option>
+      <option value="starred">仅看收藏</option>
+      <option value="due">待复习</option>
+    </select>
+    <button class="btn btn-primary btn-sm" onclick="startQuiz()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+      随机抽查
+    </button>
+    <button class="btn btn-outline btn-sm" onclick="showAddWordForm()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+      添加词语
+    </button>
+  </div>
+
+  <!-- 添加/编辑词语表单 -->
+  <div class="card" id="word-form-card" style="display:none;">
+    <div class="card-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+      <span id="word-form-title">添加词语</span>
+    </div>
+    <input type="hidden" id="word-edit-id">
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">词语/成语 <span class="required">*</span></label>
+        <input type="text" id="word-text" placeholder="如：南辕北辙">
+      </div>
+      <div class="form-group">
+        <label class="form-label">分类</label>
+        <select id="word-cat">
+          <option value="成语">成语</option>
+          <option value="实词">实词</option>
+          <option value="虚词">虚词</option>
+          <option value="其他">其他</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">真题出处</label>
+        <input type="text" id="word-source" placeholder="如：2024年河北第35题">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">词语释义与辨析 <span class="required">*</span></label>
+      <textarea id="word-explanation" rows="4" placeholder="词义解释、适用场景、易混辨析（近义词对比、误用场景等）..."></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">例句一（真题原句/模拟题例句/自主仿写）</label>
+      <textarea id="word-ex1" rows="2" placeholder="输入例句一..."></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">例句二</label>
+      <textarea id="word-ex2" rows="2" placeholder="输入例句二..."></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">例句三</label>
+      <textarea id="word-ex3" rows="2" placeholder="输入例句三..."></textarea>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="saveWord()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        保存词语
+      </button>
+      <button class="btn btn-outline" onclick="hideAddWordForm()">取消</button>
+    </div>
+  </div>
+
+  <div id="word-list"></div>
+</div>
+
+<!-- ==================== 备考复盘记录 ==================== -->
+<div class="page" id="page-review">
+  <div class="page-header">
+    <div class="page-title">备考复盘记录</div>
+    <div class="page-desc">每日复盘笔记、薄弱题型总结、学习进度记录</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+      新增复盘记录
+    </div>
+    <input type="hidden" id="review-edit-id">
+    <div class="form-group">
+      <label class="form-label">日期</label>
+      <input type="text" id="review-date" placeholder="YYYY-MM-DD" value="">
+    </div>
+    <div class="form-group">
+      <label class="form-label">今日学习总结</label>
+      <textarea id="review-summary" rows="3" placeholder="今天学了什么、做了什么..."></textarea>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">薄弱题型</label>
+        <select id="review-weak-type">
+          <option value="">无</option>
+          <option value="逻辑填空">逻辑填空</option>
+          <option value="片段阅读">片段阅读</option>
+          <option value="语句排序">语句排序</option>
+          <option value="下文推断">下文推断</option>
+          <option value="细节理解">细节理解</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">今日刷题量</label>
+        <input type="number" id="review-count" placeholder="如：30" min="0">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">错题分析</label>
+      <textarea id="review-error-analysis" rows="3" placeholder="今天的错题集中在哪些知识点..."></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">改进计划</label>
+      <textarea id="review-plan" rows="3" placeholder="明天打算怎么改进..."></textarea>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="saveReview()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        保存复盘
+      </button>
+      <button class="btn btn-outline" onclick="clearReviewForm()">清空</button>
+    </div>
+  </div>
+
+  <div id="review-list"></div>
+</div>
+
+<!-- ==================== 工作台设置 ==================== -->
+<div class="page" id="page-settings">
+  <div class="page-header">
+    <div class="page-title">工作台设置</div>
+    <div class="page-desc">数据备份、恢复与清理</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+      数据备份与恢复
+    </div>
+    <div class="tip-bar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+      <span>所有数据保存在浏览器本地。建议定期导出 JSON 备份，更换设备或清理浏览器前务必先导出。</span>
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;">
+      <button class="btn btn-primary" onclick="exportData()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+        导出 JSON 备份
+      </button>
+      <button class="btn btn-outline" onclick="document.getElementById(&#39;import-file&#39;).click()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+        导入 JSON 恢复
+      </button>
+      <button class="btn btn-outline" onclick="exportErrorCSV()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+        导出错题 CSV
+      </button>
+    </div>
+    <input type="file" id="import-file" accept=".json" style="display:none;">
+  </div>
+
+  <div class="card">
+    <div class="card-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+      数据管理
+    </div>
+    <div id="data-counts" style="margin-bottom:16px;font-size:14px;color:var(--text-secondary);line-height:2;"></div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+      <button class="btn btn-outline" onclick="clearExamples()">清空示例数据</button>
+      <button class="btn btn-danger" onclick="confirmClearAll()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+        清空全部数据
+      </button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+      关于
+    </div>
+    <div style="font-size:14px;color:var(--text-secondary);line-height:1.8;">
+      <p><strong>河北公考言语备考台</strong></p>
+      <p>专为河北省公务员考试言语理解与表达题型定制</p>
+      <p>功能：错题整理 / 词语积累 / 刷题统计 / 复盘记录</p>
+      <p style="margin-top:8px;color:var(--text-tertiary);font-size:12px;">数据存储于浏览器本地，刷新和关闭页面不丢失</p>
+    </div>
+  </div>
+</div>
+
+</main>
+</div>
+
+<!-- ========== 随机抽查模态框 ========== -->
+<div class="modal-overlay" id="quiz-overlay">
+  <div class="quiz-modal">
+    <div style="text-align:center;font-size:13px;color:var(--text-tertiary);margin-bottom:8px;" id="quiz-progress">第 1 / 5 题</div>
+    <div class="quiz-word" id="quiz-word">词语</div>
+    <div class="quiz-content" id="quiz-explanation-area">
+      <div class="qc-label">词语释义</div>
+      <div class="qc-text quiz-hidden" id="quiz-explanation" onclick="revealQuiz(&#39;explanation&#39;)">点击查看释义</div>
+    </div>
+    <div class="quiz-content" id="quiz-examples-area">
+      <div class="qc-label">例句</div>
+      <div class="qc-text quiz-hidden" id="quiz-examples" onclick="revealQuiz(&#39;examples&#39;)">点击查看例句</div>
+    </div>
+    <div class="quiz-actions">
+      <button class="btn btn-danger btn-sm" onclick="answerQuiz(false)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        没记住
+      </button>
+      <button class="btn btn-success btn-sm" onclick="answerQuiz(true)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        记住了
+      </button>
+      <button class="btn btn-ghost btn-sm" onclick="closeQuiz()">退出</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== 确认弹窗 ========== -->
+<div class="modal-overlay" id="confirm-overlay">
+  <div class="modal">
+    <h3 id="confirm-title">确认操作</h3>
+    <p id="confirm-msg">确定要执行此操作吗？</p>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeConfirm()">取消</button>
+      <button class="btn btn-danger" id="confirm-ok-btn">确定</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   河北公考言语备考台 - 核心逻辑
+   ============================================================ */
+
+var STORAGE_PREFIX = 'wb_hb_yy_';
+var KEYS = {
+  words: STORAGE_PREFIX + 'words',
+  errors: STORAGE_PREFIX + 'errors',
+  reviews: STORAGE_PREFIX + 'reviews',
+  practice: STORAGE_PREFIX + 'practice',
+  settings: STORAGE_PREFIX + 'settings',
+  initialized: STORAGE_PREFIX + 'initialized'
+};
+
+var todayStr = function(){
+  var d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+};
+
+var dateOffset = function(days){
+  var d = new Date();
+  d.setDate(d.getDate() + days);
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+};
+
+var uid = function(){ return Date.now().toString(36) + Math.random().toString(36).substr(2,5); };
+
+/* ========== 数据读写 ========== */
+function loadData(key){
+  try{
+    var data = localStorage.getItem(key);
+    return data ? JSON.parse(data) : [];
+  }catch(e){ return []; }
+}
+function saveData(key, data){
+  try{
+    localStorage.setItem(key, JSON.stringify(data));
+    if(typeof scheduleSyncPush === 'function') scheduleSyncPush();
+    return true;
+  }catch(e){
+    showToast('存储空间不足，建议导出备份后清理');
+    return false;
+  }
+}
+
+/* ========== 示例数据 ========== */
+function initExampleData(){
+  if(localStorage.getItem(KEYS.initialized)) return;
+
+  var exampleWords = [
+    {
+      id: uid(), word:'南辕北辙', category:'成语', source:'2024年河北第32题',
+      explanation:'本义是心想往南而车子却向北行。比喻行动和目的相抵触。\n\n易混辨析：\n- 南辕北辙：强调行动与目的相反\n- 背道而驰：强调方向相反，不一定有明确目的\n- 适得其反：强调结果与预期相反',
+      example1:'你想往南走，却驾车向北行，这不是南辕北辙吗？',
+      example2:'他本想帮助孩子提高成绩，结果采用的方法过于严厉，反而适得其反，可以说是南辕北辙了。',
+      example3:'发展经济不能以破坏环境为代价，否则就是南辕北辙，最终得不偿失。',
+      starred:true, reviewLevel:0, lastReview:null, nextReview:dateOffset(-1), createdAt: dateOffset(-5)
+    },
+    {
+      id: uid(), word:'不以为然', category:'成语', source:'2023年河北第28题',
+      explanation:'然：对，正确。不认为是对的。表示不同意或否定。\n\n易混辨析：\n- 不以为然：不认为正确（表态度）\n- 不以为意：不放在心上（表重视程度）',
+      example1:'他对这个方案不以为然，认为还有很大的改进空间。',
+      example2:'面对大家的质疑，他不以为然，依然坚持自己的观点。',
+      example3:'老师批评他上课说话，他却不以为然，觉得没什么大不了的。',
+      starred:false, reviewLevel:1, lastReview:dateOffset(-2), nextReview:dateOffset(0), createdAt: dateOffset(-4)
+    },
+    {
+      id: uid(), word:'司空见惯', category:'成语', source:'2024年河北第40题',
+      explanation:'司空：古代官名。指某事常见，不足为奇。\n\n近义词：习以为常、见怪不怪、屡见不鲜',
+      example1:'在繁华的都市中，堵车已成为司空见惯的现象。',
+      example2:'这种欺诈手段在网络购物中早已司空见惯，消费者需提高警惕。',
+      example3:'对于老北京人来说，胡同里的鸽哨声是司空见惯的日常。',
+      starred:false, reviewLevel:2, lastReview:dateOffset(-3), nextReview:dateOffset(1), createdAt: dateOffset(-3)
+    },
+    {
+      id: uid(), word:'浅尝辄止', category:'实词', source:'模拟题',
+      explanation:'浅：略微；辄：就。略微尝试一下就停下来。比喻不肯下功夫深入钻研。\n\n反义词：持之以恒、锲而不舍、精益求精',
+      example1:'做学问不能浅尝辄止，要有钻研到底的精神。',
+      example2:'他对各种爱好都浅尝辄止，没有一项真正精通的。',
+      example3:'学习言语理解不能浅尝辄止，要系统掌握每个题型的解题技巧。',
+      starred:false, reviewLevel:0, lastReview:null, nextReview:dateOffset(0), createdAt: dateOffset(-2)
+    }
+  ];
+
+  var exampleErrors = [
+    {
+      id: uid(), type:'逻辑填空', source:'真题', sourceDetail:'2024年河北第32题',
+      question:'很多时候，我们的政策出发点是好的，但在执行过程中却______，不仅没有达到预期效果，反而引发了新的问题。\n依次填入画横线部分最恰当的一项是：',
+      optionA:'立竿见影', optionB:'南辕北辙', optionC:'事半功倍', optionD:'锦上添花',
+      correctAnswer:'B', myAnswer:'A',
+      errorReason:'未理解文段转折关系，未抓住"不仅没有达到预期效果，反而引发新问题"这一关键信息，错选立竿见影。',
+      analysis:'文段前后构成转折，前面说"出发点是好的"，后面说"没有达到预期效果，反而引发新问题"，说明行动和目的相抵触，应选南辕北辙。立竿见影形容见效快，与文意相反。',
+      image:'', reviewed:false, redoCount:0, createdAt: dateOffset(-3)
+    },
+    {
+      id: uid(), type:'片段阅读', source:'真题', sourceDetail:'2023年河北第45题',
+      question:'传统文化的传承不应是简单的照搬照抄，而应在理解其精神内核的基础上，结合时代特征进行创新性发展。只有让传统文化与现代生活相融合，才能焕发出新的生命力。\n这段文字意在说明：',
+      optionA:'传统文化应该原封不动地保存', optionB:'传统文化需要创新性发展', optionC:'传统文化已经过时', optionD:'现代生活不需要传统文化',
+      correctAnswer:'B', myAnswer:'B',
+      errorReason:'虽然选对了，但对"创新性发展"的理解不够深入，做题时犹豫了较长时间。',
+      analysis:'文段为总分结构，首句即点明主旨"应在理解精神内核的基础上结合时代特征进行创新性发展"，后文进一步解释原因。B项为同义替换。',
+      image:'', reviewed:true, redoCount:0, createdAt: dateOffset(-1)
+    }
+  ];
+
+  var examplePractice = [
+    { id:uid(), date:dateOffset(-6), type:'逻辑填空', total:30, correct:20 },
+    { id:uid(), date:dateOffset(-5), type:'片段阅读', total:25, correct:19 },
+    { id:uid(), date:dateOffset(-4), type:'逻辑填空', total:35, correct:24 },
+    { id:uid(), date:dateOffset(-3), type:'语句排序', total:20, correct:12 },
+    { id:uid(), date:dateOffset(-2), type:'逻辑填空', total:40, correct:30 },
+    { id:uid(), date:dateOffset(-1), type:'片段阅读', total:30, correct:23 }
+  ];
+
+  var exampleReviews = [
+    {
+      id:uid(), date:dateOffset(-1),
+      summary:'今天主要练习了逻辑填空，做了40道题，正确率75%。重点复习了易混成语辨析。',
+      weakType:'逻辑填空', count:40,
+      errorAnalysis:'错题主要集中在近义成语辨析，特别是"不以为然"和"不以为意"的区分。部分题目未注意文段中的转折词。',
+      plan:'明天继续巩固成语辨析，增加词语积累量，同时开始练习片段阅读的主旨概括题。'
+    }
+  ];
+
+  saveData(KEYS.words, exampleWords);
+  saveData(KEYS.errors, exampleErrors);
+  saveData(KEYS.practice, examplePractice);
+  saveData(KEYS.reviews, exampleReviews);
+  localStorage.setItem(KEYS.initialized, '1');
+}
+
+/* ========== 页面切换 ========== */
+function switchPage(pageId){
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  document.getElementById('page-' + pageId).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(function(n){ n.classList.remove('active'); });
+  var navItem = document.querySelector('.nav-item[data-page="' + pageId + '"]');
+  if(navItem) navItem.classList.add('active');
+  if(window.innerWidth <= 768) closeSidebar();
+  window.scrollTo(0,0);
+  if(pageId === 'dashboard') renderDashboard();
+  if(pageId === 'practice') renderPractice();
+  if(pageId === 'errorbook') renderErrors();
+  if(pageId === 'vocabulary') renderWords();
+  if(pageId === 'review') renderReviews();
+  if(pageId === 'settings') renderSettings();
+}
+
+function toggleSidebar(){
+  var sb = document.getElementById('sidebar');
+  var ov = document.getElementById('overlay');
+  sb.classList.toggle('open');
+  ov.style.display = sb.classList.contains('open') ? 'block' : 'none';
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').style.display = 'none';
+}
+
+/* ========== Toast ========== */
+function showToast(msg){
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 2500);
+}
+
+/* ========== 确认弹窗 ========== */
+var confirmCallback = null;
+function showConfirm(title, msg, callback){
+  document.getElementById('confirm-title').textContent = title;
+  document.getElementById('confirm-msg').textContent = msg;
+  confirmCallback = callback;
+  document.getElementById('confirm-overlay').classList.add('show');
+}
+function closeConfirm(){
+  document.getElementById('confirm-overlay').classList.remove('show');
+  confirmCallback = null;
+}
+document.getElementById('confirm-ok-btn').onclick = function(){
+  if(confirmCallback) confirmCallback();
+  closeConfirm();
+};
+
+/* ========== 工作台首页 ========== */
+function renderDashboard(){
+  var words = loadData(KEYS.words);
+  var errors = loadData(KEYS.errors);
+  var practice = loadData(KEYS.practice);
+  var today = todayStr();
+
+  // 今日刷题量
+  var todayPrac = practice.filter(function(p){ return p.date === today; });
+  var todayCount = todayPrac.reduce(function(s,p){ return s + (p.total||0); }, 0);
+  document.getElementById('stat-today-practice').textContent = todayCount;
+
+  // 错题总数
+  document.getElementById('stat-error-total').textContent = errors.length;
+
+  // 词语积累
+  document.getElementById('stat-word-total').textContent = words.length;
+
+  // 未复盘错题
+  var unreviewed = errors.filter(function(e){ return !e.reviewed; }).length;
+  document.getElementById('stat-unreviewed').textContent = unreviewed;
+
+  // 导航徽章
+  var navBadge = document.getElementById('nav-error-count');
+  if(unreviewed > 0){
+    navBadge.textContent = unreviewed;
+    navBadge.style.display = 'inline-block';
+  } else {
+    navBadge.style.display = 'none';
+  }
+
+  // 今天要处理
+  renderTodayTasks(words, errors, practice);
+
+  // 近7日刷题趋势
+  renderPracticeChart(practice);
+}
+
+function renderTodayTasks(words, errors, practice){
+  var today = todayStr();
+  var tasks = [];
+
+  // 逾期未复盘错题
+  errors.forEach(function(e){
+    if(!e.reviewed){
+      var created = new Date(e.createdAt);
+      var daysAgo = Math.floor((new Date() - created) / (1000*60*60*24));
+      var isOverdue = daysAgo >= 2;
+      tasks.push({
+        type:'error',
+        overdue:isOverdue,
+        title:'错题未复盘：' + (e.question ? e.question.substring(0,30) : '未命名') + '...',
+        desc:e.type + ' / ' + (e.sourceDetail || e.source) + (isOverdue ? ' / 已逾期' + daysAgo + '天' : ''),
+        action:'去复盘',
+        onclick:function(){ switchPage('errorbook'); }
+      });
+    }
+  });
+
+  // 词语待复习
+  words.forEach(function(w){
+    if(w.nextReview && w.nextReview <= today){
+      tasks.push({
+        type:'word',
+        overdue:w.nextReview < today,
+        title:'词语待复习：' + w.word,
+        desc:w.category + (w.source ? ' / ' + w.source : '') + (w.nextReview < today ? ' / 已逾期' : ''),
+        action:'去复习',
+        onclick:function(){ startQuiz(); }
+      });
+    }
+  });
+
+  // 今日未刷题
+  var todayPrac = practice.filter(function(p){ return p.date === today; });
+  if(todayPrac.length === 0){
+    tasks.push({
+      type:'practice',
+      overdue:false,
+      title:'今日尚未刷题',
+      desc:'点击开始今日言语练习',
+      action:'去刷题',
+      onclick:function(){ switchPage('practice'); }
+    });
+  }
+
+  var list = document.getElementById('today-list');
+  document.getElementById('today-count').textContent = tasks.length;
+
+  if(tasks.length === 0){
+    list.innerHTML = '<div class="today-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><p>今天的任务都完成啦，继续保持！</p></div>';
+    return;
+  }
+
+  var html = '';
+  tasks.forEach(function(t){
+    var iconHtml = '';
+    if(t.type === 'error'){
+      iconHtml = '<div class="ti-icon err"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>';
+    } else if(t.type === 'word'){
+      iconHtml = '<div class="ti-icon word"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></div>';
+    } else {
+      iconHtml = '<div class="ti-icon prac"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>';
+    }
+    html += '<div class="today-item' + (t.overdue ? ' overdue' : '') + '">' +
+      iconHtml +
+      '<div class="ti-content"><div class="ti-title">' + escapeHtml(t.title) + (t.overdue ? '<span class="tag-overdue">逾期</span>' : '') + '</div>' +
+      '<div class="ti-desc">' + escapeHtml(t.desc) + '</div></div>' +
+      '<button class="ti-btn" onclick="handleTodayTask(' + tasks.indexOf(t) + ')">' + t.action + '</button>' +
+    '</div>';
+  });
+  list.innerHTML = html;
+
+  // 存储tasks供onclick使用
+  window._todayTasks = tasks;
+}
+
+function handleTodayTask(idx){
+  if(window._todayTasks && window._todayTasks[idx]){
+    window._todayTasks[idx].onclick();
+  }
+}
+
+function renderPracticeChart(practice){
+  var container = document.getElementById('practice-chart-container');
+  var days = [];
+  for(var i=6;i>=0;i--){
+    var d = dateOffset(-i);
+    var dayPrac = practice.filter(function(p){ return p.date === d; });
+    var count = dayPrac.reduce(function(s,p){ return s + (p.total||0); }, 0);
+    days.push({ date:d, count:count });
+  }
+  var maxVal = Math.max.apply(null, days.map(function(d){ return d.count; }).concat([1]));
+
+  var html = '<div class="practice-chart">';
+  days.forEach(function(d){
+    var height = Math.max(4, (d.count / maxVal) * 120);
+    var label = d.date.substring(5);
+    html += '<div class="chart-bar">' +
+      '<div class="chart-bar-fill" style="height:' + height + 'px">' +
+        (d.count > 0 ? '<span class="bar-val">' + d.count + '</span>' : '') +
+      '</div>' +
+      '<div class="bar-label">' + label + '</div>' +
+    '</div>';
+  });
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+/* ========== 刷题记录 ========== */
+function savePractice(){
+  var count = parseInt(document.getElementById('prac-count').value);
+  if(!count || count < 1){
+    showToast('请输入刷题数量');
+    return;
+  }
+  var correct = parseInt(document.getElementById('prac-correct').value) || 0;
+  if(correct > count){
+    showToast('正确数量不能大于刷题数量');
+    return;
+  }
+  var record = {
+    id:uid(),
+    date:todayStr(),
+    type:document.getElementById('prac-type').value,
+    total:count,
+    correct:correct
+  };
+  var practice = loadData(KEYS.practice);
+  practice.unshift(record);
+  saveData(KEYS.practice, practice);
+  document.getElementById('prac-count').value = '';
+  document.getElementById('prac-correct').value = '';
+  showToast('刷题记录已保存');
+  renderPractice();
+}
+
+function renderPractice(){
+  var practice = loadData(KEYS.practice);
+  var today = todayStr();
+
+  var todayPrac = practice.filter(function(p){ return p.date === today; });
+  var todayCount = todayPrac.reduce(function(s,p){ return s + (p.total||0); }, 0);
+  document.getElementById('prac-today-count').textContent = todayCount;
+
+  var totalCount = practice.reduce(function(s,p){ return s + (p.total||0); }, 0);
+  document.getElementById('prac-total-count').textContent = totalCount;
+
+  var totalCorrect = practice.reduce(function(s,p){ return s + (p.correct||0); }, 0);
+  var accuracy = totalCount > 0 ? Math.round(totalCorrect / totalCount * 100) : 0;
+  document.getElementById('prac-accuracy').textContent = accuracy + '%';
+
+  // 列表
+  var list = document.getElementById('practice-list');
+  if(practice.length === 0){
+    list.innerHTML = '<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg><p>暂无刷题记录，开始记录第一次刷题吧</p></div>';
+    return;
+  }
+
+  var html = '';
+  practice.forEach(function(p){
+    var acc = p.total > 0 ? Math.round(p.correct / p.total * 100) : 0;
+    var accColor = acc >= 80 ? 'var(--success)' : acc >= 60 ? 'var(--warning)' : 'var(--danger)';
+    html += '<div style="display:flex;align-items:center;gap:12px;padding:12px;border-bottom:1px solid var(--border);">' +
+      '<div style="flex:1;">' +
+        '<div style="font-size:14px;font-weight:600;">' + escapeHtml(p.type) + '</div>' +
+        '<div style="font-size:12px;color:var(--text-tertiary);">' + p.date + '</div>' +
+      '</div>' +
+      '<div style="text-align:center;min-width:60px;"><div style="font-size:16px;font-weight:700;">' + p.total + '</div><div style="font-size:11px;color:var(--text-tertiary);">题数</div></div>' +
+      '<div style="text-align:center;min-width:60px;"><div style="font-size:16px;font-weight:700;color:' + accColor + ';">' + acc + '%</div><div style="font-size:11px;color:var(--text-tertiary);">正确率</div></div>' +
+      '<button class="btn btn-ghost btn-sm" onclick="deletePractice(\'' + p.id + '\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>' +
+    '</div>';
+  });
+  list.innerHTML = html;
+}
+
+function deletePractice(id){
+  showConfirm('删除记录', '确定删除这条刷题记录吗？', function(){
+    var practice = loadData(KEYS.practice);
+    practice = practice.filter(function(p){ return p.id !== id; });
+    saveData(KEYS.practice, practice);
+    renderPractice();
+    showToast('已删除');
+  });
+}
+
+/* ========== 拍照错题录入 ========== */
+var uploadedImage = '';
+
+document.getElementById('photo-input').addEventListener('change', function(e){
+  var file = e.target.files[0];
+  if(!file) return;
+  if(file.size > 10 * 1024 * 1024){
+    showToast('图片不能超过10MB');
+    return;
+  }
+  var reader = new FileReader();
+  reader.onload = function(ev){
+    compressImage(ev.target.result, 800, function(dataUrl){
+      uploadedImage = dataUrl;
+      document.getElementById('preview-img').src = dataUrl;
+      document.getElementById('upload-preview').style.display = 'block';
+      document.getElementById('upload-area').style.display = 'none';
+      document.getElementById('ocr-actions').style.display = 'block';
+      document.getElementById('ocr-progress').style.display = 'none';
+      document.getElementById('ocr-btn').disabled = false;
+    });
+  };
+  reader.readAsDataURL(file);
+});
+
+function compressImage(src, maxWidth, callback){
+  var img = new Image();
+  img.onload = function(){
+    var canvas = document.createElement('canvas');
+    var w = img.width, h = img.height;
+    if(w > maxWidth){
+      h = h * (maxWidth / w);
+      w = maxWidth;
+    }
+    canvas.width = w;
+    canvas.height = h;
+    var ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, w, h);
+    callback(canvas.toDataURL('image/jpeg', 0.7));
+  };
+  img.src = src;
+}
+
+function removeImage(){
+  uploadedImage = '';
+  document.getElementById('preview-img').src = '';
+  document.getElementById('upload-preview').style.display = 'none';
+  document.getElementById('upload-area').style.display = 'block';
+  document.getElementById('photo-input').value = '';
+  document.getElementById('ocr-actions').style.display = 'none';
+  document.getElementById('ocr-progress').style.display = 'none';
+}
+
+/* ========== OCR 文字识别 ========== */
+var tesseractLoaded = false;
+
+function loadTesseract(callback){
+  if(tesseractLoaded && typeof Tesseract !== 'undefined'){
+    callback();
+    return;
+  }
+  var script = document.createElement('script');
+  script.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
+  script.onload = function(){
+    tesseractLoaded = true;
+    callback();
+  };
+  script.onerror = function(){
+    showToast('识别引擎加载失败，请检查网络连接');
+    document.getElementById('ocr-btn').disabled = false;
+    document.getElementById('ocr-progress').style.display = 'none';
+  };
+  document.head.appendChild(script);
+}
+
+function startOCR(){
+  if(!uploadedImage){
+    showToast('请先上传错题图片');
+    return;
+  }
+  var btn = document.getElementById('ocr-btn');
+  btn.disabled = true;
+  document.getElementById('ocr-progress').style.display = 'block';
+  document.getElementById('ocr-status-text').textContent = '正在加载识别引擎…';
+  document.getElementById('ocr-progress-bar').style.width = '0%';
+
+  loadTesseract(function(){
+    document.getElementById('ocr-status-text').textContent = '正在识别文字，请稍候…';
+    document.getElementById('ocr-progress-bar').style.width = '10%';
+
+    Tesseract.recognize(uploadedImage, 'chi_sim', {
+      logger: function(info){
+        if(info.status === 'recognizing text'){
+          var pct = info.progress || 0;
+          if(typeof pct === 'number'){
+            document.getElementById('ocr-progress-bar').style.width = (10 + pct * 80) + '%';
+          }
+        }
+      }
+    }).then(function(result){
+      document.getElementById('ocr-progress-bar').style.width = '100%';
+      document.getElementById('ocr-status-text').textContent = '识别完成，正在填入表格…';
+
+      var text = result.data.text.trim();
+      if(!text){
+        showToast('未识别到文字，请确认图片清晰且包含文字内容');
+        document.getElementById('ocr-btn').disabled = false;
+        document.getElementById('ocr-progress').style.display = 'none';
+        return;
+      }
+
+      parseAndFillFields(text);
+
+      setTimeout(function(){
+        document.getElementById('ocr-progress').style.display = 'none';
+        document.getElementById('ocr-btn').disabled = false;
+        showToast('文字识别完成，请核对并修正');
+      }, 300);
+
+    }).catch(function(err){
+      console.error('OCR error:', err);
+      showToast('识别失败：' + (err.message || '未知错误'));
+      document.getElementById('ocr-btn').disabled = false;
+      document.getElementById('ocr-progress').style.display = 'none';
+    });
+  });
+}
+
+function parseAndFillFields(text){
+  // 清洗文本：合并连续空格、去除多余换行
+  var cleaned = text.replace(/[ \t]+/g, ' ').replace(/\n{3,}/g, '\n\n').trim();
+  // 按行拆分
+  var lines = cleaned.split('\n').filter(function(l){ return l.trim().length > 0; });
+
+  // 检测选项起始行：匹配 "A." "A、" "A)" "A:" 或全角 "Ａ．"
+  var optionRegex = /^[A-Ha-h][.、\)．:：]|^[Ａ-Ｈａ-ｈ][．.、\)]/;
+  var optionLines = [];
+  var questionLines = [];
+
+  for(var i=0; i<lines.length; i++){
+    var line = lines[i].trim();
+    if(optionRegex.test(line)){
+      optionLines.push(line);
+    } else if(optionLines.length === 0){
+      // 还没遇到第一选项前都是题干
+      questionLines.push(line);
+    } else {
+      // 如果选项后面还有非选项文字，可能是题干延续或解析
+      // 尝试合并到题干或前一个选项
+      var prevOpt = optionLines[optionLines.length - 1];
+      optionLines[optionLines.length - 1] = prevOpt + ' ' + line;
+    }
+  }
+
+  // 如果没有检测到分选项，或者选项太少，尝试按关键词拆分
+  if(optionLines.length < 2){
+    // 尝试另一种方式：在文本中搜索 "A"、"A、" 等模式
+    var altMatch = cleaned.match(/[A-Ha-h][.、\)．:：]/g);
+    if(altMatch && altMatch.length >= 2){
+      // 重新按选项分隔符拆分
+      var parts = cleaned.split(/(?=[A-Ha-h][.、\)．:：])/g).filter(function(p){ return p.trim(); });
+      optionLines = [];
+      questionLines = [];
+      for(var j=0; j<parts.length; j++){
+        if(optionRegex.test(parts[j].trim())){
+          optionLines.push(parts[j].trim());
+        } else if(optionLines.length === 0){
+          questionLines.push(parts[j].trim());
+        }
+      }
+    }
+  }
+
+  // 去重合并题干
+  var questionText = questionLines.join('\n').trim();
+
+  // 提取选项内容（去掉 A. 等前缀）
+  var options = optionLines.map(function(line){
+    return line.replace(/^[A-Ha-h][.、\)．:：]\s*/, '').replace(/^[Ａ-Ｈａ-ｈ][．.、\)]\s*/, '').trim();
+  });
+
+  // 尝试按常见模式处理剩余文本（选项少，可能是段落行没匹配到）
+  if(optionLines.length === 0 && cleaned.length > 20){
+    // 尝试按"依次填入"等模式分题干和选项
+    var qMatch = cleaned.match(/(.+?)([A-Da-d][.、\)．:：][^A-Da-d]+)([A-Da-d][.、\)．:：][^A-Da-d]+)([A-Da-d][.、\)．:：][^A-Da-d]+)([A-Da-d][.、\)．:：].+)/s);
+    if(qMatch){
+      questionText = qMatch[1].trim();
+      options = [qMatch[2].trim(), qMatch[3].trim(), qMatch[4].trim(), qMatch[5].trim()].map(function(o){
+        return o.replace(/^[A-Da-d][.、\)．:：]\s*/, '').trim();
+      });
+    }
+  }
+
+  // 填入表单
+  if(questionText){
+    document.getElementById('err-question').value = questionText;
+  }
+  if(options[0]) document.getElementById('err-opt-a').value = options[0];
+  if(options[1]) document.getElementById('err-opt-b').value = options[1];
+  if(options[2]) document.getElementById('err-opt-c').value = options[2];
+  if(options[3]) document.getElementById('err-opt-d').value = options[3];
+
+  // 尝试推断题型
+  if(questionText){
+    if(/填空|填入|横线|____|——/.test(questionText)){
+      document.getElementById('err-type').value = '逻辑填空';
+    } else if(/排序|排列/.test(questionText)){
+      document.getElementById('err-type').value = '语句排序';
+    } else if(/下文|接下来|后面/.test(questionText)){
+      document.getElementById('err-type').value = '下文推断';
+    } else if(/说明|主旨|意在|概括|主要|观点/.test(questionText)){
+      document.getElementById('err-type').value = '片段阅读';
+    }
+  }
+
+  // 滚动到题目表单
+  document.getElementById('err-question').scrollIntoView({behavior:'smooth'});
+}
+
+function saveError(){
+  var question = document.getElementById('err-question').value.trim();
+  if(!question){
+    showToast('请输入题干内容');
+    return;
+  }
+  var err = {
+    id:uid(),
+    type:document.getElementById('err-type').value,
+    source:document.getElementById('err-source').value,
+    sourceDetail:document.getElementById('err-source-detail').value.trim(),
+    question:question,
+    optionA:document.getElementById('err-opt-a').value.trim(),
+    optionB:document.getElementById('err-opt-b').value.trim(),
+    optionC:document.getElementById('err-opt-c').value.trim(),
+    optionD:document.getElementById('err-opt-d').value.trim(),
+    correctAnswer:document.getElementById('err-correct').value,
+    myAnswer:document.getElementById('err-my-answer').value,
+    errorReason:document.getElementById('err-reason').value.trim(),
+    analysis:document.getElementById('err-analysis').value.trim(),
+    image:uploadedImage,
+    reviewed:false,
+    redoCount:0,
+    createdAt:todayStr()
+  };
+
+  var errors = loadData(KEYS.errors);
+  errors.unshift(err);
+  saveData(KEYS.errors, errors);
+
+  // 提取词语到积累库
+  var extractWord = document.getElementById('err-extract-word').value.trim();
+  if(extractWord){
+    var words = loadData(KEYS.words);
+    var newWord = {
+      id:uid(), word:extractWord, category:'其他', source:err.sourceDetail || err.source,
+      explanation:'', example1:'', example2:'', example3:'',
+      starred:false, reviewLevel:0, lastReview:null, nextReview:dateOffset(1), createdAt:todayStr()
+    };
+    words.unshift(newWord);
+    saveData(KEYS.words, words);
+    showToast('错题已保存，词语已添加到积累库');
+  } else {
+    showToast('错题已保存');
+  }
+
+  clearErrorForm();
+  switchPage('errorbook');
+}
+
+function clearErrorForm(){
+  document.getElementById('err-question').value = '';
+  document.getElementById('err-source-detail').value = '';
+  document.getElementById('err-opt-a').value = '';
+  document.getElementById('err-opt-b').value = '';
+  document.getElementById('err-opt-c').value = '';
+  document.getElementById('err-opt-d').value = '';
+  document.getElementById('err-correct').value = '';
+  document.getElementById('err-my-answer').value = '';
+  document.getElementById('err-reason').value = '';
+  document.getElementById('err-analysis').value = '';
+  document.getElementById('err-extract-word').value = '';
+  removeImage();
+}
+
+/* ========== 错题本管理 ========== */
+function renderErrors(){
+  var errors = loadData(KEYS.errors);
+  var search = document.getElementById('err-search').value.toLowerCase();
+  var filterType = document.getElementById('err-filter-type').value;
+  var filterStatus = document.getElementById('err-filter-status').value;
+
+  var filtered = errors.filter(function(e){
+    if(search && e.question && e.question.toLowerCase().indexOf(search) === -1) return false;
+    if(filterType && e.type !== filterType) return false;
+    if(filterStatus === 'unreviewed' && e.reviewed) return false;
+    if(filterStatus === 'reviewed' && !e.reviewed) return false;
+    if(filterStatus === 'redo' && e.redoCount === 0) return false;
+    return true;
+  });
+
+  var list = document.getElementById('error-list');
+  if(filtered.length === 0){
+    list.innerHTML = '<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><p>暂无错题记录</p><button class="btn btn-primary" onclick="switchPage(\'photo\')">去录入错题</button></div>';
+    return;
+  }
+
+  var typeClass = { '逻辑填空':'zt', '片段阅读':'py', '语句排序':'pc', '下文推断':'xw', '细节理解':'xj' };
+
+  var html = '';
+  filtered.forEach(function(e){
+    var tc = typeClass[e.type] || 'zt';
+    html += '<div class="error-card' + (e.reviewed ? ' reviewed' : '') + '">';
+    html += '<div class="error-card-header">';
+    html += '<span class="error-type-tag ' + tc + '">' + e.type + '</span>';
+    if(e.sourceDetail) html += '<span class="error-src-tag">' + escapeHtml(e.sourceDetail) + '</span>';
+    if(e.redoCount > 0) html += '<span class="redo-badge">重做' + e.redoCount + '次</span>';
+    html += '<span class="error-date">' + e.createdAt + '</span>';
+    html += '</div>';
+
+    html += '<div class="error-question">' + escapeHtml(e.question) + '</div>';
+
+    if(e.optionA || e.optionB || e.optionC || e.optionD){
+      html += '<div class="error-options">';
+      var opts = [['A',e.optionA],['B',e.optionB],['C',e.optionC],['D',e.optionD]];
+      opts.forEach(function(o){
+        if(o[1]){
+          var cls = '';
+          if(e.correctAnswer === o[0]) cls = ' correct';
+          if(e.myAnswer && e.myAnswer === o[0] && e.myAnswer !== e.correctAnswer) cls = ' wrong';
+          html += '<div class="error-option' + cls + '"><span class="opt-letter">' + o[0] + '</span><span class="opt-text">' + escapeHtml(o[1]) + '</span></div>';
+        }
+      });
+      html += '</div>';
+    }
+
+    if(e.correctAnswer || e.myAnswer){
+      html += '<div class="error-answer-row">';
+      if(e.correctAnswer) html += '<div class="ans-item"><span class="ans-label">正确答案：</span><span class="ans-correct">' + e.correctAnswer + '</span></div>';
+      if(e.myAnswer) html += '<div class="ans-item"><span class="ans-label">我的答案：</span><span class="ans-mine">' + e.myAnswer + '</span></div>';
+      html += '</div>';
+    }
+
+    if(e.errorReason){
+      html += '<div class="error-reason"><strong>错因：</strong>' + escapeHtml(e.errorReason) + '</div>';
+    }
+    if(e.analysis){
+      html += '<div class="error-analysis"><strong>解析：</strong>' + escapeHtml(e.analysis) + '</div>';
+    }
+    if(e.image){
+      html += '<div class="error-image"><img src="' + e.image + '" alt="错题图片" onclick="viewImage(\'' + e.id + '\')"></div>';
+    }
+
+    html += '<div class="error-card-footer">';
+    html += '<button class="btn btn-ghost btn-sm" onclick="toggleReview(\'' + e.id + '\')">' + (e.reviewed ? '标记未复盘' : '标记已复盘') + '</button>';
+    html += '<div class="actions">';
+    html += '<button class="btn btn-outline btn-sm" onclick="redoError(\'' + e.id + '\')">重做+1</button>';
+    html += '<button class="btn btn-danger btn-sm" onclick="deleteError(\'' + e.id + '\')">删除</button>';
+    html += '</div>';
+    html += '</div>';
+    html += '</div>';
+  });
+  list.innerHTML = html;
+}
+
+function toggleReview(id){
+  var errors = loadData(KEYS.errors);
+  errors.forEach(function(e){
+    if(e.id === id){
+      e.reviewed = !e.reviewed;
+      if(e.reviewed) e.lastReviewedAt = todayStr();
+    }
+  });
+  saveData(KEYS.errors, errors);
+  renderErrors();
+  showToast(e.reviewed ? '已标记为已复盘' : '已标记为未复盘');
+}
+
+function redoError(id){
+  var errors = loadData(KEYS.errors);
+  errors.forEach(function(e){
+    if(e.id === id){
+      e.redoCount = (e.redoCount || 0) + 1;
+      e.reviewed = false;
+    }
+  });
+  saveData(KEYS.errors, errors);
+  renderErrors();
+  showToast('已标记重做');
+}
+
+function deleteError(id){
+  showConfirm('删除错题', '确定删除这道错题吗？删除后不可恢复。', function(){
+    var errors = loadData(KEYS.errors);
+    errors = errors.filter(function(e){ return e.id !== id; });
+    saveData(KEYS.errors, errors);
+    renderErrors();
+    showToast('已删除');
+  });
+}
+
+function viewImage(id){
+  var errors = loadData(KEYS.errors);
+  var err = errors.find(function(e){ return e.id === id; });
+  if(err && err.image){
+    var w = window.open('', '_blank');
+    w.document.write('<img src="' + err.image + '" style="max-width:100%;">');
+  }
+}
+
+/* ========== 词语积累库 ========== */
+function showAddWordForm(editId){
+  var card = document.getElementById('word-form-card');
+  card.style.display = 'block';
+  if(editId){
+    var words = loadData(KEYS.words);
+    var w = words.find(function(x){ return x.id === editId; });
+    if(w){
+      document.getElementById('word-form-title').textContent = '编辑词语';
+      document.getElementById('word-edit-id').value = w.id;
+      document.getElementById('word-text').value = w.word;
+      document.getElementById('word-cat').value = w.category;
+      document.getElementById('word-source').value = w.source || '';
+      document.getElementById('word-explanation').value = w.explanation;
+      document.getElementById('word-ex1').value = w.example1 || '';
+      document.getElementById('word-ex2').value = w.example2 || '';
+      document.getElementById('word-ex3').value = w.example3 || '';
+    }
+  } else {
+    document.getElementById('word-form-title').textContent = '添加词语';
+    document.getElementById('word-edit-id').value = '';
+    document.getElementById('word-text').value = '';
+    document.getElementById('word-cat').value = '成语';
+    document.getElementById('word-source').value = '';
+    document.getElementById('word-explanation').value = '';
+    document.getElementById('word-ex1').value = '';
+    document.getElementById('word-ex2').value = '';
+    document.getElementById('word-ex3').value = '';
+  }
+  card.scrollIntoView({ behavior:'smooth' });
+}
+
+function hideAddWordForm(){
+  document.getElementById('word-form-card').style.display = 'none';
+}
+
+function saveWord(){
+  var word = document.getElementById('word-text').value.trim();
+  var explanation = document.getElementById('word-explanation').value.trim();
+  if(!word){ showToast('请输入词语'); return; }
+  if(!explanation){ showToast('请输入词语释义'); return; }
+
+  var editId = document.getElementById('word-edit-id').value;
+  var words = loadData(KEYS.words);
+
+  var wordData = {
+    word:word,
+    category:document.getElementById('word-cat').value,
+    source:document.getElementById('word-source').value.trim(),
+    explanation:explanation,
+    example1:document.getElementById('word-ex1').value.trim(),
+    example2:document.getElementById('word-ex2').value.trim(),
+    example3:document.getElementById('word-ex3').value.trim()
+  };
+
+  if(editId){
+    words.forEach(function(w){
+      if(w.id === editId){
+        Object.assign(w, wordData);
+      }
+    });
+    showToast('词语已更新');
+  } else {
+    wordData.id = uid();
+    wordData.starred = false;
+    wordData.reviewLevel = 0;
+    wordData.lastReview = null;
+    wordData.nextReview = dateOffset(1);
+    wordData.createdAt = todayStr();
+    words.unshift(wordData);
+    showToast('词语已添加');
+  }
+
+  saveData(KEYS.words, words);
+  hideAddWordForm();
+  renderWords();
+}
+
+function renderWords(){
+  var words = loadData(KEYS.words);
+  var search = document.getElementById('word-search').value.toLowerCase();
+  var filterCat = document.getElementById('word-filter-cat').value;
+  var filterStar = document.getElementById('word-filter-star').value;
+  var today = todayStr();
+
+  var filtered = words.filter(function(w){
+    if(search && w.word.toLowerCase().indexOf(search) === -1 && w.explanation.toLowerCase().indexOf(search) === -1) return false;
+    if(filterCat && w.category !== filterCat) return false;
+    if(filterStar === 'starred' && !w.starred) return false;
+    if(filterStar === 'due' && !(w.nextReview && w.nextReview <= today)) return false;
+    return true;
+  });
+
+  var list = document.getElementById('word-list');
+  if(filtered.length === 0){
+    list.innerHTML = '<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg><p>暂无词语记录</p><button class="btn btn-primary" onclick="showAddWordForm()">添加词语</button></div>';
+    return;
+  }
+
+  var catClass = { '成语':'chengyu', '实词':'shici', '虚词':'xuci', '其他':'qita' };
+
+  var html = '';
+  filtered.forEach(function(w){
+    var cc = catClass[w.category] || 'qita';
+    var isDue = w.nextReview && w.nextReview <= today;
+    var dotsHtml = '';
+    for(var i=0;i<5;i++){
+      dotsHtml += '<span class="dot' + (i < (w.reviewLevel||0) ? ' filled' : '') + '"></span>';
+    }
+
+    html += '<div class="word-card' + (w.starred ? ' starred' : '') + '">';
+    html += '<div class="word-card-header">';
+    html += '<span class="word-text">' + escapeHtml(w.word) + '</span>';
+    html += '<span class="word-cat ' + cc + '">' + w.category + '</span>';
+    if(w.source) html += '<span class="word-src">' + escapeHtml(w.source) + '</span>';
+    if(isDue) html += '<span style="font-size:11px;padding:2px 6px;border-radius:4px;background:var(--warning-light);color:var(--warning);font-weight:600;">待复习</span>';
+    html += '<button class="star-btn' + (w.starred ? ' starred' : '') + '" onclick="toggleStar(\'' + w.id + '\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>';
+    html += '</div>';
+
+    html += '<div class="word-explanation">' + escapeHtml(w.explanation) + '</div>';
+
+    if(w.example1 || w.example2 || w.example3){
+      html += '<div class="word-examples">';
+      if(w.example1) html += '<div class="word-example"><span class="ex-num">1</span><span>' + escapeHtml(w.example1) + '</span></div>';
+      if(w.example2) html += '<div class="word-example"><span class="ex-num">2</span><span>' + escapeHtml(w.example2) + '</span></div>';
+      if(w.example3) html += '<div class="word-example"><span class="ex-num">3</span><span>' + escapeHtml(w.example3) + '</span></div>';
+      html += '</div>';
+    }
+
+    html += '<div class="word-card-footer">';
+    html += '<div class="word-level">掌握度<div class="level-dots">' + dotsHtml + '</div></div>';
+    html += '<div class="actions">';
+    html += '<button class="btn btn-outline btn-sm" onclick="showAddWordForm(\'' + w.id + '\')">编辑</button>';
+    html += '<button class="btn btn-danger btn-sm" onclick="deleteWord(\'' + w.id + '\')">删除</button>';
+    html += '</div>';
+    html += '</div>';
+    html += '</div>';
+  });
+  list.innerHTML = html;
+
+  // 数据量提示
+  checkDataCount();
+}
+
+function toggleStar(id){
+  var words = loadData(KEYS.words);
+  words.forEach(function(w){
+    if(w.id === id) w.starred = !w.starred;
+  });
+  saveData(KEYS.words, words);
+  renderWords();
+}
+
+function deleteWord(id){
+  showConfirm('删除词语', '确定删除这个词语吗？删除后不可恢复。', function(){
+    var words = loadData(KEYS.words);
+    words = words.filter(function(w){ return w.id !== id; });
+    saveData(KEYS.words, words);
+    renderWords();
+    showToast('已删除');
+  });
+}
+
+/* ========== 随机抽查 ========== */
+var quizWords = [];
+var quizIndex = 0;
+var quizRevealed = { explanation:false, examples:false };
+
+function startQuiz(){
+  var words = loadData(KEYS.words);
+  if(words.length === 0){
+    showToast('暂无词语可供抽查');
+    return;
+  }
+  // 随机选5个（或全部）
+  var shuffled = words.slice().sort(function(){ return Math.random() - 0.5; });
+  quizWords = shuffled.slice(0, Math.min(5, shuffled.length));
+  quizIndex = 0;
+  quizRevealed = { explanation:false, examples:false };
+  document.getElementById('quiz-overlay').classList.add('show');
+  renderQuiz();
+}
+
+function renderQuiz(){
+  if(quizIndex >= quizWords.length){
+    closeQuiz();
+    showToast('抽查完成！');
+    return;
+  }
+  var w = quizWords[quizIndex];
+  document.getElementById('quiz-progress').textContent = '第 ' + (quizIndex+1) + ' / ' + quizWords.length + ' 题';
+  document.getElementById('quiz-word').textContent = w.word;
+
+  var explEl = document.getElementById('quiz-explanation');
+  explEl.textContent = w.explanation || '（暂无释义）';
+  explEl.classList.add('quiz-hidden');
+
+  var exEl = document.getElementById('quiz-examples');
+  var exHtml = '';
+  if(w.example1) exHtml += '1. ' + w.example1 + '\n';
+  if(w.example2) exHtml += '2. ' + w.example2 + '\n';
+  if(w.example3) exHtml += '3. ' + w.example3;
+  exEl.textContent = exHtml || '（暂无例句）';
+  exEl.classList.add('quiz-hidden');
+
+  quizRevealed = { explanation:false, examples:false };
+}
+
+function revealQuiz(type){
+  var el = document.getElementById(type === 'explanation' ? 'quiz-explanation' : 'quiz-examples');
+  el.classList.remove('quiz-hidden');
+  quizRevealed[type] = true;
+}
+
+function answerQuiz(correct){
+  var w = quizWords[quizIndex];
+  var words = loadData(KEYS.words);
+
+  words.forEach(function(x){
+    if(x.id === w.id){
+      if(correct){
+        x.reviewLevel = Math.min(5, (x.reviewLevel||0) + 1);
+      } else {
+        x.reviewLevel = 0;
+      }
+      x.lastReview = todayStr();
+      // 根据等级设置下次复习时间
+      var days = [1, 2, 4, 7, 15, 30];
+      x.nextReview = dateOffset(days[x.reviewLevel] || 30);
+    }
+  });
+  saveData(KEYS.words, words);
+
+  quizIndex++;
+  renderQuiz();
+}
+
+function closeQuiz(){
+  document.getElementById('quiz-overlay').classList.remove('show');
+}
+
+/* ========== 复盘记录 ========== */
+function saveReview(){
+  var summary = document.getElementById('review-summary').value.trim();
+  if(!summary){
+    showToast('请输入学习总结');
+    return;
+  }
+  var editId = document.getElementById('review-edit-id').value;
+  var reviews = loadData(KEYS.reviews);
+
+  var data = {
+    date:document.getElementById('review-date').value.trim() || todayStr(),
+    summary:summary,
+    weakType:document.getElementById('review-weak-type').value,
+    count:parseInt(document.getElementById('review-count').value) || 0,
+    errorAnalysis:document.getElementById('review-error-analysis').value.trim(),
+    plan:document.getElementById('review-plan').value.trim()
+  };
+
+  if(editId){
+    reviews.forEach(function(r){
+      if(r.id === editId) Object.assign(r, data);
+    });
+    showToast('复盘已更新');
+  } else {
+    data.id = uid();
+    data.createdAt = todayStr();
+    reviews.unshift(data);
+    showToast('复盘已保存');
+  }
+
+  saveData(KEYS.reviews, reviews);
+  clearReviewForm();
+  renderReviews();
+}
+
+function clearReviewForm(){
+  document.getElementById('review-edit-id').value = '';
+  document.getElementById('review-date').value = '';
+  document.getElementById('review-summary').value = '';
+  document.getElementById('review-weak-type').value = '';
+  document.getElementById('review-count').value = '';
+  document.getElementById('review-error-analysis').value = '';
+  document.getElementById('review-plan').value = '';
+}
+
+function renderReviews(){
+  var reviews = loadData(KEYS.reviews);
+  var list = document.getElementById('review-list');
+  if(reviews.length === 0){
+    list.innerHTML = '<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11H3v10h6V11zM9 3H3v6h6V3zM21 3h-6v18h6V3zM21 11h-6v10h6v-10z"/></svg><p>暂无复盘记录</p></div>';
+    return;
+  }
+  var html = '';
+  reviews.forEach(function(r){
+    html += '<div class="review-card">';
+    html += '<div class="review-date"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;color:var(--accent);"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' + r.date + '</div>';
+    if(r.summary){
+      html += '<div class="review-section"><div class="rs-label">学习总结</div><div class="rs-content">' + escapeHtml(r.summary) + '</div></div>';
+    }
+    if(r.weakType){
+      html += '<div class="review-section"><div class="rs-label">薄弱题型</div><div class="rs-content">' + escapeHtml(r.weakType) + (r.count ? ' / 刷题' + r.count + '题' : '') + '</div></div>';
+    }
+    if(r.errorAnalysis){
+      html += '<div class="review-section"><div class="rs-label">错题分析</div><div class="rs-content">' + escapeHtml(r.errorAnalysis) + '</div></div>';
+    }
+    if(r.plan){
+      html += '<div class="review-section"><div class="rs-label">改进计划</div><div class="rs-content">' + escapeHtml(r.plan) + '</div></div>';
+    }
+    html += '<div style="display:flex;gap:6px;margin-top:10px;">';
+    html += '<button class="btn btn-outline btn-sm" onclick="editReview(\'' + r.id + '\')">编辑</button>';
+    html += '<button class="btn btn-danger btn-sm" onclick="deleteReview(\'' + r.id + '\')">删除</button>';
+    html += '</div>';
+    html += '</div>';
+  });
+  list.innerHTML = html;
+}
+
+function editReview(id){
+  var reviews = loadData(KEYS.reviews);
+  var r = reviews.find(function(x){ return x.id === id; });
+  if(r){
+    document.getElementById('review-edit-id').value = r.id;
+    document.getElementById('review-date').value = r.date;
+    document.getElementById('review-summary').value = r.summary;
+    document.getElementById('review-weak-type').value = r.weakType || '';
+    document.getElementById('review-count').value = r.count || '';
+    document.getElementById('review-error-analysis').value = r.errorAnalysis || '';
+    document.getElementById('review-plan').value = r.plan || '';
+    document.querySelector('#page-review .card').scrollIntoView({ behavior:'smooth' });
+  }
+}
+
+function deleteReview(id){
+  showConfirm('删除复盘', '确定删除这条复盘记录吗？', function(){
+    var reviews = loadData(KEYS.reviews);
+    reviews = reviews.filter(function(r){ return r.id !== id; });
+    saveData(KEYS.reviews, reviews);
+    renderReviews();
+    showToast('已删除');
+  });
+}
+
+/* ========== 设置 ========== */
+function renderSettings(){
+  var words = loadData(KEYS.words);
+  var errors = loadData(KEYS.errors);
+  var reviews = loadData(KEYS.reviews);
+  var practice = loadData(KEYS.practice);
+  var total = words.length + errors.length + reviews.length + practice.length;
+
+  var html = '词语积累：<strong>' + words.length + '</strong> 条<br>';
+  html += '错题记录：<strong>' + errors.length + '</strong> 条<br>';
+  html += '复盘记录：<strong>' + reviews.length + '</strong> 条<br>';
+  html += '刷题记录：<strong>' + practice.length + '</strong> 条<br>';
+  html += '合计：<strong>' + total + '</strong> 条数据';
+  document.getElementById('data-counts').innerHTML = html;
+}
+
+function exportData(){
+  var data = {
+    exportDate: new Date().toISOString(),
+    version: '1.0',
+    words: loadData(KEYS.words),
+    errors: loadData(KEYS.errors),
+    reviews: loadData(KEYS.reviews),
+    practice: loadData(KEYS.practice)
+  };
+  var blob = new Blob([JSON.stringify(data, null, 2)], { type:'application/json' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = '河北公考言语备考_备份_' + todayStr() + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('备份文件已导出');
+}
+
+document.getElementById('import-file').addEventListener('change', function(e){
+  var file = e.target.files[0];
+  if(!file) return;
+  var reader = new FileReader();
+  reader.onload = function(ev){
+    try{
+      var data = JSON.parse(ev.target.result);
+      showConfirm('导入数据', '导入将覆盖当前所有数据，确定继续吗？', function(){
+        if(data.words) saveData(KEYS.words, data.words);
+        if(data.errors) saveData(KEYS.errors, data.errors);
+        if(data.reviews) saveData(KEYS.reviews, data.reviews);
+        if(data.practice) saveData(KEYS.practice, data.practice);
+        localStorage.setItem(KEYS.initialized, '1');
+        showToast('数据导入成功');
+        renderSettings();
+        switchPage('dashboard');
+      });
+    }catch(err){
+      showToast('文件格式错误，请选择正确的备份文件');
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+});
+
+function exportErrorCSV(){
+  var errors = loadData(KEYS.errors);
+  if(errors.length === 0){
+    showToast('暂无错题可导出');
+    return;
+  }
+  var csv = '\uFEFF题型,来源,来源详情,题干,选项A,选项B,选项C,选项D,正确答案,我的答案,错因,解析,录入日期\n';
+  errors.forEach(function(e){
+    var row = [
+      e.type, e.source, e.sourceDetail || '',
+      (e.question || '').replace(/[\n\r]/g, ' '),
+      e.optionA || '', e.optionB || '', e.optionC || '', e.optionD || '',
+      e.correctAnswer || '', e.myAnswer || '',
+      (e.errorReason || '').replace(/[\n\r]/g, ' '),
+      (e.analysis || '').replace(/[\n\r]/g, ' '),
+      e.createdAt || ''
+    ];
+    csv += row.map(function(c){ return '"' + String(c).replace(/"/g, '""') + '"'; }).join(',') + '\n';
+  });
+  var blob = new Blob([csv], { type:'text/csv;charset=utf-8' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = '错题本_' + todayStr() + '.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('CSV已导出');
+}
+
+function clearExamples(){
+  showConfirm('清空示例数据', '将删除所有预置的示例词语、错题和复盘记录，确定吗？', function(){
+    saveData(KEYS.words, []);
+    saveData(KEYS.errors, []);
+    saveData(KEYS.reviews, []);
+    saveData(KEYS.practice, []);
+    localStorage.setItem(KEYS.initialized, '1');
+    showToast('示例数据已清空');
+    renderSettings();
+    switchPage('dashboard');
+  });
+}
+
+function confirmClearAll(){
+  showConfirm('清空全部数据', '此操作将删除所有数据且不可恢复！建议先导出备份。确定要清空吗？', function(){
+    Object.keys(KEYS).forEach(function(k){
+      localStorage.removeItem(KEYS[k]);
+    });
+    showToast('全部数据已清空');
+    initExampleData();
+    renderSettings();
+    switchPage('dashboard');
+  });
+}
+
+/* ========== 数据量提示 ========== */
+function checkDataCount(){
+  var total = loadData(KEYS.words).length + loadData(KEYS.errors).length + loadData(KEYS.reviews).length + loadData(KEYS.practice).length;
+  if(total >= 30){
+    var existing = document.querySelector('.data-count-tip');
+    if(!existing){
+      var tip = document.createElement('div');
+      tip.className = 'data-count-tip';
+      tip.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>数据已积累 ' + total + ' 条，建议导出备份';
+      var wordList = document.getElementById('word-list');
+      if(wordList) wordList.parentNode.insertBefore(tip, wordList);
+    }
+  }
+}
+
+/* ========== 工具函数 ========== */
+function escapeHtml(str){
+  if(!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
+
+/* ========== 初始化 ========== */
+initExampleData();
+document.getElementById('review-date').value = todayStr();
+renderDashboard();
+
+/* ========== 云端自动同步引擎（Railway 后端） ========== */
+var SYNC_API    = (window.SYNC_API_BASE || '') + '/api/data';
+var SYNC_META   = STORAGE_PREFIX + 'sync_meta';
+var SYNC_DEVICE = STORAGE_PREFIX + 'device_id';
+var _syncTimer  = null;
+var _syncBusy   = false;
+var _syncLoading= false;  // 正在从云端拉取数据时禁止触发上传
+
+/* 设备唯一标识 */
+function getDeviceId(){
+  var id = localStorage.getItem(SYNC_DEVICE);
+  if(!id){
+    id = 'dev-' + Date.now().toString(36) + Math.random().toString(36).substr(2,6);
+    localStorage.setItem(SYNC_DEVICE, id);
+  }
+  return id;
+}
+
+/* 读取同步元数据 */
+function getSyncMeta(){
+  try{ return JSON.parse(localStorage.getItem(SYNC_META)) || {}; }
+  catch(e){ return {}; }
+}
+function setSyncMeta(m){
+  localStorage.setItem(SYNC_META, JSON.stringify(m));
+}
+
+/* 组装本地全部数据 */
+function buildPayload(){
+  return {
+    version:'1.0',
+    words:  loadData(KEYS.words),
+    errors: loadData(KEYS.errors),
+    reviews:loadData(KEYS.reviews),
+    practice:loadData(KEYS.practice),
+    lastModified: getSyncMeta().lastModified || new Date().toISOString(),
+    device: getDeviceId()
+  };
+}
+
+/* 上传：把本地数据推到云端 */
+function syncPush(){
+  if(_syncBusy){ _syncTimer = setTimeout(syncPush, 5000); return; }
+  _syncBusy = true;
+  _setSyncUI('uploading');
+  var now = new Date().toISOString();
+  var payload = buildPayload();
+  payload.lastModified = now;
+  fetch(SYNC_API, {
+    method:'POST',
+    headers:{'Content-Type':'application/json','Accept':'application/json'},
+    body: JSON.stringify(payload)
+  })
+  .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+  .then(function(resp){
+    if(!resp || !resp.ok) throw new Error(resp && resp.error ? resp.error : 'save failed');
+    var m = getSyncMeta();
+    m.lastModified = now;
+    m.lastSyncedAt = now;
+    setSyncMeta(m);
+    _setSyncUI('synced');
+  })
+  .catch(function(e){
+    console.warn('[sync] push error:', e.message);
+    _setSyncUI('error');
+  })
+  .finally(function(){ _syncBusy = false; });
+}
+
+/* 延迟上传（防抖：停止操作3秒后再上传） */
+function scheduleSyncPush(){
+  if(_syncLoading) return;            // 拉取中不触发上传
+  if(_syncTimer){ clearTimeout(_syncTimer); }
+  _syncTimer = setTimeout(syncPush, 3000);
+}
+
+/* 下载：从云端拉取最新数据，自动合并到本地 */
+function syncPull(){
+  if(_syncBusy) return;
+  _syncBusy = true;
+  if(_syncTimer){ clearTimeout(_syncTimer); _syncTimer = null; }
+  _setSyncUI('downloading');
+  fetch(SYNC_API, { headers:{'Accept':'application/json'} })
+  .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+  .then(function(cloud){
+    var m = getSyncMeta();
+    var cloudT = new Date(cloud.lastModified || 0).getTime() || 0;
+    var localT = (m.lastModified ? new Date(m.lastModified).getTime() : 0) || 0;
+    var hasLocal = loadData(KEYS.words).length + loadData(KEYS.errors).length
+                 + loadData(KEYS.reviews).length + loadData(KEYS.practice).length;
+
+    if(!m.lastModified && hasLocal > 0){
+      /* 首次同步但本地已有数据 → 直接上传 */
+      _syncBusy = false;
+      syncPush();
+      return;
+    }
+    if(cloudT > localT){
+      /* 云端更新 → 写入本地 */
+      _syncLoading = true;
+      if(cloud.words)   saveData(KEYS.words, cloud.words);
+      if(cloud.errors)  saveData(KEYS.errors, cloud.errors);
+      if(cloud.reviews) saveData(KEYS.reviews, cloud.reviews);
+      if(cloud.practice)saveData(KEYS.practice, cloud.practice);
+      localStorage.setItem(KEYS.initialized, '1');
+      _syncLoading = false;
+      m.lastModified = cloud.lastModified;
+      m.lastSyncedAt = new Date().toISOString();
+      setSyncMeta(m);
+      /* 刷新当前页面 */
+      var nav = document.querySelector('.nav-item.active');
+      switchPage(nav ? nav.getAttribute('data-page') : 'dashboard');
+      _setSyncUI('synced');
+      showToast('已同步云端最新数据');
+    } else if(cloudT < localT){
+      /* 本地更新 → 上传 */
+      _syncBusy = false;
+      syncPush();
+      return;
+    } else {
+      _setSyncUI('synced');
+    }
+  })
+  .catch(function(e){
+    console.warn('[sync] pull error:', e.message);
+    _setSyncUI('error');
+  })
+  .finally(function(){ _syncBusy = false; });
+}
+
+/* 同步状态指示器 */
+function _setSyncUI(state){
+  var el = document.getElementById('sync-status');
+  if(!el) return;
+  var map = {
+    idle:       ['☁','自动同步',''],
+    uploading:  ['⟳','上传中…','spin'],
+    downloading:['⟳','同步中…','spin'],
+    synced:     ['✓','已同步','ok'],
+    error:      ['✗','同步失败','err']
+  };
+  var s = map[state] || map.idle;
+  el.innerHTML = '<span class="sync-dot '+s[2]+'">'+s[0]+'</span><span>'+s[1]+'</span>';
+  if(state === 'synced'){
+    setTimeout(function(){
+      var si = map.idle;
+      el.innerHTML = '<span class="sync-dot '+si[2]+'">'+si[0]+'</span><span>'+si[1]+'</span>';
+    }, 3500);
+  }
+}
+
+/* 初始化同步 */
+function initSync(){
+  _setSyncUI('idle');
+  setTimeout(syncPull, 2000);           // 启动2秒后首次拉取
+  setInterval(syncPull, 60000);         // 每60秒轮询一次
+  document.addEventListener('visibilitychange', function(){
+    if(!document.hidden) syncPull();     // 切回标签页时立即同步
+  });
+}
+
+initSync();
+</script>
+
+
+</body></html>
