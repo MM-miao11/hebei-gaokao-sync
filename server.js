@@ -55,6 +55,35 @@ if (!fs.existsSync(DATA_FILE)) {
   writeData(defaultData);
 }
 
+/**
+ * 按 id 智能合并两个数组
+ * - 以 id 为唯一标识
+ * - 两边都有的项：保留 lastModified / updatedAt / createdAt 较新的版本
+ * - 只在一边有的项：直接保留
+ */
+function mergeById(local = [], remote = []) {
+  const map = new Map();
+
+  const getTime = (item) => {
+    if (!item || typeof item !== 'object') return 0;
+    const t = item.lastModified || item.updatedAt || item.createdAt || item.nextReview || item.date || 0;
+    return new Date(t).getTime() || 0;
+  };
+
+  [...local, ...remote].forEach(item => {
+    if (!item || typeof item !== 'object') return;
+    const id = item.id;
+    if (!id) return;
+
+    const existing = map.get(id);
+    if (!existing || getTime(item) >= getTime(existing)) {
+      map.set(id, item);
+    }
+  });
+
+  return Array.from(map.values());
+}
+
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -65,7 +94,7 @@ app.get('/api/data', (req, res) => {
   res.json(data);
 });
 
-// 保存数据（按时间戳决定是否覆盖）
+// 保存数据（后端智能合并，防止任何客户端覆盖丢失）
 app.post('/api/data', (req, res) => {
   const incoming = req.body;
   if (!incoming || typeof incoming !== 'object') {
@@ -73,28 +102,37 @@ app.post('/api/data', (req, res) => {
   }
 
   const current = readData();
-  const incomingTime = incoming.lastModified ? new Date(incoming.lastModified).getTime() : 0;
-  const currentTime = current.lastModified ? new Date(current.lastModified).getTime() : 0;
 
-  // 如果传入数据比云端新，或者云端为空，则覆盖
-  if (incomingTime >= currentTime || !current.words || current.words.length === 0) {
-    const toSave = {
-      version: incoming.version || current.version || '1.0',
-      words: incoming.words || current.words || [],
-      errors: incoming.errors || current.errors || [],
-      reviews: incoming.reviews || current.reviews || [],
-      practice: incoming.practice || current.practice || [],
-      lastModified: incoming.lastModified || new Date().toISOString(),
-      device: incoming.device || current.device || 'unknown'
-    };
-    if (writeData(toSave)) {
-      return res.json({ ok: true, saved: true, lastModified: toSave.lastModified });
-    } else {
-      return res.status(500).json({ ok: false, error: 'Failed to write data' });
-    }
+  // 按 ID 合并四类数据
+  const merged = {
+    version: incoming.version || current.version || '1.0',
+    words: mergeById(current.words, incoming.words),
+    errors: mergeById(current.errors, incoming.errors),
+    reviews: mergeById(current.reviews, incoming.reviews),
+    practice: mergeById(current.practice, incoming.practice),
+    lastModified: new Date().toISOString(),
+    device: incoming.device || current.device || 'unknown'
+  };
+
+  // 记录合并摘要
+  const summary = {
+    wordsBefore: (current.words || []).length,
+    wordsAfter: merged.words.length,
+    wordsIncoming: (incoming.words || []).length,
+    errorsBefore: (current.errors || []).length,
+    errorsAfter: merged.errors.length,
+    errorsIncoming: (incoming.errors || []).length
+  };
+
+  if (writeData(merged)) {
+    return res.json({
+      ok: true,
+      saved: true,
+      lastModified: merged.lastModified,
+      summary: summary
+    });
   } else {
-    // 云端更新，拒绝覆盖
-    return res.json({ ok: true, saved: false, reason: 'cloud-newer', lastModified: current.lastModified });
+    return res.status(500).json({ ok: false, error: 'Failed to write data' });
   }
 });
 

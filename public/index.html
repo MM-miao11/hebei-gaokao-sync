@@ -2467,8 +2467,9 @@ initExampleData();
 document.getElementById('review-date').value = todayStr();
 renderDashboard();
 
-/* ========== 云端自动同步引擎（Railway 后端） ========== */
-var SYNC_API    = (window.SYNC_API_BASE || '') + '/api/data';
+/* ========== 云端自动同步引擎 ========== */
+var SYNC_API    = 'https://hebei-gaokao-sync-production.up.railway.app/api/data';
+var SYNC_HEALTH = 'https://hebei-gaokao-sync-production.up.railway.app/health';
 var SYNC_META   = STORAGE_PREFIX + 'sync_meta';
 var SYNC_DEVICE = STORAGE_PREFIX + 'device_id';
 var _syncTimer  = null;
@@ -2494,108 +2495,115 @@ function setSyncMeta(m){
   localStorage.setItem(SYNC_META, JSON.stringify(m));
 }
 
-/* 组装本地全部数据 */
-function buildPayload(){
-  return {
-    version:'1.0',
-    words:  loadData(KEYS.words),
-    errors: loadData(KEYS.errors),
-    reviews:loadData(KEYS.reviews),
-    practice:loadData(KEYS.practice),
-    lastModified: getSyncMeta().lastModified || new Date().toISOString(),
-    device: getDeviceId()
-  };
+/* ========== 智能合并同步引擎 ==========
+   核心逻辑：每次同步都先拉取云端数据，与本地数据按ID合并，
+   保留两边所有数据，然后保存到本地并上传到云端。
+   这样无论哪台设备有多少数据，同步后两边都拥有全部数据。
+*/
+function _mergeArr(local, cloud){
+  var map = {};
+  var idKey = 'id';
+  for(var i=0; i<cloud.length; i++){
+    var c = cloud[i];
+    var cid = c[idKey] || c.word || c.date || ('c'+i);
+    if(cid) map[cid] = c;
+  }
+  for(var j=0; j<local.length; j++){
+    var l = local[j];
+    var lid = l[idKey] || l.word || l.date || ('l'+j);
+    if(lid) map[lid] = l;  // 本地覆盖同名ID（当前设备上的版本优先）
+  }
+  return Object.values(map);
 }
 
-/* 上传：把本地数据推到云端 */
-function syncPush(){
-  if(_syncBusy){ _syncTimer = setTimeout(syncPush, 5000); return; }
-  _syncBusy = true;
-  _setSyncUI('uploading');
-  var now = new Date().toISOString();
-  var payload = buildPayload();
-  payload.lastModified = now;
-  fetch(SYNC_API, {
-    method:'POST',
-    headers:{'Content-Type':'application/json','Accept':'application/json'},
-    body: JSON.stringify(payload)
-  })
-  .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
-  .then(function(resp){
-    if(!resp || !resp.ok) throw new Error(resp && resp.error ? resp.error : 'save failed');
-    var m = getSyncMeta();
-    m.lastModified = now;
-    m.lastSyncedAt = now;
-    setSyncMeta(m);
-    _setSyncUI('synced');
-  })
-  .catch(function(e){
-    console.warn('[sync] push error:', e.message);
-    _setSyncUI('error');
-  })
-  .finally(function(){ _syncBusy = false; });
-}
-
-/* 延迟上传（防抖：停止操作3秒后再上传） */
-function scheduleSyncPush(){
-  if(_syncLoading) return;            // 拉取中不触发上传
-  if(_syncTimer){ clearTimeout(_syncTimer); }
-  _syncTimer = setTimeout(syncPush, 3000);
-}
-
-/* 下载：从云端拉取最新数据，自动合并到本地 */
-function syncPull(){
-  if(_syncBusy) return;
+/* 智能同步：合并本地+云端 → 保存到本地 → 上传到云端 */
+function syncMerge(){
+  if(_syncBusy){ _syncTimer = setTimeout(syncMerge, 5000); return; }
   _syncBusy = true;
   if(_syncTimer){ clearTimeout(_syncTimer); _syncTimer = null; }
   _setSyncUI('downloading');
+
   fetch(SYNC_API, { headers:{'Accept':'application/json'} })
   .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
   .then(function(cloud){
-    var m = getSyncMeta();
-    var cloudT = new Date(cloud.lastModified || 0).getTime() || 0;
-    var localT = (m.lastModified ? new Date(m.lastModified).getTime() : 0) || 0;
-    var hasLocal = loadData(KEYS.words).length + loadData(KEYS.errors).length
-                 + loadData(KEYS.reviews).length + loadData(KEYS.practice).length;
+    var localWords = loadData(KEYS.words) || [];
+    var localErrors = loadData(KEYS.errors) || [];
+    var localReviews = loadData(KEYS.reviews) || [];
+    var localPractice = loadData(KEYS.practice) || [];
 
-    if(!m.lastModified && hasLocal > 0){
-      /* 首次同步但本地已有数据 → 直接上传 */
-      _syncBusy = false;
-      syncPush();
-      return;
-    }
-    if(cloudT > localT){
-      /* 云端更新 → 写入本地 */
-      _syncLoading = true;
-      if(cloud.words)   saveData(KEYS.words, cloud.words);
-      if(cloud.errors)  saveData(KEYS.errors, cloud.errors);
-      if(cloud.reviews) saveData(KEYS.reviews, cloud.reviews);
-      if(cloud.practice)saveData(KEYS.practice, cloud.practice);
-      localStorage.setItem(KEYS.initialized, '1');
-      _syncLoading = false;
-      m.lastModified = cloud.lastModified;
-      m.lastSyncedAt = new Date().toISOString();
+    var cloudWords = cloud.words || [];
+    var cloudErrors = cloud.errors || [];
+    var cloudReviews = cloud.reviews || [];
+    var cloudPractice = cloud.practice || [];
+
+    var mergedWords = _mergeArr(localWords, cloudWords);
+    var mergedErrors = _mergeArr(localErrors, cloudErrors);
+    var mergedReviews = _mergeArr(localReviews, cloudReviews);
+    var mergedPractice = _mergeArr(localPractice, cloudPractice);
+
+    /* 检测是否有云端新增数据 */
+    var cloudAdded = (mergedWords.length > localWords.length) ||
+                      (mergedErrors.length > localErrors.length) ||
+                      (mergedReviews.length > localReviews.length) ||
+                      (mergedPractice.length > localPractice.length);
+
+    /* 保存合并后的数据到本地 */
+    _syncLoading = true;
+    saveData(KEYS.words, mergedWords);
+    saveData(KEYS.errors, mergedErrors);
+    saveData(KEYS.reviews, mergedReviews);
+    saveData(KEYS.practice, mergedPractice);
+    localStorage.setItem(KEYS.initialized, '1');
+    _syncLoading = false;
+
+    /* 上传合并后的数据到云端 */
+    var now = new Date().toISOString();
+    var payload = {
+      version:'1.0',
+      words: mergedWords,
+      errors: mergedErrors,
+      reviews: mergedReviews,
+      practice: mergedPractice,
+      lastModified: now,
+      device: getDeviceId()
+    };
+    _setSyncUI('uploading');
+    return fetch(SYNC_API, {
+      method:'POST',
+      headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body: JSON.stringify(payload)
+    })
+    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+    .then(function(){
+      var m = getSyncMeta();
+      m.lastModified = now;
+      m.lastSyncedAt = now;
       setSyncMeta(m);
-      /* 刷新当前页面 */
-      var nav = document.querySelector('.nav-item.active');
-      switchPage(nav ? nav.getAttribute('data-page') : 'dashboard');
       _setSyncUI('synced');
-      showToast('已同步云端最新数据');
-    } else if(cloudT < localT){
-      /* 本地更新 → 上传 */
-      _syncBusy = false;
-      syncPush();
-      return;
-    } else {
-      _setSyncUI('synced');
-    }
+      if(cloudAdded){
+        var nav = document.querySelector('.nav-item.active');
+        switchPage(nav ? nav.getAttribute('data-page') : 'dashboard');
+        showToast('已从云端合并 ' + (mergedWords.length - localWords.length) + ' 条新数据');
+      }
+    });
   })
   .catch(function(e){
-    console.warn('[sync] pull error:', e.message);
+    console.warn('[sync] merge error:', e.message);
     _setSyncUI('error');
   })
   .finally(function(){ _syncBusy = false; });
 }
+
+/* 延迟同步（防抖3秒） */
+function scheduleSyncPush(){
+  if(_syncLoading) return;
+  if(_syncTimer){ clearTimeout(_syncTimer); }
+  _syncTimer = setTimeout(syncMerge, 3000);
+}
+
+/* 手动触发同步 */
+function syncPull(){ syncMerge(); }
+function syncPush(){ syncMerge(); }
 
 /* 同步状态指示器 */
 function _setSyncUI(state){
@@ -2603,7 +2611,7 @@ function _setSyncUI(state){
   if(!el) return;
   var map = {
     idle:       ['☁','自动同步',''],
-    uploading:  ['⟳','上传中…','spin'],
+    uploading:  ['⟳','同步中…','spin'],
     downloading:['⟳','同步中…','spin'],
     synced:     ['✓','已同步','ok'],
     error:      ['✗','同步失败','err']
@@ -2621,10 +2629,10 @@ function _setSyncUI(state){
 /* 初始化同步 */
 function initSync(){
   _setSyncUI('idle');
-  setTimeout(syncPull, 2000);           // 启动2秒后首次拉取
-  setInterval(syncPull, 60000);         // 每60秒轮询一次
+  setTimeout(syncMerge, 2000);           // 启动2秒后首次同步
+  setInterval(syncMerge, 60000);         // 每60秒自动同步
   document.addEventListener('visibilitychange', function(){
-    if(!document.hidden) syncPull();     // 切回标签页时立即同步
+    if(!document.hidden) syncMerge();     // 切回标签页时立即同步
   });
 }
 
