@@ -3494,15 +3494,13 @@ function renderMock(){
     html += '<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:10px;">';
     html += secRow('言语理解', fmtSec(secs.yy));
     html += secRow('资料分析', fmtSec(secs.data));
-    html += '<div style="' + ROW + ' cursor:pointer;" onclick="toggleMockDetail(\'' + m.id + '\')"><span>判断推理</span><strong style="' + VAL_STYLE + '">' + fmtSec(secs.judge) + ' <span style="font-size:12px;color:var(--accent);">▼</span></strong></div>';
+    html += '<div style="' + ROW + ' cursor:pointer;" onclick="toggleMockDetail(\'' + m.id + '\')"><span>判断推理</span><strong style="' + VAL_STYLE + '"><span style="font-size:12px;color:var(--accent);margin-right:4px;">▼</span>' + fmtSec(secs.judge) + '</strong></div>';
     html += '<div class="mock-judge-detail" id="mock-detail-' + m.id + '" style="display:none;">';
     html += subRow('图形推理', fmtSub(jd.figure));
     html += subRow('定义判断', fmtSub(jd.definition));
     html += subRow('类比推理', fmtSub(jd.analogy));
     html += '</div>';
     html += secRow('数量关系', fmtSec(secs.quant));
-    var durationText = Number(m.duration) > 0 ? '<span style="' + VAL_STYLE + '">【' + m.duration + '分钟】</span>' : '—';
-    html += secRow('总用时', durationText);
     html += secRow('政治理论', fmtSec(secs.politics));
     html += secRow('常识', fmtSec(secs.common));
     html += '</div>';
