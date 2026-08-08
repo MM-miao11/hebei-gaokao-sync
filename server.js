@@ -58,9 +58,10 @@ if (!fs.existsSync(DATA_FILE)) {
 /**
  * 按 id 智能合并两个数组
  * - 以 id 为唯一标识
- * - 两边都有的项：保留 lastModified / updatedAt / createdAt 较新的版本
- * - 软删除传播：如果任一版本标记了 deleted:true，合并结果保留 deleted:true
+ * - 只有当两边都标记 deleted 时，合并结果才标记 deleted
+ * - 两边都 active（未删除）时，保留 lastModified 较新的版本
  * - 只在一边有的项：直接保留
+ * 重要：被一端"软删除"后，会被另一端"重新激活"覆盖（防止旧的删除标记永久卡死数据）
  */
 function mergeById(local = [], remote = []) {
   const map = new Map();
@@ -71,24 +72,42 @@ function mergeById(local = [], remote = []) {
     return new Date(t).getTime() || 0;
   };
 
-  [...local, ...remote].forEach(item => {
-    if (!item || typeof item !== 'object') return;
-    const id = item.id;
-    if (!id) return;
+  const findById = (arr, id) => (arr || []).find(x => x && x.id === id);
 
-    const existing = map.get(id);
-    if (!existing) {
-      map.set(id, item);
-    } else {
-      // 软删除优先：任一方标记 deleted，结果即 deleted
-      if (item.deleted || existing.deleted) {
-        const deleted = { ...existing, ...item };
-        deleted.deleted = true;
-        if (!deleted.deletedAt) deleted.deletedAt = item.deletedAt || existing.deletedAt;
-        map.set(id, deleted);
-      } else if (getTime(item) >= getTime(existing)) {
-        map.set(id, item);
+  // 收集所有 id
+  const ids = new Set();
+  (local || []).forEach(item => { if (item && item.id) ids.add(item.id); });
+  (remote || []).forEach(item => { if (item && item.id) ids.add(item.id); });
+
+  ids.forEach(id => {
+    const l = findById(local, id);
+    const r = findById(remote, id);
+
+    // 两边都存在
+    if (l && r) {
+      const lDeleted = !!l.deleted;
+      const rDeleted = !!r.deleted;
+
+      if (lDeleted && rDeleted) {
+        // 两边都标记删除 → 取时间最新的（保留 deleted 状态）
+        const winner = getTime(r) >= getTime(l) ? r : l;
+        map.set(id, { ...winner, deleted: true });
+      } else if (lDeleted && !rDeleted) {
+        // 云端删除，但 incoming 重新激活 → 保留 incoming（取消删除）
+        map.set(id, r);
+      } else if (!lDeleted && rDeleted) {
+        // 云端活跃，incoming 删除 → 保留 incoming（标记删除）
+        map.set(id, r);
+      } else {
+        // 两边都活跃 → 取时间最新的
+        map.set(id, getTime(r) >= getTime(l) ? r : l);
       }
+    } else if (l) {
+      // 只在云端
+      map.set(id, l);
+    } else if (r) {
+      // 只在 incoming
+      map.set(id, r);
     }
   });
 

@@ -564,7 +564,7 @@ input[type="file"]{display:none;}
       导入恢复
     </button>
   </div>
-  <div class="sync-bar" id="sync-status" onclick="syncPull()">
+  <div class="sync-bar" id="sync-status" onclick="syncPull()" title="点击立即同步">
     <span class="sync-dot">☁</span><span>自动同步</span>
   </div>
 </aside>
@@ -1101,6 +1101,37 @@ input[type="file"]{display:none;}
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
         清空全部数据
       </button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+      复习设置
+    </div>
+    <div style="font-size:14px;color:var(--text-secondary);line-height:1.8;margin-bottom:14px;">
+      控制每次复习词语的数量和选择方式
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap;">
+      <span style="font-size:14px;color:var(--text-primary);min-width:130px;">每次复习数量：</span>
+      <input type="number" id="setting-quiz-count" min="1" max="50" step="1" value="5" style="width:80px;padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:14px;" />
+      <span style="font-size:12px;color:var(--text-tertiary);">默认 5，范围 1-50</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap;">
+      <label style="font-size:14px;color:var(--text-primary);display:flex;align-items:center;gap:6px;cursor:pointer;">
+        <input type="checkbox" id="setting-quiz-manual" />
+        <span>自由选择复习词语（进入复习时手动勾选）</span>
+      </label>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap;">
+      <label style="font-size:14px;color:var(--text-primary);display:flex;align-items:center;gap:6px;cursor:pointer;">
+        <input type="checkbox" id="setting-quiz-due-only" />
+        <span>仅复习今日到期词语（不勾选则含逾期）</span>
+      </label>
+    </div>
+    <div style="display:flex;gap:12px;">
+      <button class="btn btn-primary" onclick="saveReviewSettings()">保存复习设置</button>
+      <button class="btn btn-outline" onclick="resetReviewSettings()">恢复默认</button>
     </div>
   </div>
 
@@ -2163,13 +2194,134 @@ function startQuiz(){
     showToast('暂无词语可供抽查');
     return;
   }
-  // 随机选5个（或全部）
+  var rs = loadReviewSettings();
+
+  // 仅到期筛选
+  if(rs.dueOnly){
+    var today = todayStr();
+    words = words.filter(function(w){ return w.nextReview && w.nextReview <= today; });
+    if(words.length === 0){
+      showToast('今日没有到期的词语');
+      return;
+    }
+  }
+
+  // 自由选择模式：弹出选择界面
+  if(rs.manualSelect){
+    openWordSelector(words, rs.quizCount);
+    return;
+  }
+
+  // 随机选 N 个
   var shuffled = words.slice().sort(function(){ return Math.random() - 0.5; });
-  quizWords = shuffled.slice(0, Math.min(5, shuffled.length));
+  quizWords = shuffled.slice(0, Math.min(rs.quizCount, shuffled.length));
   quizIndex = 0;
   quizRevealed = { explanation:false, examples:false };
   document.getElementById('quiz-overlay').classList.add('show');
   renderQuiz();
+}
+
+/* 自由选择复习词语 */
+function openWordSelector(pool, maxCount){
+  var selected = {};
+  var content = document.createElement('div');
+  content.id = 'word-selector-overlay';
+  content.className = 'modal-overlay show';
+  content.innerHTML = '<div class="modal" style="max-width:560px;max-height:80vh;overflow:hidden;display:flex;flex-direction:column;">'
+    + '<h3>选择要复习的词语（最多 '+ maxCount + ' 个）</h3>'
+    + '<div style="margin-bottom:12px;display:flex;gap:8px;flex-wrap:wrap;">'
+    +   '<button class="btn btn-outline btn-sm" onclick="selectAllInSelector()">全选</button>'
+    +   '<button class="btn btn-outline btn-sm" onclick="selectNoneInSelector()">全不选</button>'
+    +   '<button class="btn btn-outline btn-sm" onclick="selectRandomInSelector('+ maxCount +')">随机 '+ maxCount + ' 个</button>'
+    + '</div>'
+    + '<div id="word-selector-list" style="flex:1;overflow-y:auto;border:1px solid var(--border);border-radius:6px;padding:8px;max-height:50vh;"></div>'
+    + '<div class="modal-actions">'
+    +   '<button class="btn btn-outline" onclick="closeWordSelector()">取消</button>'
+    +   '<button class="btn btn-primary" onclick="confirmWordSelector('+ maxCount +')">开始复习</button>'
+    + '</div></div>';
+  document.body.appendChild(content);
+
+  var list = content.querySelector('#word-selector-list');
+  pool.forEach(function(w, idx){
+    var checked = idx < maxCount ? 'checked' : '';
+    if(checked) selected[w.id] = true;
+    var due = w.nextReview && w.nextReview <= todayStr();
+    var row = document.createElement('label');
+    row.style.cssText = 'display:flex;align-items:center;gap:8px;padding:6px;border-bottom:1px solid var(--border-light);cursor:pointer;';
+    row.dataset.wordId = w.id;
+    row.innerHTML = '<input type="checkbox" data-word-id="'+ w.id +'" ' + checked + ' />'
+      + '<span style="flex:1;font-size:14px;">'+ (w.word || '（未命名）') + '</span>'
+      + (due ? '<span style="font-size:11px;color:var(--warning);">待复习</span>' : '');
+    list.appendChild(row);
+    row.querySelector('input').addEventListener('change', function(e){
+      if(e.target.checked) selected[w.id] = true;
+      else delete selected[w.id];
+    });
+  });
+
+  // 存到全局，供子函数使用
+  window.__wordSelectorPool = pool;
+  window.__wordSelectorSelected = selected;
+  window.__wordSelectorMax = maxCount;
+}
+
+function selectAllInSelector(){
+  var inputs = document.querySelectorAll('#word-selector-list input[type=checkbox]');
+  window.__wordSelectorSelected = {};
+  inputs.forEach(function(inp){
+    inp.checked = true;
+    window.__wordSelectorSelected[inp.dataset.wordId] = true;
+  });
+}
+
+function selectNoneInSelector(){
+  var inputs = document.querySelectorAll('#word-selector-list input[type=checkbox]');
+  inputs.forEach(function(inp){ inp.checked = false; });
+  window.__wordSelectorSelected = {};
+}
+
+function selectRandomInSelector(n){
+  var pool = window.__wordSelectorPool || [];
+  var shuffled = pool.slice().sort(function(){ return Math.random() - 0.5; });
+  var picked = shuffled.slice(0, Math.min(n, shuffled.length));
+  selectNoneInSelector();
+  picked.forEach(function(w){
+    var inp = document.querySelector('#word-selector-list input[data-word-id="'+ w.id +'"]');
+    if(inp){
+      inp.checked = true;
+      window.__wordSelectorSelected[w.id] = true;
+    }
+  });
+}
+
+function confirmWordSelector(maxCount){
+  var pool = window.__wordSelectorPool || [];
+  var selected = window.__wordSelectorSelected || {};
+  var ids = Object.keys(selected);
+  if(ids.length === 0){
+    showToast('请至少选择一个词语');
+    return;
+  }
+  if(ids.length > maxCount){
+    showToast('最多只能选 ' + maxCount + ' 个，已为你截取前 ' + maxCount + ' 个');
+    ids = ids.slice(0, maxCount);
+  }
+  var map = {};
+  pool.forEach(function(w){ map[w.id] = w; });
+  quizWords = ids.map(function(id){ return map[id]; }).filter(Boolean);
+  quizIndex = 0;
+  quizRevealed = { explanation:false, examples:false };
+  closeWordSelector();
+  document.getElementById('quiz-overlay').classList.add('show');
+  renderQuiz();
+}
+
+function closeWordSelector(){
+  var el = document.getElementById('word-selector-overlay');
+  if(el) el.remove();
+  window.__wordSelectorPool = null;
+  window.__wordSelectorSelected = null;
+  window.__wordSelectorMax = null;
 }
 
 function renderQuiz(){
@@ -2218,6 +2370,7 @@ function answerQuiz(correct){
       // 根据等级设置下次复习时间
       var days = [1, 2, 4, 7, 15, 30];
       x.nextReview = dateOffset(days[x.reviewLevel] || 30);
+      x.lastModified = new Date().toISOString();
     }
   });
   saveData(KEYS.words, words);
@@ -2347,6 +2500,47 @@ function renderSettings(){
   html += '刷题记录：<strong>' + practice.length + '</strong> 条<br>';
   html += '合计：<strong>' + total + '</strong> 条数据';
   document.getElementById('data-counts').innerHTML = html;
+
+  // 加载复习设置
+  var rs = loadReviewSettings();
+  var qc = document.getElementById('setting-quiz-count');
+  var qm = document.getElementById('setting-quiz-manual');
+  var qdo = document.getElementById('setting-quiz-due-only');
+  if(qc) qc.value = rs.quizCount;
+  if(qm) qm.checked = rs.manualSelect;
+  if(qdo) qdo.checked = rs.dueOnly;
+}
+
+function loadReviewSettings(){
+  try{
+    var raw = localStorage.getItem('review_settings');
+    if(raw){
+      var s = JSON.parse(raw);
+      return {
+        quizCount: Math.min(50, Math.max(1, parseInt(s.quizCount) || 5)),
+        manualSelect: !!s.manualSelect,
+        dueOnly: !!s.dueOnly
+      };
+    }
+  }catch(e){}
+  return { quizCount: 5, manualSelect: false, dueOnly: false };
+}
+
+function saveReviewSettings(){
+  var qc = parseInt(document.getElementById('setting-quiz-count').value) || 5;
+  qc = Math.min(50, Math.max(1, qc));
+  var qm = document.getElementById('setting-quiz-manual').checked;
+  var qdo = document.getElementById('setting-quiz-due-only').checked;
+  var settings = { quizCount: qc, manualSelect: qm, dueOnly: qdo, updatedAt: new Date().toISOString() };
+  localStorage.setItem('review_settings', JSON.stringify(settings));
+  showToast('复习设置已保存（每次 ' + qc + ' 个' + (qm ? '，自由选择' : '') + (qdo ? '，仅到期' : '') + '）');
+}
+
+function resetReviewSettings(){
+  document.getElementById('setting-quiz-count').value = 5;
+  document.getElementById('setting-quiz-manual').checked = false;
+  document.getElementById('setting-quiz-due-only').checked = false;
+  saveReviewSettings();
 }
 
 function exportData(){
@@ -2509,24 +2703,55 @@ function setSyncMeta(m){
 function _mergeArr(local, cloud){
   var map = {};
   var idKey = 'id';
+  var getTime = function(item){
+    if(!item || typeof item !== 'object') return 0;
+    var t = item.lastModified || item.updatedAt || item.createdAt || item.nextReview || item.date || 0;
+    var d = new Date(t).getTime();
+    return isNaN(d) ? 0 : d;
+  };
+
+  // 收集所有 id
+  var ids = {};
   for(var i=0; i<cloud.length; i++){
-    var c = cloud[i];
-    var cid = c[idKey] || c.word || c.date || ('c'+i);
-    if(cid) map[cid] = c;
+    var cid = cloud[i][idKey] || cloud[i].word || cloud[i].date || ('c'+i);
+    if(cid) ids[cid] = true;
   }
   for(var j=0; j<local.length; j++){
-    var l = local[j];
-    var lid = l[idKey] || l.word || l.date || ('l'+j);
-    if(lid){
-      /* 软删除传播：如果云端标记了 deleted 而本地没有，保留删除标记 */
-      var existing = map[lid];
-      if(existing && existing.deleted && !l.deleted){
-        l.deleted = true;
-        l.deletedAt = existing.deletedAt;
-      }
-      map[lid] = l;  // 本地覆盖同名ID（当前设备上的版本优先）
-    }
+    var lid = local[j][idKey] || local[j].word || local[j].date || ('l'+j);
+    if(lid) ids[lid] = true;
   }
+
+  Object.keys(ids).forEach(function(id){
+    var l = null, c = null;
+    for(var i=0; i<local.length; i++){
+      var lid = local[i][idKey] || local[i].word || local[i].date || ('l'+i);
+      if(lid === id){ l = local[i]; break; }
+    }
+    for(var i=0; i<cloud.length; i++){
+      var cid = cloud[i][idKey] || cloud[i].word || cloud[i].date || ('c'+i);
+      if(cid === id){ c = cloud[i]; break; }
+    }
+
+    if(l && c){
+      var lDel = !!l.deleted;
+      var cDel = !!c.deleted;
+      if(lDel && cDel){
+        var winner = getTime(c) >= getTime(l) ? c : l;
+        map[id] = Object.assign({}, winner, { deleted: true });
+      } else if(lDel && !cDel){
+        map[id] = c;  // 云端未删除，本地删除 → 取消本地删除
+      } else if(!lDel && cDel){
+        map[id] = l;  // 本地未删除，云端删除 → 取消云端删除
+      } else {
+        map[id] = getTime(l) >= getTime(c) ? l : c;  // 两边都活跃，取最新
+      }
+    } else if(l){
+      map[id] = l;
+    } else if(c){
+      map[id] = c;
+    }
+  });
+
   return Object.values(map);
 }
 
@@ -2643,10 +2868,17 @@ function _setSyncUI(state){
 /* 初始化同步 */
 function initSync(){
   _setSyncUI('idle');
-  setTimeout(syncMerge, 2000);           // 启动2秒后首次同步
-  setInterval(syncMerge, 60000);         // 每60秒自动同步
+  setTimeout(syncMerge, 1500);           // 启动1.5秒后首次同步
+  setInterval(syncMerge, 30000);         // 每30秒自动同步（更频繁）
   document.addEventListener('visibilitychange', function(){
     if(!document.hidden) syncMerge();     // 切回标签页时立即同步
+  });
+  // 监听其他标签页的 storage 变化（同一浏览器多标签页同步）
+  window.addEventListener('storage', function(e){
+    if(e.key && e.key.indexOf('heb_') === 0){
+      console.log('[sync] storage changed in another tab', e.key);
+      syncMerge();
+    }
   });
 }
 
