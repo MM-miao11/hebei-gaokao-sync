@@ -1410,7 +1410,8 @@ input[type="file"]{display:none;}
   </div>
 
   <div class="card">
-    <div class="card-title">新增模考</div>
+    <div class="card-title" id="mock-form-title">新增模考</div>
+    <input type="hidden" id="mock-edit-id">
     <div class="form-row">
       <div class="form-group">
         <label class="form-label">模考名称 <span class="required">*</span></label>
@@ -1423,6 +1424,14 @@ input[type="file"]{display:none;}
       <div class="form-group">
         <label class="form-label">总分</label>
         <input type="number" id="mock-total" placeholder="如：78" min="0" max="100">
+      </div>
+      <div class="form-group">
+        <label class="form-label">总题量</label>
+        <input type="number" id="mock-question-count" placeholder="如：130" min="0">
+      </div>
+      <div class="form-group">
+        <label class="form-label">考试用时（分钟）</label>
+        <input type="number" id="mock-duration" placeholder="如：120" min="0">
       </div>
     </div>
 
@@ -1482,7 +1491,8 @@ input[type="file"]{display:none;}
     </div>
 
     <div class="form-actions">
-      <button class="btn btn-primary" onclick="saveMock()">保存模考记录</button>
+      <button class="btn btn-primary" onclick="saveMock()" id="mock-save-btn">保存模考记录</button>
+      <button class="btn btn-outline" onclick="clearMockForm()" id="mock-cancel-btn" style="display:none;">取消编辑</button>
     </div>
   </div>
 
@@ -3362,11 +3372,13 @@ function saveMock(){
     var score = sc === '' ? null : (parseFloat(sc) || 0);
     return { correct: f.correct, total: f.total, accuracy: f.accuracy, score: score };
   };
+  var editId = document.getElementById('mock-edit-id').value;
   var exam = {
-    id: uid(),
     name: name,
     date: document.getElementById('mock-date').value || todayStr(),
     total: getNum('mock-total'),
+    questionCount: getNum('mock-question-count'),
+    duration: getNum('mock-duration'),
     sections: {
       yy: buildSec('yy'),
       data: buildSec('data'),
@@ -3380,23 +3392,40 @@ function saveMock(){
       analogy: { score: getNum('mock-judge-ana-score'), accuracy: getNum('mock-judge-ana-acc') }
     },
     summary: document.getElementById('mock-summary').value.trim(),
-    createdAt: new Date().toISOString(),
     lastModified: new Date().toISOString()
   };
   var list = loadData(KEYS.mock_exams) || [];
-  list.unshift(exam);
+  if(editId){
+    var idx = list.findIndex(function(x){ return x.id === editId; });
+    if(idx >= 0){
+      exam.id = editId;
+      exam.createdAt = list[idx].createdAt;
+      list[idx] = exam;
+      showToast('模考记录已更新');
+    } else {
+      showToast('未找到要编辑的记录');
+      return;
+    }
+  } else {
+    exam.id = uid();
+    exam.createdAt = new Date().toISOString();
+    list.unshift(exam);
+    showToast('模考记录已保存');
+  }
   saveData(KEYS.mock_exams, list);
   clearMockForm();
   renderMock();
-  showToast('模考记录已保存');
 }
 function clearMockForm(){
-  ['mock-name','mock-date','mock-total','mock-summary',
+  ['mock-edit-id','mock-name','mock-date','mock-total','mock-question-count','mock-duration','mock-summary',
    'mock-yy-frac','mock-yy-score','mock-data-frac','mock-data-score',
    'mock-judge-frac','mock-judge-score','mock-politics-frac','mock-politics-score',
    'mock-common-frac','mock-common-score',
    'mock-judge-fig-score','mock-judge-fig-acc','mock-judge-def-score','mock-judge-def-acc',
    'mock-judge-ana-score','mock-judge-ana-acc'].forEach(function(id){ var el = document.getElementById(id); if(el) el.value = ''; });
+  document.getElementById('mock-form-title').textContent = '新增模考';
+  document.getElementById('mock-save-btn').textContent = '保存模考记录';
+  document.getElementById('mock-cancel-btn').style.display = 'none';
 }
 function renderMock(){
   var listEl = document.getElementById('mock-list');
@@ -3406,44 +3435,99 @@ function renderMock(){
     listEl.innerHTML = '<div class="empty-state"><p>暂无模考记录</p></div>';
     return;
   }
-  var ROW = 'display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-bottom:1px solid var(--border);font-size:14px;';
+  var ROW = 'display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-bottom:1px solid var(--border);font-size:14px;color:var(--text-primary);';
+  var VAL_STYLE = 'font-weight:600;font-size:14px;color:var(--text-primary);';
   var fmtSec = function(s){
     if(!s) return '—';
     var correct = Number(s.correct) || 0;
     var total = Number(s.total) || 0;
     var accuracy = Number(s.accuracy) || 0;
-    if(total > 0) return '【' + correct + '】【' + accuracy + '%】';
-    if(s.score != null && s.score !== '' && Number(s.score) !== 0) return '【' + s.score + '分】';
-    if(accuracy > 0) return '【' + accuracy + '%】';
+    if(total > 0) return '<span style="' + VAL_STYLE + '">【' + correct + '】【' + accuracy + '%】</span>';
+    if(s.score != null && s.score !== '' && Number(s.score) !== 0) return '<span style="' + VAL_STYLE + '">【' + s.score + '分】</span>';
+    if(accuracy > 0) return '<span style="' + VAL_STYLE + '">【' + accuracy + '%】</span>';
     return '—';
   };
   var secRow = function(label, valHtml){
-    return '<div style="' + ROW + '"><span>' + label + '</span><strong>' + valHtml + '</strong></div>';
+    return '<div style="' + ROW + '"><span>' + label + '</span><strong style="' + VAL_STYLE + '">' + valHtml + '</strong></div>';
   };
   var html = '<div class="mock-list">';
   list.forEach(function(m){
     var secs = m.sections || {};
     var jd = m.judgeDetails || {};
+    // 若未填总题量，自动按各模块 total 求和
+    var questionCount = Number(m.questionCount) || 0;
+    if(questionCount === 0){
+      ['yy','data','judge','politics','common'].forEach(function(code){
+        questionCount += Number(secs[code] && secs[code].total) || 0;
+      });
+    }
     html += '<div class="mock-card">';
     html += '<div class="mock-header"><div><strong>' + escapeHtml(m.name) + '</strong><span class="mock-date">' + escapeHtml(m.date || '') + '</span></div><div class="mock-total">' + (m.total || 0) + '分</div></div>';
     html += '<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:10px;">';
     html += secRow('言语理解', fmtSec(secs.yy));
     html += secRow('资料分析', fmtSec(secs.data));
-    html += '<div style="' + ROW + ' cursor:pointer;color:var(--accent);" onclick="toggleMockDetail(\'' + m.id + '\')"><span>判断推理</span><strong>' + fmtSec(secs.judge) + ' <span style="font-size:12px;">▼</span></strong></div>';
+    html += '<div style="' + ROW + ' cursor:pointer;" onclick="toggleMockDetail(\'' + m.id + '\')"><span>判断推理</span><strong style="' + VAL_STYLE + '">' + fmtSec(secs.judge) + ' <span style="font-size:12px;color:var(--accent);">▼</span></strong></div>';
     html += '<div class="mock-judge-detail" id="mock-detail-' + m.id + '" style="display:none;">';
     html += '<div class="mock-detail-row"><span>图形推理</span><strong>' + (jd.figure && jd.figure.score || 0) + '</strong><small>' + (jd.figure && jd.figure.accuracy || 0) + '%</small></div>';
     html += '<div class="mock-detail-row"><span>定义判断</span><strong>' + (jd.definition && jd.definition.score || 0) + '</strong><small>' + (jd.definition && jd.definition.accuracy || 0) + '%</small></div>';
     html += '<div class="mock-detail-row"><span>类比推理</span><strong>' + (jd.analogy && jd.analogy.score || 0) + '</strong><small>' + (jd.analogy && jd.analogy.accuracy || 0) + '%</small></div>';
     html += '</div>';
+    // 数量 & 时间 行
+    var countText = questionCount > 0 ? '<span style="' + VAL_STYLE + '">【' + questionCount + '题】</span>' : '—';
+    html += secRow('数量', countText);
+    var durationText = Number(m.duration) > 0 ? '<span style="' + VAL_STYLE + '">【' + m.duration + '分钟】</span>' : '—';
+    html += secRow('时间', durationText);
     html += secRow('政治理论', fmtSec(secs.politics));
     html += secRow('常识', fmtSec(secs.common));
     html += '</div>';
     if(m.summary) html += '<div style="font-size:13px;color:var(--text-secondary);padding:2px 2px 10px;line-height:1.6;">总结：' + escapeHtml(m.summary).replace(/\n/g, '<br>') + '</div>';
-    html += '<div style="margin-top:6px;"><button class="btn btn-danger btn-sm" onclick="deleteMock(\'' + m.id + '\')">删除</button></div>';
+    html += '<div style="margin-top:6px;display:flex;gap:8px;"><button class="btn btn-outline btn-sm" onclick="editMock(\'' + m.id + '\')">编辑</button><button class="btn btn-danger btn-sm" onclick="deleteMock(\'' + m.id + '\')">删除</button></div>';
     html += '</div>';
   });
   html += '</div>';
   listEl.innerHTML = html;
+}
+function editMock(id){
+  var list = loadData(KEYS.mock_exams);
+  var m = list.find(function(x){ return x.id === id; });
+  if(!m){ showToast('记录不存在'); return; }
+  document.getElementById('mock-edit-id').value = m.id;
+  document.getElementById('mock-name').value = m.name || '';
+  document.getElementById('mock-date').value = m.date || '';
+  document.getElementById('mock-total').value = m.total || '';
+  document.getElementById('mock-question-count').value = m.questionCount || '';
+  document.getElementById('mock-duration').value = m.duration || '';
+  document.getElementById('mock-summary').value = m.summary || '';
+  var setSec = function(code, sec){
+    if(!sec) sec = {};
+    var fracIn = document.getElementById('mock-' + code + '-frac');
+    var scoreIn = document.getElementById('mock-' + code + '-score');
+    if(sec.total > 0 && sec.correct > 0){
+      fracIn.value = sec.correct + '/' + sec.total;
+    } else if(sec.correct > 0){
+      fracIn.value = String(sec.correct);
+    } else {
+      fracIn.value = '';
+    }
+    scoreIn.value = sec.score != null ? sec.score : '';
+  };
+  var secs = m.sections || {};
+  setSec('yy', secs.yy);
+  setSec('data', secs.data);
+  setSec('judge', secs.judge);
+  setSec('politics', secs.politics);
+  setSec('common', secs.common);
+  var jd = m.judgeDetails || {};
+  document.getElementById('mock-judge-fig-score').value = jd.figure && jd.figure.score != null ? jd.figure.score : '';
+  document.getElementById('mock-judge-fig-acc').value = jd.figure && jd.figure.accuracy != null ? jd.figure.accuracy : '';
+  document.getElementById('mock-judge-def-score').value = jd.definition && jd.definition.score != null ? jd.definition.score : '';
+  document.getElementById('mock-judge-def-acc').value = jd.definition && jd.definition.accuracy != null ? jd.definition.accuracy : '';
+  document.getElementById('mock-judge-ana-score').value = jd.analogy && jd.analogy.score != null ? jd.analogy.score : '';
+  document.getElementById('mock-judge-ana-acc').value = jd.analogy && jd.analogy.accuracy != null ? jd.analogy.accuracy : '';
+  document.getElementById('mock-form-title').textContent = '编辑模考';
+  document.getElementById('mock-save-btn').textContent = '更新模考记录';
+  document.getElementById('mock-cancel-btn').style.display = 'inline-block';
+  document.getElementById('page-mock').scrollIntoView({ behavior:'smooth' });
 }
 function toggleMockDetail(id){
   var el = document.getElementById('mock-detail-' + id);
