@@ -1426,41 +1426,48 @@ input[type="file"]{display:none;}
         <input type="number" id="mock-total" placeholder="如：78" min="0" max="100">
       </div>
       <div class="form-group">
-        <label class="form-label">总题量</label>
-        <input type="number" id="mock-question-count" placeholder="如：130" min="0">
-      </div>
-      <div class="form-group">
         <label class="form-label">考试用时（分钟）</label>
         <input type="number" id="mock-duration" placeholder="如：120" min="0">
       </div>
     </div>
 
-    <div style="font-size:13px;color:var(--text-secondary);margin:12px 0 8px;">各模块正确率（填写「对/总」如 <b>18/20</b>，正确率自动换算；得分选填）</div>
+    <div style="font-size:13px;color:var(--text-secondary);margin:12px 0 8px;">各模块正确率（填写「对/总」如 <b>18/20</b>，正确率自动换算；得分、用时选填）</div>
     <div class="form-row">
       <div class="form-group">
         <label class="form-label">言语理解</label>
-        <input type="text" id="mock-yy-frac" placeholder="如 18/20" >
+        <input type="text" id="mock-yy-frac" placeholder="如 18/20">
         <input type="number" id="mock-yy-score" placeholder="得分(选填)" min="0" style="margin-top:6px;">
+        <input type="number" id="mock-yy-time" placeholder="用时(分)" min="0" style="margin-top:6px;">
       </div>
       <div class="form-group">
         <label class="form-label">资料分析</label>
-        <input type="text" id="mock-data-frac" placeholder="如 18/20" >
+        <input type="text" id="mock-data-frac" placeholder="如 18/20">
         <input type="number" id="mock-data-score" placeholder="得分(选填)" min="0" style="margin-top:6px;">
+        <input type="number" id="mock-data-time" placeholder="用时(分)" min="0" style="margin-top:6px;">
       </div>
       <div class="form-group">
         <label class="form-label">判断推理</label>
-        <input type="text" id="mock-judge-frac" placeholder="如 18/20" >
+        <input type="text" id="mock-judge-frac" placeholder="如 18/20">
         <input type="number" id="mock-judge-score" placeholder="得分(选填)" min="0" style="margin-top:6px;">
+        <input type="number" id="mock-judge-time" placeholder="用时(分)" min="0" style="margin-top:6px;">
+      </div>
+      <div class="form-group">
+        <label class="form-label">数量关系</label>
+        <input type="text" id="mock-quant-frac" placeholder="如 18/20">
+        <input type="number" id="mock-quant-score" placeholder="得分(选填)" min="0" style="margin-top:6px;">
+        <input type="number" id="mock-quant-time" placeholder="用时(分)" min="0" style="margin-top:6px;">
       </div>
       <div class="form-group">
         <label class="form-label">政治理论</label>
-        <input type="text" id="mock-politics-frac" placeholder="如 18/20" >
+        <input type="text" id="mock-politics-frac" placeholder="如 18/20">
         <input type="number" id="mock-politics-score" placeholder="得分(选填)" min="0" style="margin-top:6px;">
+        <input type="number" id="mock-politics-time" placeholder="用时(分)" min="0" style="margin-top:6px;">
       </div>
       <div class="form-group">
         <label class="form-label">常识</label>
-        <input type="text" id="mock-common-frac" placeholder="如 18/20" >
+        <input type="text" id="mock-common-frac" placeholder="如 18/20">
         <input type="number" id="mock-common-score" placeholder="得分(选填)" min="0" style="margin-top:6px;">
+        <input type="number" id="mock-common-time" placeholder="用时(分)" min="0" style="margin-top:6px;">
       </div>
     </div>
 
@@ -1471,16 +1478,19 @@ input[type="file"]{display:none;}
           <label class="form-label">图形推理</label>
           <input type="number" id="mock-judge-fig-score" placeholder="得分" min="0">
           <input type="number" id="mock-judge-fig-acc" placeholder="正确率%" min="0" max="100" style="margin-top:6px;">
+          <input type="number" id="mock-judge-fig-time" placeholder="用时(分)" min="0" style="margin-top:6px;">
         </div>
         <div class="form-group">
           <label class="form-label">定义判断</label>
           <input type="number" id="mock-judge-def-score" placeholder="得分" min="0">
           <input type="number" id="mock-judge-def-acc" placeholder="正确率%" min="0" max="100" style="margin-top:6px;">
+          <input type="number" id="mock-judge-def-time" placeholder="用时(分)" min="0" style="margin-top:6px;">
         </div>
         <div class="form-group">
           <label class="form-label">类比推理</label>
           <input type="number" id="mock-judge-ana-score" placeholder="得分" min="0">
           <input type="number" id="mock-judge-ana-acc" placeholder="正确率%" min="0" max="100" style="margin-top:6px;">
+          <input type="number" id="mock-judge-ana-time" placeholder="用时(分)" min="0" style="margin-top:6px;">
         </div>
       </div>
     </div>
@@ -3369,27 +3379,29 @@ function saveMock(){
   var buildSec = function(code){
     var f = parseFrac(getVal('mock-' + code + '-frac'));
     var sc = getVal('mock-' + code + '-score');
+    var tm = getVal('mock-' + code + '-time');
     var score = sc === '' ? null : (parseFloat(sc) || 0);
-    return { correct: f.correct, total: f.total, accuracy: f.accuracy, score: score };
+    var time = tm === '' ? null : (parseFloat(tm) || 0);
+    return { correct: f.correct, total: f.total, accuracy: f.accuracy, score: score, time: time };
   };
   var editId = document.getElementById('mock-edit-id').value;
   var exam = {
     name: name,
     date: document.getElementById('mock-date').value || todayStr(),
     total: getNum('mock-total'),
-    questionCount: getNum('mock-question-count'),
     duration: getNum('mock-duration'),
     sections: {
       yy: buildSec('yy'),
       data: buildSec('data'),
       judge: buildSec('judge'),
+      quant: buildSec('quant'),
       politics: buildSec('politics'),
       common: buildSec('common')
     },
     judgeDetails: {
-      figure: { score: getNum('mock-judge-fig-score'), accuracy: getNum('mock-judge-fig-acc') },
-      definition: { score: getNum('mock-judge-def-score'), accuracy: getNum('mock-judge-def-acc') },
-      analogy: { score: getNum('mock-judge-ana-score'), accuracy: getNum('mock-judge-ana-acc') }
+      figure: { score: getNum('mock-judge-fig-score'), accuracy: getNum('mock-judge-fig-acc'), time: getNum('mock-judge-fig-time') || null },
+      definition: { score: getNum('mock-judge-def-score'), accuracy: getNum('mock-judge-def-acc'), time: getNum('mock-judge-def-time') || null },
+      analogy: { score: getNum('mock-judge-ana-score'), accuracy: getNum('mock-judge-ana-acc'), time: getNum('mock-judge-ana-time') || null }
     },
     summary: document.getElementById('mock-summary').value.trim(),
     lastModified: new Date().toISOString()
@@ -3417,12 +3429,16 @@ function saveMock(){
   renderMock();
 }
 function clearMockForm(){
-  ['mock-edit-id','mock-name','mock-date','mock-total','mock-question-count','mock-duration','mock-summary',
-   'mock-yy-frac','mock-yy-score','mock-data-frac','mock-data-score',
-   'mock-judge-frac','mock-judge-score','mock-politics-frac','mock-politics-score',
-   'mock-common-frac','mock-common-score',
-   'mock-judge-fig-score','mock-judge-fig-acc','mock-judge-def-score','mock-judge-def-acc',
-   'mock-judge-ana-score','mock-judge-ana-acc'].forEach(function(id){ var el = document.getElementById(id); if(el) el.value = ''; });
+  ['mock-edit-id','mock-name','mock-date','mock-total','mock-duration','mock-summary',
+   'mock-yy-frac','mock-yy-score','mock-yy-time',
+   'mock-data-frac','mock-data-score','mock-data-time',
+   'mock-judge-frac','mock-judge-score','mock-judge-time',
+   'mock-quant-frac','mock-quant-score','mock-quant-time',
+   'mock-politics-frac','mock-politics-score','mock-politics-time',
+   'mock-common-frac','mock-common-score','mock-common-time',
+   'mock-judge-fig-score','mock-judge-fig-acc','mock-judge-fig-time',
+   'mock-judge-def-score','mock-judge-def-acc','mock-judge-def-time',
+   'mock-judge-ana-score','mock-judge-ana-acc','mock-judge-ana-time'].forEach(function(id){ var el = document.getElementById(id); if(el) el.value = ''; });
   document.getElementById('mock-form-title').textContent = '新增模考';
   document.getElementById('mock-save-btn').textContent = '保存模考记录';
   document.getElementById('mock-cancel-btn').style.display = 'none';
@@ -3437,30 +3453,42 @@ function renderMock(){
   }
   var ROW = 'display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-bottom:1px solid var(--border);font-size:14px;color:var(--text-primary);';
   var VAL_STYLE = 'font-weight:600;font-size:14px;color:var(--text-primary);';
+  var SUB_ROW = 'display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:1px solid var(--border);font-size:13px;color:var(--text-secondary);background:#f8f9fa;';
   var fmtSec = function(s){
     if(!s) return '—';
     var correct = Number(s.correct) || 0;
     var total = Number(s.total) || 0;
     var accuracy = Number(s.accuracy) || 0;
-    if(total > 0) return '<span style="' + VAL_STYLE + '">【' + correct + '】【' + accuracy + '%】</span>';
-    if(s.score != null && s.score !== '' && Number(s.score) !== 0) return '<span style="' + VAL_STYLE + '">【' + s.score + '分】</span>';
-    if(accuracy > 0) return '<span style="' + VAL_STYLE + '">【' + accuracy + '%】</span>';
-    return '—';
+    var score = (s.score != null && s.score !== '') ? Number(s.score) : 0;
+    var time = (s.time != null && s.time !== '') ? Number(s.time) : 0;
+    var parts = [];
+    if(total > 0) parts.push('【' + correct + '】【' + accuracy + '%】');
+    else if(accuracy > 0) parts.push('【' + accuracy + '%】');
+    if(score > 0) parts.push('【' + score + '分】');
+    if(time > 0) parts.push('【' + time + '分钟】');
+    return parts.length ? '<span style="' + VAL_STYLE + '">' + parts.join('') + '</span>' : '—';
+  };
+  var fmtSub = function(s){
+    if(!s) return '—';
+    var score = (s.score != null && s.score !== '') ? Number(s.score) : 0;
+    var accuracy = Number(s.accuracy) || 0;
+    var time = (s.time != null && s.time !== '') ? Number(s.time) : 0;
+    var parts = [];
+    if(score > 0) parts.push('【' + score + '分】');
+    if(accuracy > 0) parts.push('【' + accuracy + '%】');
+    if(time > 0) parts.push('【' + time + '分钟】');
+    return parts.length ? '<span style="' + VAL_STYLE + '">' + parts.join('') + '</span>' : '—';
   };
   var secRow = function(label, valHtml){
     return '<div style="' + ROW + '"><span>' + label + '</span><strong style="' + VAL_STYLE + '">' + valHtml + '</strong></div>';
+  };
+  var subRow = function(label, valHtml){
+    return '<div style="' + SUB_ROW + '"><span>' + label + '</span><strong style="' + VAL_STYLE + '">' + valHtml + '</strong></div>';
   };
   var html = '<div class="mock-list">';
   list.forEach(function(m){
     var secs = m.sections || {};
     var jd = m.judgeDetails || {};
-    // 若未填总题量，自动按各模块 total 求和
-    var questionCount = Number(m.questionCount) || 0;
-    if(questionCount === 0){
-      ['yy','data','judge','politics','common'].forEach(function(code){
-        questionCount += Number(secs[code] && secs[code].total) || 0;
-      });
-    }
     html += '<div class="mock-card">';
     html += '<div class="mock-header"><div><strong>' + escapeHtml(m.name) + '</strong><span class="mock-date">' + escapeHtml(m.date || '') + '</span></div><div class="mock-total">' + (m.total || 0) + '分</div></div>';
     html += '<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:10px;">';
@@ -3468,15 +3496,13 @@ function renderMock(){
     html += secRow('资料分析', fmtSec(secs.data));
     html += '<div style="' + ROW + ' cursor:pointer;" onclick="toggleMockDetail(\'' + m.id + '\')"><span>判断推理</span><strong style="' + VAL_STYLE + '">' + fmtSec(secs.judge) + ' <span style="font-size:12px;color:var(--accent);">▼</span></strong></div>';
     html += '<div class="mock-judge-detail" id="mock-detail-' + m.id + '" style="display:none;">';
-    html += '<div class="mock-detail-row"><span>图形推理</span><strong>' + (jd.figure && jd.figure.score || 0) + '</strong><small>' + (jd.figure && jd.figure.accuracy || 0) + '%</small></div>';
-    html += '<div class="mock-detail-row"><span>定义判断</span><strong>' + (jd.definition && jd.definition.score || 0) + '</strong><small>' + (jd.definition && jd.definition.accuracy || 0) + '%</small></div>';
-    html += '<div class="mock-detail-row"><span>类比推理</span><strong>' + (jd.analogy && jd.analogy.score || 0) + '</strong><small>' + (jd.analogy && jd.analogy.accuracy || 0) + '%</small></div>';
+    html += subRow('图形推理', fmtSub(jd.figure));
+    html += subRow('定义判断', fmtSub(jd.definition));
+    html += subRow('类比推理', fmtSub(jd.analogy));
     html += '</div>';
-    // 数量 & 时间 行
-    var countText = questionCount > 0 ? '<span style="' + VAL_STYLE + '">【' + questionCount + '题】</span>' : '—';
-    html += secRow('数量', countText);
+    html += secRow('数量关系', fmtSec(secs.quant));
     var durationText = Number(m.duration) > 0 ? '<span style="' + VAL_STYLE + '">【' + m.duration + '分钟】</span>' : '—';
-    html += secRow('时间', durationText);
+    html += secRow('总用时', durationText);
     html += secRow('政治理论', fmtSec(secs.politics));
     html += secRow('常识', fmtSec(secs.common));
     html += '</div>';
@@ -3495,13 +3521,13 @@ function editMock(id){
   document.getElementById('mock-name').value = m.name || '';
   document.getElementById('mock-date').value = m.date || '';
   document.getElementById('mock-total').value = m.total || '';
-  document.getElementById('mock-question-count').value = m.questionCount || '';
   document.getElementById('mock-duration').value = m.duration || '';
   document.getElementById('mock-summary').value = m.summary || '';
   var setSec = function(code, sec){
     if(!sec) sec = {};
     var fracIn = document.getElementById('mock-' + code + '-frac');
     var scoreIn = document.getElementById('mock-' + code + '-score');
+    var timeIn = document.getElementById('mock-' + code + '-time');
     if(sec.total > 0 && sec.correct > 0){
       fracIn.value = sec.correct + '/' + sec.total;
     } else if(sec.correct > 0){
@@ -3510,20 +3536,25 @@ function editMock(id){
       fracIn.value = '';
     }
     scoreIn.value = sec.score != null ? sec.score : '';
+    timeIn.value = sec.time != null ? sec.time : '';
+  };
+  var setSub = function(code, sub){
+    if(!sub) sub = {};
+    document.getElementById('mock-judge-' + code + '-score').value = sub.score != null ? sub.score : '';
+    document.getElementById('mock-judge-' + code + '-acc').value = sub.accuracy != null ? sub.accuracy : '';
+    document.getElementById('mock-judge-' + code + '-time').value = sub.time != null ? sub.time : '';
   };
   var secs = m.sections || {};
   setSec('yy', secs.yy);
   setSec('data', secs.data);
   setSec('judge', secs.judge);
+  setSec('quant', secs.quant);
   setSec('politics', secs.politics);
   setSec('common', secs.common);
   var jd = m.judgeDetails || {};
-  document.getElementById('mock-judge-fig-score').value = jd.figure && jd.figure.score != null ? jd.figure.score : '';
-  document.getElementById('mock-judge-fig-acc').value = jd.figure && jd.figure.accuracy != null ? jd.figure.accuracy : '';
-  document.getElementById('mock-judge-def-score').value = jd.definition && jd.definition.score != null ? jd.definition.score : '';
-  document.getElementById('mock-judge-def-acc').value = jd.definition && jd.definition.accuracy != null ? jd.definition.accuracy : '';
-  document.getElementById('mock-judge-ana-score').value = jd.analogy && jd.analogy.score != null ? jd.analogy.score : '';
-  document.getElementById('mock-judge-ana-acc').value = jd.analogy && jd.analogy.accuracy != null ? jd.analogy.accuracy : '';
+  setSub('fig', jd.figure);
+  setSub('def', jd.definition);
+  setSub('ana', jd.analogy);
   document.getElementById('mock-form-title').textContent = '编辑模考';
   document.getElementById('mock-save-btn').textContent = '更新模考记录';
   document.getElementById('mock-cancel-btn').style.display = 'inline-block';
