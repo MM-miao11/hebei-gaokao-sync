@@ -22,6 +22,16 @@ const defaultData = {
   errors: [],
   reviews: [],
   practice: [],
+  // 资料分析
+  data_errors: [],
+  data_notes: [],
+  data_reviews: [],
+  // 判断推理
+  judge_errors: [],
+  judge_notes: [],
+  judge_reviews: [],
+  // 模考记录
+  mock_exams: [],
   lastModified: new Date().toISOString(),
   device: 'init'
 };
@@ -145,6 +155,13 @@ app.post('/api/data', (req, res) => {
       errors: incoming.errors || [],
       reviews: incoming.reviews || [],
       practice: incoming.practice || [],
+      data_errors: incoming.data_errors || [],
+      data_notes: incoming.data_notes || [],
+      data_reviews: incoming.data_reviews || [],
+      judge_errors: incoming.judge_errors || [],
+      judge_notes: incoming.judge_notes || [],
+      judge_reviews: incoming.judge_reviews || [],
+      mock_exams: incoming.mock_exams || [],
       lastModified: new Date().toISOString(),
       device: incoming.device || 'unknown'
     };
@@ -156,6 +173,13 @@ app.post('/api/data', (req, res) => {
       errors: mergeById(current.errors, incoming.errors),
       reviews: mergeById(current.reviews, incoming.reviews),
       practice: mergeById(current.practice, incoming.practice),
+      data_errors: mergeById(current.data_errors, incoming.data_errors),
+      data_notes: mergeById(current.data_notes, incoming.data_notes),
+      data_reviews: mergeById(current.data_reviews, incoming.data_reviews),
+      judge_errors: mergeById(current.judge_errors, incoming.judge_errors),
+      judge_notes: mergeById(current.judge_notes, incoming.judge_notes),
+      judge_reviews: mergeById(current.judge_reviews, incoming.judge_reviews),
+      mock_exams: mergeById(current.mock_exams, incoming.mock_exams),
       lastModified: new Date().toISOString(),
       device: incoming.device || current.device || 'unknown'
     };

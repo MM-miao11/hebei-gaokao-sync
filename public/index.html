@@ -94,6 +94,40 @@ input[type="file"]{display:none;}
   margin-left:auto;background:var(--danger);color:#fff;
   font-size:11px;padding:1px 7px;border-radius:10px;font-weight:600;
 }
+/* 分组折叠导航 */
+.nav-group{}
+.nav-group-header{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 20px;color:var(--sidebar-text);
+  font-size:14px;cursor:pointer;transition:all .2s;
+  border-left:3px solid transparent;position:relative;
+}
+.nav-group-header:hover{background:var(--sidebar-hover);color:#d0d0e0;}
+.nav-group-header.active{
+  background:rgba(79,125,243,0.12);color:var(--sidebar-text-active);
+  border-left-color:var(--sidebar-active);
+}
+.nav-group-header svg{width:20px;height:20px;flex-shrink:0;}
+.nav-group-arrow{
+  margin-left:auto;font-size:11px;transition:transform .2s;
+}
+.nav-group.open .nav-group-arrow{transform:rotate(90deg);}
+.nav-group-items{
+  max-height:0;overflow:hidden;transition:max-height .25s ease;
+}
+.nav-group.open .nav-group-items{max-height:500px;}
+.nav-subitem{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 20px 10px 56px;color:var(--sidebar-text);
+  font-size:13px;cursor:pointer;transition:all .2s;
+  border-left:3px solid transparent;
+}
+.nav-subitem:hover{background:var(--sidebar-hover);color:#d0d0e0;}
+.nav-subitem.active{
+  background:rgba(79,125,243,0.08);color:var(--sidebar-text-active);
+  border-left-color:var(--sidebar-active);
+}
+.nav-subitem svg{width:16px;height:16px;flex-shrink:0;opacity:.8;}
 .sidebar-footer{
   padding:16px 20px;border-top:1px solid rgba(255,255,255,0.08);
   display:flex;gap:8px;
@@ -533,6 +567,31 @@ input[type="file"]{display:none;}
   .page-title{font-size:18px;}
   .word-card .word-text{font-size:17px;}
 }
+
+/* ========== 模考记录样式 ========== */
+.mock-list{display:flex;flex-direction:column;gap:14px;}
+.mock-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow-sm);}
+.mock-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.mock-header strong{font-size:16px;color:var(--text-primary);}
+.mock-date{font-size:12px;color:var(--text-tertiary);margin-left:10px;}
+.mock-total{font-size:22px;font-weight:800;color:var(--accent);}
+.mock-sections{display:grid;grid-template-columns:repeat(3, 1fr);gap:10px;margin-bottom:10px;}
+.mock-sec{background:var(--bg-secondary);border-radius:var(--radius-sm);padding:10px;text-align:center;cursor:pointer;transition:background .2s;}
+.mock-sec:hover{background:#e8eefc;}
+.mock-sec span{display:block;font-size:11px;color:var(--text-tertiary);margin-bottom:4px;}
+.mock-sec strong{display:block;font-size:18px;color:var(--text-primary);}
+.mock-sec small{display:block;font-size:11px;color:var(--success);}
+.mock-sec-judge{background:rgba(79,125,243,0.08);border:1px solid rgba(79,125,243,0.15);}
+.mock-judge-detail{background:var(--bg-secondary);border-radius:var(--radius-sm);padding:12px;margin-top:8px;}
+.mock-detail-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px dashed var(--border);}
+.mock-detail-row:last-child{border-bottom:none;}
+.mock-detail-row span{font-size:13px;color:var(--text-secondary);}
+.mock-detail-row strong{font-size:15px;color:var(--text-primary);}
+.mock-detail-row small{font-size:12px;color:var(--success);margin-left:6px;}
+
+/* ========== 模块页面通用样式补充 ========== */
+.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px;}
+.toolbar .search-input{flex:1;min-width:180px;}
 </style>
 </head>
 <body>
@@ -559,34 +618,88 @@ input[type="file"]{display:none;}
     </div>
     <div class="sidebar-sub">河北公务员考试专属</div>
   </div>
-  <nav class="nav-list">
+    <nav class="nav-list">
     <div class="nav-item active" data-page="dashboard" onclick="switchPage(&#39;dashboard&#39;)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect></svg>
       <span>工作台首页</span>
     </div>
-    <div class="nav-item" data-page="practice" onclick="switchPage(&#39;practice&#39;)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-      <span>言语题库刷题</span>
+
+    <!-- 资料分析 -->
+    <div class="nav-group" id="nav-group-data">
+      <div class="nav-group-header" onclick="toggleNavGroup(&#39;data&#39;)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10"></path><path d="M12 20V4"></path><path d="M6 20v-6"></path></svg>
+        <span>资料分析</span>
+        <span class="nav-group-arrow">▶</span>
+      </div>
+      <div class="nav-group-items">
+        <div class="nav-subitem" data-page="data-errorbook" onclick="switchPage(&#39;data-errorbook&#39;)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+          <span>错题</span>
+        </div>
+        <div class="nav-subitem" data-page="data-notes" onclick="switchPage(&#39;data-notes&#39;)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+          <span>知识积累库</span>
+        </div>
+        <div class="nav-subitem" data-page="data-reviews" onclick="switchPage(&#39;data-reviews&#39;)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11H3v10h6V11zM9 3H3v6h6V3zM21 3h-6v18h6V3zM21 11h-6v10h6v-10z"></path></svg>
+          <span>复盘笔记</span>
+        </div>
+      </div>
     </div>
-    <div class="nav-item" data-page="photo" onclick="switchPage(&#39;photo&#39;)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
-      <span>拍照错题录入</span>
+
+    <!-- 判断推理 -->
+    <div class="nav-group" id="nav-group-judge">
+      <div class="nav-group-header" onclick="toggleNavGroup(&#39;judge&#39;)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+        <span>判断推理</span>
+        <span class="nav-group-arrow">▶</span>
+      </div>
+      <div class="nav-group-items">
+        <div class="nav-subitem" data-page="judge-errorbook" onclick="switchPage(&#39;judge-errorbook&#39;)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+          <span>错题</span>
+        </div>
+        <div class="nav-subitem" data-page="judge-notes" onclick="switchPage(&#39;judge-notes&#39;)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+          <span>知识积累库</span>
+        </div>
+        <div class="nav-subitem" data-page="judge-reviews" onclick="switchPage(&#39;judge-reviews&#39;)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11H3v10h6V11zM9 3H3v6h6V3zM21 3h-6v18h6V3zM21 11h-6v10h6v-10z"></path></svg>
+          <span>复盘笔记</span>
+        </div>
+      </div>
     </div>
-    <div class="nav-item" data-page="errorbook" onclick="switchPage(&#39;errorbook&#39;)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
-      <span>错题本管理</span>
-      <span class="nav-badge" id="nav-error-count" style="display:none">0</span>
+
+    <!-- 言语理解 -->
+    <div class="nav-group open" id="nav-group-yy">
+      <div class="nav-group-header" onclick="toggleNavGroup(&#39;yy&#39;)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+        <span>言语理解</span>
+        <span class="nav-group-arrow">▶</span>
+      </div>
+      <div class="nav-group-items">
+        <div class="nav-subitem" data-page="photo" onclick="switchPage(&#39;photo&#39;)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+          <span>拍照错题录入</span>
+        </div>
+        <div class="nav-subitem" data-page="errorbook" onclick="switchPage(&#39;errorbook&#39;)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+          <span>错题本管理</span>
+          <span class="nav-badge" id="nav-error-count" style="display:none">0</span>
+        </div>
+        <div class="nav-subitem" data-page="vocabulary" onclick="switchPage(&#39;vocabulary&#39;)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+          <span>词语积累库</span>
+        </div>
+      </div>
     </div>
-    <div class="nav-item" data-page="vocabulary" onclick="switchPage(&#39;vocabulary&#39;)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-      <span>词语积累库</span>
-    </div>
-    <div class="nav-item" data-page="review" onclick="switchPage(&#39;review&#39;)">
+
+    <div class="nav-item" data-page="mock" onclick="switchPage(&#39;mock&#39;)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11H3v10h6V11zM9 3H3v6h6V3zM21 3h-6v18h6V3zM21 11h-6v10h6v-10z"></path></svg>
-      <span>备考复盘记录</span>
+      <span>模考记录</span>
     </div>
     <div class="nav-item" data-page="settings" onclick="switchPage(&#39;settings&#39;)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l-.06-.06a1.65 1.65 0 0 0-.33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
       <span>工作台设置</span>
     </div>
   </nav>
@@ -1197,6 +1310,215 @@ input[type="file"]{display:none;}
   </div>
 </div>
 
+
+<!-- ==================== 资料分析 - 错题 ==================== -->
+<div class="page" id="page-data-errorbook">
+  <div class="page-header">
+    <div class="page-title">资料分析 · 错题</div>
+    <div class="page-desc">记录资料分析错题，支持筛选与复盘</div>
+  </div>
+  <div class="card">
+    <div class="toolbar">
+      <input type="text" id="data-error-search" class="search-input" placeholder="搜索错题内容..." oninput="renderModuleErrors('data')">
+      <select id="data-error-type" onchange="renderModuleErrors('data')">
+        <option value="">全部类型</option>
+        <option value="计算错误">计算错误</option>
+        <option value="公式不熟">公式不熟</option>
+        <option value="审题失误">审题失误</option>
+        <option value="时间不够">时间不够</option>
+        <option value="其他">其他</option>
+      </select>
+      <button class="btn btn-primary" onclick="openModuleErrorForm('data')">+ 新增错题</button>
+    </div>
+    <div id="data-error-list"></div>
+  </div>
+</div>
+
+<!-- ==================== 资料分析 - 知识积累库 ==================== -->
+<div class="page" id="page-data-notes">
+  <div class="page-header">
+    <div class="page-title">资料分析 · 知识积累库</div>
+    <div class="page-desc">资料分析常用公式、速算技巧、考点归纳</div>
+  </div>
+  <div class="card">
+    <div class="form-group">
+      <label class="form-label">新增知识点</label>
+      <input type="text" id="data-note-title" placeholder="标题，如：增长率公式">
+      <textarea id="data-note-content" rows="3" placeholder="内容详情..." style="margin-top:8px;"></textarea>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="saveModuleNote('data')">保存知识点</button>
+    </div>
+  </div>
+  <div class="card" style="margin-top:16px;">
+    <div class="card-title">知识列表</div>
+    <div id="data-note-list"></div>
+  </div>
+</div>
+
+<!-- ==================== 资料分析 - 复盘笔记 ==================== -->
+<div class="page" id="page-data-reviews">
+  <div class="page-header">
+    <div class="page-title">资料分析 · 复盘笔记</div>
+    <div class="page-desc">资料分析阶段性复盘总结</div>
+  </div>
+  <div class="card">
+    <div class="form-group">
+      <label class="form-label">新增复盘</label>
+      <input type="date" id="data-review-date" style="margin-bottom:8px;">
+      <textarea id="data-review-content" rows="4" placeholder="本次复盘内容..."></textarea>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="saveModuleReview('data')">保存复盘</button>
+    </div>
+  </div>
+  <div class="card" style="margin-top:16px;">
+    <div class="card-title">复盘记录</div>
+    <div id="data-review-list"></div>
+  </div>
+</div>
+
+<!-- ==================== 判断推理 - 错题 ==================== -->
+<div class="page" id="page-judge-errorbook">
+  <div class="page-header">
+    <div class="page-title">判断推理 · 错题</div>
+    <div class="page-desc">记录判断推理错题，支持筛选与复盘</div>
+  </div>
+  <div class="card">
+    <div class="toolbar">
+      <input type="text" id="judge-error-search" class="search-input" placeholder="搜索错题内容..." oninput="renderModuleErrors('judge')">
+      <select id="judge-error-type" onchange="renderModuleErrors('judge')">
+        <option value="">全部类型</option>
+        <option value="图形推理">图形推理</option>
+        <option value="定义判断">定义判断</option>
+        <option value="类比推理">类比推理</option>
+        <option value="逻辑判断">逻辑判断</option>
+      </select>
+      <button class="btn btn-primary" onclick="openModuleErrorForm('judge')">+ 新增错题</button>
+    </div>
+    <div id="judge-error-list"></div>
+  </div>
+</div>
+
+<!-- ==================== 判断推理 - 知识积累库 ==================== -->
+<div class="page" id="page-judge-notes">
+  <div class="page-header">
+    <div class="page-title">判断推理 · 知识积累库</div>
+    <div class="page-desc">判断推理常用规律、技巧、考点归纳</div>
+  </div>
+  <div class="card">
+    <div class="form-group">
+      <label class="form-label">新增知识点</label>
+      <input type="text" id="judge-note-title" placeholder="标题，如：图形推理-位置规律">
+      <textarea id="judge-note-content" rows="3" placeholder="内容详情..." style="margin-top:8px;"></textarea>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="saveModuleNote('judge')">保存知识点</button>
+    </div>
+  </div>
+  <div class="card" style="margin-top:16px;">
+    <div class="card-title">知识列表</div>
+    <div id="judge-note-list"></div>
+  </div>
+</div>
+
+<!-- ==================== 判断推理 - 复盘笔记 ==================== -->
+<div class="page" id="page-judge-reviews">
+  <div class="page-header">
+    <div class="page-title">判断推理 · 复盘笔记</div>
+    <div class="page-desc">判断推理阶段性复盘总结</div>
+  </div>
+  <div class="card">
+    <div class="form-group">
+      <label class="form-label">新增复盘</label>
+      <input type="date" id="judge-review-date" style="margin-bottom:8px;">
+      <textarea id="judge-review-content" rows="4" placeholder="本次复盘内容..."></textarea>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="saveModuleReview('judge')">保存复盘</button>
+    </div>
+  </div>
+  <div class="card" style="margin-top:16px;">
+    <div class="card-title">复盘记录</div>
+    <div id="judge-review-list"></div>
+  </div>
+</div>
+
+<!-- ==================== 模考记录 ==================== -->
+<div class="page" id="page-mock">
+  <div class="page-header">
+    <div class="page-title">模考记录</div>
+    <div class="page-desc">记录每次模考总分、各模块得分与正确率</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">新增模考</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">模考名称 <span class="required">*</span></label>
+        <input type="text" id="mock-name" placeholder="如：2026国考行测模考一">
+      </div>
+      <div class="form-group">
+        <label class="form-label">考试日期</label>
+        <input type="date" id="mock-date">
+      </div>
+      <div class="form-group">
+        <label class="form-label">总分</label>
+        <input type="number" id="mock-total" placeholder="如：78" min="0" max="100">
+      </div>
+    </div>
+
+    <div style="font-size:13px;color:var(--text-secondary);margin:12px 0 8px;">各模块得分与正确率</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">言语理解</label>
+        <input type="number" id="mock-yy-score" placeholder="得分" min="0">
+        <input type="number" id="mock-yy-acc" placeholder="正确率%" min="0" max="100" style="margin-top:6px;">
+      </div>
+      <div class="form-group">
+        <label class="form-label">资料分析</label>
+        <input type="number" id="mock-data-score" placeholder="得分" min="0">
+        <input type="number" id="mock-data-acc" placeholder="正确率%" min="0" max="100" style="margin-top:6px;">
+      </div>
+      <div class="form-group">
+        <label class="form-label">判断推理</label>
+        <input type="number" id="mock-judge-score" placeholder="总得分" min="0">
+        <input type="number" id="mock-judge-acc" placeholder="总正确率%" min="0" max="100" style="margin-top:6px;">
+      </div>
+    </div>
+
+    <div class="card" style="background:rgba(79,125,243,0.04);border:1px dashed rgba(79,125,243,0.25);">
+      <div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px;">判断推理细分（选填，点击可在记录中展开）</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">图形推理</label>
+          <input type="number" id="mock-judge-fig-score" placeholder="得分" min="0">
+          <input type="number" id="mock-judge-fig-acc" placeholder="正确率%" min="0" max="100" style="margin-top:6px;">
+        </div>
+        <div class="form-group">
+          <label class="form-label">定义判断</label>
+          <input type="number" id="mock-judge-def-score" placeholder="得分" min="0">
+          <input type="number" id="mock-judge-def-acc" placeholder="正确率%" min="0" max="100" style="margin-top:6px;">
+        </div>
+        <div class="form-group">
+          <label class="form-label">类比推理</label>
+          <input type="number" id="mock-judge-ana-score" placeholder="得分" min="0">
+          <input type="number" id="mock-judge-ana-acc" placeholder="正确率%" min="0" max="100" style="margin-top:6px;">
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="saveMock()">保存模考记录</button>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px;">
+    <div class="card-title">历史模考</div>
+    <div id="mock-list"></div>
+  </div>
+</div>
+
 </main>
 </div>
 
@@ -1249,9 +1571,21 @@ input[type="file"]{display:none;}
 
 var STORAGE_PREFIX = 'wb_hb_yy_';
 var KEYS = {
+  // 言语理解
   words: STORAGE_PREFIX + 'words',
   errors: STORAGE_PREFIX + 'errors',
   reviews: STORAGE_PREFIX + 'reviews',
+  // 资料分析
+  data_errors: STORAGE_PREFIX + 'data_errors',
+  data_notes: STORAGE_PREFIX + 'data_notes',
+  data_reviews: STORAGE_PREFIX + 'data_reviews',
+  // 判断推理
+  judge_errors: STORAGE_PREFIX + 'judge_errors',
+  judge_notes: STORAGE_PREFIX + 'judge_notes',
+  judge_reviews: STORAGE_PREFIX + 'judge_reviews',
+  // 模考记录
+  mock_exams: STORAGE_PREFIX + 'mock_exams',
+  // 其他
   practice: STORAGE_PREFIX + 'practice',
   settings: STORAGE_PREFIX + 'settings',
   initialized: STORAGE_PREFIX + 'initialized'
@@ -1380,18 +1714,46 @@ function initExampleData(){
 /* ========== 页面切换 ========== */
 function switchPage(pageId){
   document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
-  document.getElementById('page-' + pageId).classList.add('active');
+  var pageEl = document.getElementById('page-' + pageId);
+  if(pageEl) pageEl.classList.add('active');
+
+  /* 高亮导航 */
   document.querySelectorAll('.nav-item').forEach(function(n){ n.classList.remove('active'); });
+  document.querySelectorAll('.nav-subitem').forEach(function(n){ n.classList.remove('active'); });
   var navItem = document.querySelector('.nav-item[data-page="' + pageId + '"]');
+  var subItem = document.querySelector('.nav-subitem[data-page="' + pageId + '"]');
   if(navItem) navItem.classList.add('active');
+  if(subItem){
+    subItem.classList.add('active');
+    /* 自动展开所属分组 */
+    var group = subItem.closest('.nav-group');
+    if(group) group.classList.add('open');
+  }
+
   if(window.innerWidth <= 768) closeSidebar();
   window.scrollTo(0,0);
+
+  /* 渲染对应页面 */
   if(pageId === 'dashboard') renderDashboard();
   if(pageId === 'practice') renderPractice();
   if(pageId === 'errorbook') renderErrors();
   if(pageId === 'vocabulary') renderWords();
   if(pageId === 'review') renderReviews();
   if(pageId === 'settings') renderSettings();
+  if(pageId === 'mock') renderMock();
+  /* 新模块页面 */
+  if(pageId === 'data-errorbook') renderModuleErrors('data');
+  if(pageId === 'data-notes') renderModuleNotes('data');
+  if(pageId === 'data-reviews') renderModuleReviews('data');
+  if(pageId === 'judge-errorbook') renderModuleErrors('judge');
+  if(pageId === 'judge-notes') renderModuleNotes('judge');
+  if(pageId === 'judge-reviews') renderModuleReviews('judge');
+}
+
+/* 展开/收起分组 */
+function toggleNavGroup(group){
+  var el = document.getElementById('nav-group-' + group);
+  if(el) el.classList.toggle('open');
 }
 
 function toggleSidebar(){
@@ -2539,12 +2901,25 @@ function renderSettings(){
   var errors = loadActive(KEYS.errors);
   var reviews = loadActive(KEYS.reviews);
   var practice = loadActive(KEYS.practice);
-  var total = words.length + errors.length + reviews.length + practice.length;
+  var data_errors = loadActive(KEYS.data_errors);
+  var data_notes = loadActive(KEYS.data_notes);
+  var data_reviews = loadActive(KEYS.data_reviews);
+  var judge_errors = loadActive(KEYS.judge_errors);
+  var judge_notes = loadActive(KEYS.judge_notes);
+  var judge_reviews = loadActive(KEYS.judge_reviews);
+  var mock_exams = loadActive(KEYS.mock_exams);
+  var total = words.length + errors.length + reviews.length + practice.length +
+              data_errors.length + data_notes.length + data_reviews.length +
+              judge_errors.length + judge_notes.length + judge_reviews.length +
+              mock_exams.length;
 
-  var html = '词语积累：<strong>' + words.length + '</strong> 条<br>';
-  html += '错题记录：<strong>' + errors.length + '</strong> 条<br>';
-  html += '复盘记录：<strong>' + reviews.length + '</strong> 条<br>';
-  html += '刷题记录：<strong>' + practice.length + '</strong> 条<br>';
+  var html = '【言语理解】<br>';
+  html += '词语积累：<strong>' + words.length + '</strong> 条 · 错题：<strong>' + errors.length + '</strong> 条 · 复盘：<strong>' + reviews.length + '</strong> 条<br><br>';
+  html += '【资料分析】<br>';
+  html += '错题：<strong>' + data_errors.length + '</strong> 条 · 知识点：<strong>' + data_notes.length + '</strong> 条 · 复盘：<strong>' + data_reviews.length + '</strong> 条<br><br>';
+  html += '【判断推理】<br>';
+  html += '错题：<strong>' + judge_errors.length + '</strong> 条 · 知识点：<strong>' + judge_notes.length + '</strong> 条 · 复盘：<strong>' + judge_reviews.length + '</strong> 条<br><br>';
+  html += '【模考记录】<strong>' + mock_exams.length + '</strong> 条 · 刷题记录：<strong>' + practice.length + '</strong> 条<br><br>';
   html += '合计：<strong>' + total + '</strong> 条数据';
   document.getElementById('data-counts').innerHTML = html;
 
@@ -2597,13 +2972,20 @@ function exportData(){
     words: loadActive(KEYS.words),
     errors: loadActive(KEYS.errors),
     reviews: loadActive(KEYS.reviews),
-    practice: loadActive(KEYS.practice)
+    practice: loadActive(KEYS.practice),
+    data_errors: loadActive(KEYS.data_errors),
+    data_notes: loadActive(KEYS.data_notes),
+    data_reviews: loadActive(KEYS.data_reviews),
+    judge_errors: loadActive(KEYS.judge_errors),
+    judge_notes: loadActive(KEYS.judge_notes),
+    judge_reviews: loadActive(KEYS.judge_reviews),
+    mock_exams: loadActive(KEYS.mock_exams)
   };
   var blob = new Blob([JSON.stringify(data, null, 2)], { type:'application/json' });
   var url = URL.createObjectURL(blob);
   var a = document.createElement('a');
   a.href = url;
-  a.download = '河北公考言语备考_备份_' + todayStr() + '.json';
+  a.download = '河北公考备考台_备份_' + todayStr() + '.json';
   a.click();
   URL.revokeObjectURL(url);
   showToast('备份文件已导出');
@@ -2621,6 +3003,13 @@ document.getElementById('import-file').addEventListener('change', function(e){
         if(data.errors) saveData(KEYS.errors, data.errors);
         if(data.reviews) saveData(KEYS.reviews, data.reviews);
         if(data.practice) saveData(KEYS.practice, data.practice);
+        if(data.data_errors) saveData(KEYS.data_errors, data.data_errors);
+        if(data.data_notes) saveData(KEYS.data_notes, data.data_notes);
+        if(data.data_reviews) saveData(KEYS.data_reviews, data.data_reviews);
+        if(data.judge_errors) saveData(KEYS.judge_errors, data.judge_errors);
+        if(data.judge_notes) saveData(KEYS.judge_notes, data.judge_notes);
+        if(data.judge_reviews) saveData(KEYS.judge_reviews, data.judge_reviews);
+        if(data.mock_exams) saveData(KEYS.mock_exams, data.mock_exams);
         localStorage.setItem(KEYS.initialized, '1');
         showToast('数据导入成功');
         renderSettings();
@@ -2669,6 +3058,13 @@ function clearExamples(){
     saveData(KEYS.errors, []);
     saveData(KEYS.reviews, []);
     saveData(KEYS.practice, []);
+    saveData(KEYS.data_errors, []);
+    saveData(KEYS.data_notes, []);
+    saveData(KEYS.data_reviews, []);
+    saveData(KEYS.judge_errors, []);
+    saveData(KEYS.judge_notes, []);
+    saveData(KEYS.judge_reviews, []);
+    saveData(KEYS.mock_exams, []);
     localStorage.setItem(KEYS.initialized, '1');
     showToast('示例数据已清空');
     renderSettings();
@@ -2713,6 +3109,247 @@ function escapeHtml(str){
 initExampleData();
 document.getElementById('review-date').value = todayStr();
 renderDashboard();
+
+
+/* ========== 新模块：错题/知识库/复盘（资料分析、判断推理共用） ========== */
+function moduleKey(module, type){
+  if(module === 'data'){
+    if(type === 'errors') return KEYS.data_errors;
+    if(type === 'notes') return KEYS.data_notes;
+    if(type === 'reviews') return KEYS.data_reviews;
+  }
+  if(module === 'judge'){
+    if(type === 'errors') return KEYS.judge_errors;
+    if(type === 'notes') return KEYS.judge_notes;
+    if(type === 'reviews') return KEYS.judge_reviews;
+  }
+  return null;
+}
+function moduleTitle(module){
+  return module === 'data' ? '资料分析' : '判断推理';
+}
+
+/* ---------- 错题 ---------- */
+function openModuleErrorForm(module){
+  var title = prompt('请输入' + moduleTitle(module) + '错题内容（简要题干）：');
+  if(!title) return;
+  var type = prompt('错题类型（可直接回车跳过）：', module === 'data' ? '计算错误' : '图形推理');
+  var reason = prompt('错因/解析（可直接回车跳过）：');
+  var list = loadData(moduleKey(module, 'errors')) || [];
+  list.unshift({
+    id: uid(),
+    question: title,
+    type: type || '',
+    errorReason: reason || '',
+    createdAt: new Date().toISOString(),
+    lastModified: new Date().toISOString()
+  });
+  saveData(moduleKey(module, 'errors'), list);
+  renderModuleErrors(module);
+  showToast('已保存' + moduleTitle(module) + '错题');
+}
+function renderModuleErrors(module){
+  var key = moduleKey(module, 'errors');
+  var listEl = document.getElementById(module + '-error-list');
+  if(!listEl) return;
+  var search = (document.getElementById(module + '-error-search') || {}).value || '';
+  var typeFilter = (document.getElementById(module + '-error-type') || {}).value || '';
+  var list = loadActive(key);
+  if(search){
+    list = list.filter(function(x){ return (x.question || '').indexOf(search) !== -1; });
+  }
+  if(typeFilter){
+    list = list.filter(function(x){ return x.type === typeFilter; });
+  }
+  if(list.length === 0){
+    listEl.innerHTML = '<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><p>暂无错题记录</p><button class="btn btn-primary" onclick="openModuleErrorForm(\'' + module + '\')">新增错题</button></div>';
+    return;
+  }
+  var html = '<div class="error-list">';
+  list.forEach(function(e){
+    html += '<div class="error-card">';
+    html += '<div class="error-header"><span class="error-type">' + escapeHtml(e.type || '未分类') + '</span><span class="error-date">' + (e.createdAt ? e.createdAt.slice(0,10) : '') + '</span></div>';
+    html += '<div class="error-question">' + escapeHtml(e.question || '') + '</div>';
+    if(e.errorReason) html += '<div class="error-reason"><strong>错因：</strong>' + escapeHtml(e.errorReason) + '</div>';
+    html += '<div class="error-actions"><button class="btn btn-danger btn-sm" onclick="deleteModuleError(\'' + module + '\', \'' + e.id + '\')">删除</button></div>';
+    html += '</div>';
+  });
+  html += '</div>';
+  listEl.innerHTML = html;
+}
+function deleteModuleError(module, id){
+  showConfirm('删除错题', '确定删除这条错题吗？', function(){
+    var key = moduleKey(module, 'errors');
+    var list = loadData(key).map(function(x){ return x.id === id ? Object.assign({}, x, {deleted:true, deletedAt:new Date().toISOString(), lastModified:new Date().toISOString()}) : x; });
+    saveData(key, list);
+    renderModuleErrors(module);
+  });
+}
+
+/* ---------- 知识积累库 ---------- */
+function saveModuleNote(module){
+  var title = document.getElementById(module + '-note-title').value.trim();
+  var content = document.getElementById(module + '-note-content').value.trim();
+  if(!title && !content){ showToast('请输入内容'); return; }
+  var list = loadData(moduleKey(module, 'notes')) || [];
+  list.unshift({
+    id: uid(),
+    title: title,
+    content: content,
+    createdAt: new Date().toISOString(),
+    lastModified: new Date().toISOString()
+  });
+  saveData(moduleKey(module, 'notes'), list);
+  document.getElementById(module + '-note-title').value = '';
+  document.getElementById(module + '-note-content').value = '';
+  renderModuleNotes(module);
+  showToast('已保存');
+}
+function renderModuleNotes(module){
+  var key = moduleKey(module, 'notes');
+  var listEl = document.getElementById(module + '-note-list');
+  if(!listEl) return;
+  var list = loadActive(key);
+  if(list.length === 0){
+    listEl.innerHTML = '<div class="empty-state"><p>暂无知识点</p></div>';
+    return;
+  }
+  var html = '<div class="word-list">';
+  list.forEach(function(n){
+    html += '<div class="word-card"><div class="word-text">' + escapeHtml(n.title || '无标题') + '</div>';
+    if(n.content) html += '<div class="word-meaning">' + escapeHtml(n.content).replace(/\n/g, '<br>') + '</div>';
+    html += '<div class="word-actions"><button class="btn btn-danger btn-sm" onclick="deleteModuleNote(\'' + module + '\', \'' + n.id + '\')">删除</button></div></div>';
+  });
+  html += '</div>';
+  listEl.innerHTML = html;
+}
+function deleteModuleNote(module, id){
+  showConfirm('删除知识点', '确定删除吗？', function(){
+    var key = moduleKey(module, 'notes');
+    var list = loadData(key).map(function(x){ return x.id === id ? Object.assign({}, x, {deleted:true, deletedAt:new Date().toISOString(), lastModified:new Date().toISOString()}) : x; });
+    saveData(key, list);
+    renderModuleNotes(module);
+  });
+}
+
+/* ---------- 复盘笔记 ---------- */
+function saveModuleReview(module){
+  var dateInput = document.getElementById(module + '-review-date');
+  var contentInput = document.getElementById(module + '-review-content');
+  var date = dateInput.value || todayStr();
+  var content = contentInput.value.trim();
+  if(!content){ showToast('请输入复盘内容'); return; }
+  var list = loadData(moduleKey(module, 'reviews')) || [];
+  list.unshift({
+    id: uid(),
+    date: date,
+    content: content,
+    createdAt: new Date().toISOString(),
+    lastModified: new Date().toISOString()
+  });
+  saveData(moduleKey(module, 'reviews'), list);
+  contentInput.value = '';
+  renderModuleReviews(module);
+  showToast('已保存复盘');
+}
+function renderModuleReviews(module){
+  var key = moduleKey(module, 'reviews');
+  var listEl = document.getElementById(module + '-review-list');
+  if(!listEl) return;
+  var list = loadActive(key);
+  if(list.length === 0){
+    listEl.innerHTML = '<div class="empty-state"><p>暂无复盘记录</p></div>';
+    return;
+  }
+  var html = '<div class="review-list">';
+  list.forEach(function(r){
+    html += '<div class="review-card"><div class="review-date">' + escapeHtml(r.date || '') + '</div><div class="review-content">' + escapeHtml(r.content).replace(/\n/g, '<br>') + '</div>';
+    html += '<div style="margin-top:10px;"><button class="btn btn-danger btn-sm" onclick="deleteModuleReview(\'' + module + '\', \'' + r.id + '\')">删除</button></div></div>';
+  });
+  html += '</div>';
+  listEl.innerHTML = html;
+}
+function deleteModuleReview(module, id){
+  showConfirm('删除复盘', '确定删除吗？', function(){
+    var key = moduleKey(module, 'reviews');
+    var list = loadData(key).map(function(x){ return x.id === id ? Object.assign({}, x, {deleted:true, deletedAt:new Date().toISOString(), lastModified:new Date().toISOString()}) : x; });
+    saveData(key, list);
+    renderModuleReviews(module);
+  });
+}
+
+/* ========== 模考记录 ========== */
+function saveMock(){
+  var name = document.getElementById('mock-name').value.trim();
+  if(!name){ showToast('请输入模考名称'); return; }
+  var getNum = function(id){ var v = parseFloat(document.getElementById(id).value); return isNaN(v) ? 0 : v; };
+  var exam = {
+    id: uid(),
+    name: name,
+    date: document.getElementById('mock-date').value || todayStr(),
+    total: getNum('mock-total'),
+    sections: {
+      yy: { score: getNum('mock-yy-score'), accuracy: getNum('mock-yy-acc') },
+      data: { score: getNum('mock-data-score'), accuracy: getNum('mock-data-acc') },
+      judge: { score: getNum('mock-judge-score'), accuracy: getNum('mock-judge-acc') }
+    },
+    judgeDetails: {
+      figure: { score: getNum('mock-judge-fig-score'), accuracy: getNum('mock-judge-fig-acc') },
+      definition: { score: getNum('mock-judge-def-score'), accuracy: getNum('mock-judge-def-acc') },
+      analogy: { score: getNum('mock-judge-ana-score'), accuracy: getNum('mock-judge-ana-acc') }
+    },
+    createdAt: new Date().toISOString(),
+    lastModified: new Date().toISOString()
+  };
+  var list = loadData(KEYS.mock_exams) || [];
+  list.unshift(exam);
+  saveData(KEYS.mock_exams, list);
+  clearMockForm();
+  renderMock();
+  showToast('模考记录已保存');
+}
+function clearMockForm(){
+  ['mock-name','mock-date','mock-total','mock-yy-score','mock-yy-acc','mock-data-score','mock-data-acc','mock-judge-score','mock-judge-acc','mock-judge-fig-score','mock-judge-fig-acc','mock-judge-def-score','mock-judge-def-acc','mock-judge-ana-score','mock-judge-ana-acc'].forEach(function(id){ var el = document.getElementById(id); if(el) el.value = ''; });
+}
+function renderMock(){
+  var listEl = document.getElementById('mock-list');
+  if(!listEl) return;
+  var list = loadActive(KEYS.mock_exams);
+  if(list.length === 0){
+    listEl.innerHTML = '<div class="empty-state"><p>暂无模考记录</p></div>';
+    return;
+  }
+  var html = '<div class="mock-list">';
+  list.forEach(function(m){
+    html += '<div class="mock-card">';
+    html += '<div class="mock-header"><div><strong>' + escapeHtml(m.name) + '</strong><span class="mock-date">' + escapeHtml(m.date || '') + '</span></div><div class="mock-total">' + (m.total || 0) + '分</div></div>';
+    html += '<div class="mock-sections">';
+    html += '<div class="mock-sec"><span>言语</span><strong>' + (m.sections.yy.score || 0) + '</strong><small>' + (m.sections.yy.accuracy || 0) + '%</small></div>';
+    html += '<div class="mock-sec"><span>资料</span><strong>' + (m.sections.data.score || 0) + '</strong><small>' + (m.sections.data.accuracy || 0) + '%</small></div>';
+    html += '<div class="mock-sec mock-sec-judge" onclick="toggleMockDetail(\'' + m.id + '\')"><span>判断 ▼</span><strong>' + (m.sections.judge.score || 0) + '</strong><small>' + (m.sections.judge.accuracy || 0) + '%</small></div>';
+    html += '</div>';
+    html += '<div class="mock-judge-detail" id="mock-detail-' + m.id + '" style="display:none;">';
+    html += '<div class="mock-detail-row"><span>图形推理</span><strong>' + (m.judgeDetails.figure.score || 0) + '</strong><small>' + (m.judgeDetails.figure.accuracy || 0) + '%</small></div>';
+    html += '<div class="mock-detail-row"><span>定义判断</span><strong>' + (m.judgeDetails.definition.score || 0) + '</strong><small>' + (m.judgeDetails.definition.accuracy || 0) + '%</small></div>';
+    html += '<div class="mock-detail-row"><span>类比推理</span><strong>' + (m.judgeDetails.analogy.score || 0) + '</strong><small>' + (m.judgeDetails.analogy.accuracy || 0) + '%</small></div>';
+    html += '</div>';
+    html += '<div style="margin-top:10px;"><button class="btn btn-danger btn-sm" onclick="deleteMock(\'' + m.id + '\')">删除</button></div>';
+    html += '</div>';
+  });
+  html += '</div>';
+  listEl.innerHTML = html;
+}
+function toggleMockDetail(id){
+  var el = document.getElementById('mock-detail-' + id);
+  if(el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+function deleteMock(id){
+  showConfirm('删除模考记录', '确定删除吗？', function(){
+    var list = loadData(KEYS.mock_exams).map(function(x){ return x.id === id ? Object.assign({}, x, {deleted:true, deletedAt:new Date().toISOString(), lastModified:new Date().toISOString()}) : x; });
+    saveData(KEYS.mock_exams, list);
+    renderMock();
+  });
+}
 
 /* ========== 云端手动同步引擎 ========== */
 var SYNC_API    = 'https://hebei-gaokao-sync-production.up.railway.app/api/data';
@@ -2819,6 +3456,13 @@ function syncPush(){
     errors:   loadData(KEYS.errors)   || [],
     reviews:  loadData(KEYS.reviews)  || [],
     practice: loadData(KEYS.practice) || [],
+    data_errors:   loadData(KEYS.data_errors)   || [],
+    data_notes:    loadData(KEYS.data_notes)    || [],
+    data_reviews:  loadData(KEYS.data_reviews)  || [],
+    judge_errors:  loadData(KEYS.judge_errors)  || [],
+    judge_notes:   loadData(KEYS.judge_notes)   || [],
+    judge_reviews: loadData(KEYS.judge_reviews) || [],
+    mock_exams:    loadData(KEYS.mock_exams)    || [],
     lastModified: now,
     device: getDeviceId()
   };
@@ -2862,6 +3506,13 @@ function syncPull(){
     saveData(KEYS.errors,   cloud.errors   || []);
     saveData(KEYS.reviews,  cloud.reviews  || []);
     saveData(KEYS.practice, cloud.practice || []);
+    saveData(KEYS.data_errors,   cloud.data_errors   || []);
+    saveData(KEYS.data_notes,    cloud.data_notes    || []);
+    saveData(KEYS.data_reviews,  cloud.data_reviews  || []);
+    saveData(KEYS.judge_errors,  cloud.judge_errors  || []);
+    saveData(KEYS.judge_notes,   cloud.judge_notes   || []);
+    saveData(KEYS.judge_reviews, cloud.judge_reviews || []);
+    saveData(KEYS.mock_exams,    cloud.mock_exams    || []);
     localStorage.setItem(KEYS.initialized, '1');
     _syncLoading = false;
 
