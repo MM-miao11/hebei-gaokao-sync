@@ -632,13 +632,18 @@ input[type="file"]{display:none;}
         <span class="nav-group-arrow">▶</span>
       </div>
       <div class="nav-group-items">
+        <div class="nav-subitem" data-page="data-photo" onclick="switchPage(&#39;data-photo&#39;)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+          <span>拍照错题导入</span>
+        </div>
         <div class="nav-subitem" data-page="data-errorbook" onclick="switchPage(&#39;data-errorbook&#39;)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
-          <span>错题</span>
+          <span>错题本管理</span>
+          <span class="nav-badge" id="nav-data-error-count" style="display:none">0</span>
         </div>
         <div class="nav-subitem" data-page="data-notes" onclick="switchPage(&#39;data-notes&#39;)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-          <span>知识积累库</span>
+          <span>知识点积累库</span>
         </div>
         <div class="nav-subitem" data-page="data-reviews" onclick="switchPage(&#39;data-reviews&#39;)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11H3v10h6V11zM9 3H3v6h6V3zM21 3h-6v18h6V3zM21 11h-6v10h6v-10z"></path></svg>
@@ -655,13 +660,18 @@ input[type="file"]{display:none;}
         <span class="nav-group-arrow">▶</span>
       </div>
       <div class="nav-group-items">
+        <div class="nav-subitem" data-page="judge-photo" onclick="switchPage(&#39;judge-photo&#39;)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+          <span>拍照错题导入</span>
+        </div>
         <div class="nav-subitem" data-page="judge-errorbook" onclick="switchPage(&#39;judge-errorbook&#39;)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
-          <span>错题</span>
+          <span>错题本管理</span>
+          <span class="nav-badge" id="nav-judge-error-count" style="display:none">0</span>
         </div>
         <div class="nav-subitem" data-page="judge-notes" onclick="switchPage(&#39;judge-notes&#39;)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-          <span>知识积累库</span>
+          <span>知识点积累库</span>
         </div>
         <div class="nav-subitem" data-page="judge-reviews" onclick="switchPage(&#39;judge-reviews&#39;)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11H3v10h6V11zM9 3H3v6h6V3zM21 3h-6v18h6V3zM21 11h-6v10h6v-10z"></path></svg>
@@ -691,7 +701,13 @@ input[type="file"]{display:none;}
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
           <span>词语积累库</span>
         </div>
+        <div class="nav-subitem" data-page="review" onclick="switchPage(&#39;review&#39;)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11H3v10h6V11zM9 3H3v6h6V3zM21 3h-6v18h6V3zM21 11h-6v10h6v-10z"></path></svg>
+          <span>复盘笔记</span>
+        </div>
       </div>
+    </div>
+
     </div>
 
     <div class="nav-item" data-page="mock" onclick="switchPage(&#39;mock&#39;)">
@@ -893,11 +909,11 @@ input[type="file"]{display:none;}
   </div>
 </div>
 
-<!-- ==================== 拍照错题录入 ==================== -->
+<!-- ==================== 拍照错题录入（言语/资料/判断共用） ==================== -->
 <div class="page" id="page-photo">
   <div class="page-header">
-    <div class="page-title">拍照错题录入</div>
-    <div class="page-desc">上传错题图片，手动录入题目内容，支持关联词语积累</div>
+    <div class="page-title" id="photo-page-title">拍照错题录入</div>
+    <div class="page-desc" id="photo-page-desc">上传错题图片，手动录入题目内容</div>
   </div>
 
   <div class="tip-bar">
@@ -948,13 +964,7 @@ input[type="file"]{display:none;}
     <div class="form-row">
       <div class="form-group">
         <label class="form-label">题型分类 <span class="required">*</span></label>
-        <select id="err-type">
-          <option value="逻辑填空">逻辑填空</option>
-          <option value="片段阅读">片段阅读</option>
-          <option value="语句排序">语句排序</option>
-          <option value="下文推断">下文推断</option>
-          <option value="细节理解">细节理解</option>
-        </select>
+        <select id="err-type"></select>
       </div>
       <div class="form-group">
         <label class="form-label">题目来源</label>
@@ -1023,7 +1033,7 @@ input[type="file"]{display:none;}
       <label class="form-label">题目解析</label>
       <textarea id="err-analysis" rows="3" placeholder="录入题目解析..."></textarea>
     </div>
-    <div class="form-group">
+    <div class="form-group" id="err-extract-word-group">
       <label class="form-label">提取词语到积累库（可选）</label>
       <input type="text" id="err-extract-word" placeholder="输入要积累的词语/成语，保存后自动跳转补充释义例句">
     </div>
@@ -1040,11 +1050,11 @@ input[type="file"]{display:none;}
   </div>
 </div>
 
-<!-- ==================== 错题本管理 ==================== -->
+<!-- ==================== 错题本管理（言语/资料/判断共用） ==================== -->
 <div class="page" id="page-errorbook">
   <div class="page-header">
-    <div class="page-title">错题本管理</div>
-    <div class="page-desc">所有言语错题汇总，支持筛选、复盘、重做标记</div>
+    <div class="page-title" id="errorbook-page-title">错题本管理</div>
+    <div class="page-desc" id="errorbook-page-desc">所有错题汇总，支持筛选、复盘、重做标记</div>
   </div>
 
   <div class="toolbar">
@@ -1054,11 +1064,6 @@ input[type="file"]{display:none;}
     </div>
     <select id="err-filter-type" onchange="renderErrors()">
       <option value="">全部题型</option>
-      <option value="逻辑填空">逻辑填空</option>
-      <option value="片段阅读">片段阅读</option>
-      <option value="语句排序">语句排序</option>
-      <option value="下文推断">下文推断</option>
-      <option value="细节理解">细节理解</option>
     </select>
     <select id="err-filter-status" onchange="renderErrors()">
       <option value="">全部状态</option>
@@ -1162,8 +1167,8 @@ input[type="file"]{display:none;}
 <!-- ==================== 备考复盘记录 ==================== -->
 <div class="page" id="page-review">
   <div class="page-header">
-    <div class="page-title">备考复盘记录</div>
-    <div class="page-desc">每日复盘笔记、薄弱题型总结、学习进度记录</div>
+    <div class="page-title" id="review-page-title">备考复盘记录</div>
+    <div class="page-desc" id="review-page-desc">每日复盘笔记、薄弱题型总结、学习进度记录</div>
   </div>
 
   <div class="card">
@@ -1185,11 +1190,6 @@ input[type="file"]{display:none;}
         <label class="form-label">薄弱题型</label>
         <select id="review-weak-type">
           <option value="">无</option>
-          <option value="逻辑填空">逻辑填空</option>
-          <option value="片段阅读">片段阅读</option>
-          <option value="语句排序">语句排序</option>
-          <option value="下文推断">下文推断</option>
-          <option value="细节理解">细节理解</option>
         </select>
       </div>
       <div class="form-group">
@@ -1356,27 +1356,7 @@ input[type="file"]{display:none;}
   </div>
 </div>
 
-<!-- ==================== 资料分析 - 复盘笔记 ==================== -->
-<div class="page" id="page-data-reviews">
-  <div class="page-header">
-    <div class="page-title">资料分析 · 复盘笔记</div>
-    <div class="page-desc">资料分析阶段性复盘总结</div>
-  </div>
-  <div class="card">
-    <div class="form-group">
-      <label class="form-label">新增复盘</label>
-      <input type="date" id="data-review-date" style="margin-bottom:8px;">
-      <textarea id="data-review-content" rows="4" placeholder="本次复盘内容..."></textarea>
-    </div>
-    <div class="form-actions">
-      <button class="btn btn-primary" onclick="saveModuleReview('data')">保存复盘</button>
-    </div>
-  </div>
-  <div class="card" style="margin-top:16px;">
-    <div class="card-title">复盘记录</div>
-    <div id="data-review-list"></div>
-  </div>
-</div>
+<!-- 资料分析复盘已并入共用复盘页 page-review（currentReviewModule='data'） -->
 
 <!-- ==================== 判断推理 - 错题 ==================== -->
 <div class="page" id="page-judge-errorbook">
@@ -1422,27 +1402,7 @@ input[type="file"]{display:none;}
   </div>
 </div>
 
-<!-- ==================== 判断推理 - 复盘笔记 ==================== -->
-<div class="page" id="page-judge-reviews">
-  <div class="page-header">
-    <div class="page-title">判断推理 · 复盘笔记</div>
-    <div class="page-desc">判断推理阶段性复盘总结</div>
-  </div>
-  <div class="card">
-    <div class="form-group">
-      <label class="form-label">新增复盘</label>
-      <input type="date" id="judge-review-date" style="margin-bottom:8px;">
-      <textarea id="judge-review-content" rows="4" placeholder="本次复盘内容..."></textarea>
-    </div>
-    <div class="form-actions">
-      <button class="btn btn-primary" onclick="saveModuleReview('judge')">保存复盘</button>
-    </div>
-  </div>
-  <div class="card" style="margin-top:16px;">
-    <div class="card-title">复盘记录</div>
-    <div id="judge-review-list"></div>
-  </div>
-</div>
+<!-- 判断推理复盘已并入共用复盘页 page-review（currentReviewModule='judge'） -->
 
 <!-- ==================== 模考记录 ==================== -->
 <div class="page" id="page-mock">
@@ -1468,22 +1428,32 @@ input[type="file"]{display:none;}
       </div>
     </div>
 
-    <div style="font-size:13px;color:var(--text-secondary);margin:12px 0 8px;">各模块得分与正确率</div>
+    <div style="font-size:13px;color:var(--text-secondary);margin:12px 0 8px;">各模块正确率（填写「对/总」如 <b>18/20</b>，正确率自动换算；得分选填）</div>
     <div class="form-row">
       <div class="form-group">
         <label class="form-label">言语理解</label>
-        <input type="number" id="mock-yy-score" placeholder="得分" min="0">
-        <input type="number" id="mock-yy-acc" placeholder="正确率%" min="0" max="100" style="margin-top:6px;">
+        <input type="text" id="mock-yy-frac" placeholder="如 18/20" >
+        <input type="number" id="mock-yy-score" placeholder="得分(选填)" min="0" style="margin-top:6px;">
       </div>
       <div class="form-group">
         <label class="form-label">资料分析</label>
-        <input type="number" id="mock-data-score" placeholder="得分" min="0">
-        <input type="number" id="mock-data-acc" placeholder="正确率%" min="0" max="100" style="margin-top:6px;">
+        <input type="text" id="mock-data-frac" placeholder="如 18/20" >
+        <input type="number" id="mock-data-score" placeholder="得分(选填)" min="0" style="margin-top:6px;">
       </div>
       <div class="form-group">
         <label class="form-label">判断推理</label>
-        <input type="number" id="mock-judge-score" placeholder="总得分" min="0">
-        <input type="number" id="mock-judge-acc" placeholder="总正确率%" min="0" max="100" style="margin-top:6px;">
+        <input type="text" id="mock-judge-frac" placeholder="如 18/20" >
+        <input type="number" id="mock-judge-score" placeholder="得分(选填)" min="0" style="margin-top:6px;">
+      </div>
+      <div class="form-group">
+        <label class="form-label">政治理论</label>
+        <input type="text" id="mock-politics-frac" placeholder="如 18/20" >
+        <input type="number" id="mock-politics-score" placeholder="得分(选填)" min="0" style="margin-top:6px;">
+      </div>
+      <div class="form-group">
+        <label class="form-label">常识</label>
+        <input type="text" id="mock-common-frac" placeholder="如 18/20" >
+        <input type="number" id="mock-common-score" placeholder="得分(选填)" min="0" style="margin-top:6px;">
       </div>
     </div>
 
@@ -1506,6 +1476,11 @@ input[type="file"]{display:none;}
           <input type="number" id="mock-judge-ana-acc" placeholder="正确率%" min="0" max="100" style="margin-top:6px;">
         </div>
       </div>
+    </div>
+
+    <div class="form-group" style="margin-top:14px;">
+      <label class="form-label">模考总结（选填）</label>
+      <textarea id="mock-summary" rows="3" placeholder="本次模考整体复盘、得失总结..."></textarea>
     </div>
 
     <div class="form-actions">
@@ -1711,10 +1686,24 @@ function initExampleData(){
   localStorage.setItem(KEYS.initialized, '1');
 }
 
+/* 当前模块上下文（拍照录入/错题本共用页面） */
+var currentPhotoModule = 'yy';
+var currentErrorbookModule = 'yy';
+var currentReviewModule = 'yy';
+
+/* 页面 ID 映射：部分导航项共用同一个 page */
+var PAGE_MAP = {
+  'data-photo': 'photo',
+  'judge-photo': 'photo',
+  'data-errorbook': 'errorbook',
+  'judge-errorbook': 'errorbook'
+};
+
 /* ========== 页面切换 ========== */
 function switchPage(pageId){
+  var actualPageId = PAGE_MAP[pageId] || pageId;
   document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
-  var pageEl = document.getElementById('page-' + pageId);
+  var pageEl = document.getElementById('page-' + actualPageId);
   if(pageEl) pageEl.classList.add('active');
 
   /* 高亮导航 */
@@ -1733,21 +1722,31 @@ function switchPage(pageId){
   if(window.innerWidth <= 768) closeSidebar();
   window.scrollTo(0,0);
 
-  /* 渲染对应页面 */
+  /* 设置模块上下文并渲染 */
+  if(pageId === 'photo' || pageId === 'data-photo' || pageId === 'judge-photo'){
+    currentPhotoModule = pageId === 'data-photo' ? 'data' : (pageId === 'judge-photo' ? 'judge' : 'yy');
+    setupPhotoPage();
+  }
+  if(pageId === 'errorbook' || pageId === 'data-errorbook' || pageId === 'judge-errorbook'){
+    currentErrorbookModule = pageId === 'data-errorbook' ? 'data' : (pageId === 'judge-errorbook' ? 'judge' : 'yy');
+    setupErrorbookPage();
+    renderErrors();
+  }
+
   if(pageId === 'dashboard') renderDashboard();
   if(pageId === 'practice') renderPractice();
-  if(pageId === 'errorbook') renderErrors();
   if(pageId === 'vocabulary') renderWords();
-  if(pageId === 'review') renderReviews();
   if(pageId === 'settings') renderSettings();
   if(pageId === 'mock') renderMock();
+  /* 复盘笔记（言语/资料/判断 共用 page-review） */
+  if(pageId === 'review' || pageId === 'data-reviews' || pageId === 'judge-reviews'){
+    currentReviewModule = pageId === 'data-reviews' ? 'data' : (pageId === 'judge-reviews' ? 'judge' : 'yy');
+    setupReviewPage();
+    renderReviews();
+  }
   /* 新模块页面 */
-  if(pageId === 'data-errorbook') renderModuleErrors('data');
   if(pageId === 'data-notes') renderModuleNotes('data');
-  if(pageId === 'data-reviews') renderModuleReviews('data');
-  if(pageId === 'judge-errorbook') renderModuleErrors('judge');
   if(pageId === 'judge-notes') renderModuleNotes('judge');
-  if(pageId === 'judge-reviews') renderModuleReviews('judge');
 }
 
 /* 展开/收起分组 */
@@ -2220,8 +2219,8 @@ function parseAndFillFields(text){
   if(options[2]) document.getElementById('err-opt-c').value = options[2];
   if(options[3]) document.getElementById('err-opt-d').value = options[3];
 
-  // 尝试推断题型
-  if(questionText){
+  // 尝试推断题型（仅言语理解模块）
+  if(questionText && currentPhotoModule === 'yy'){
     if(/填空|填入|横线|____|——/.test(questionText)){
       document.getElementById('err-type').value = '逻辑填空';
     } else if(/排序|排列/.test(questionText)){
@@ -2237,7 +2236,93 @@ function parseAndFillFields(text){
   document.getElementById('err-question').scrollIntoView({behavior:'smooth'});
 }
 
+/* ---------- 模块配置：错题相关页面共用 ---------- */
+var MODULE_CONFIG = {
+  yy: {
+    title: '言语理解',
+    errorKey: 'errors',
+    typeOptions: [['逻辑填空','逻辑填空'], ['片段阅读','片段阅读'], ['语句排序','语句排序'], ['下文推断','下文推断'], ['细节理解','细节理解']],
+    typeClass: { '逻辑填空':'zt', '片段阅读':'py', '语句排序':'pc', '下文推断':'xw', '细节理解':'xj' },
+    showExtractWord: true,
+    photoRedirect: 'errorbook',
+    emptyBtnText: '去录入错题',
+    emptyBtnAction: "switchPage('photo')",
+    reviewWeakTypes: ['逻辑填空','片段阅读','语句排序','下文推断','细节理解']
+  },
+  data: {
+    title: '资料分析',
+    errorKey: 'data_errors',
+    typeOptions: [['计算错误','计算错误'], ['公式不熟','公式不熟'], ['审题失误','审题失误'], ['时间不够','时间不够'], ['其他','其他']],
+    typeClass: { '计算错误':'js', '公式不熟':'gs', '审题失误':'st', '时间不够':'sj', '其他':'qt' },
+    showExtractWord: false,
+    photoRedirect: 'data-errorbook',
+    emptyBtnText: '去录入错题',
+    emptyBtnAction: "switchPage('data-photo')",
+    reviewWeakTypes: ['计算错误','公式不熟','审题失误','时间不够','其他']
+  },
+  judge: {
+    title: '判断推理',
+    errorKey: 'judge_errors',
+    typeOptions: [['图形推理','图形推理'], ['定义判断','定义判断'], ['类比推理','类比推理'], ['逻辑判断','逻辑判断']],
+    typeClass: { '图形推理':'tx', '定义判断':'dy', '类比推理':'lb', '逻辑判断':'lj' },
+    showExtractWord: false,
+    photoRedirect: 'judge-errorbook',
+    emptyBtnText: '去录入错题',
+    emptyBtnAction: "switchPage('judge-photo')",
+    reviewWeakTypes: ['图形推理','定义判断','类比推理','逻辑判断']
+  }
+};
+
+function setupPhotoPage(){
+  var cfg = MODULE_CONFIG[currentPhotoModule];
+  document.getElementById('photo-page-title').textContent = cfg.title + ' · 拍照错题录入';
+  document.getElementById('photo-page-desc').textContent = cfg.showExtractWord ? '上传错题图片，手动录入题目内容，支持关联词语积累' : '上传错题图片，手动录入题目内容';
+  var sel = document.getElementById('err-type');
+  sel.innerHTML = '';
+  cfg.typeOptions.forEach(function(opt){
+    var o = document.createElement('option');
+    o.value = opt[0];
+    o.textContent = opt[1];
+    sel.appendChild(o);
+  });
+  var extractGroup = document.getElementById('err-extract-word-group');
+  if(extractGroup) extractGroup.style.display = cfg.showExtractWord ? 'block' : 'none';
+}
+
+function setupErrorbookPage(){
+  var cfg = MODULE_CONFIG[currentErrorbookModule];
+  document.getElementById('errorbook-page-title').textContent = cfg.title + ' · 错题本管理';
+  document.getElementById('errorbook-page-desc').textContent = cfg.title + '错题汇总，支持筛选、复盘、重做标记';
+  var sel = document.getElementById('err-filter-type');
+  sel.innerHTML = '<option value="">全部题型</option>';
+  cfg.typeOptions.forEach(function(opt){
+    var o = document.createElement('option');
+    o.value = opt[0];
+    o.textContent = opt[1];
+    sel.appendChild(o);
+  });
+}
+
+function getReviewKey(module){
+  return module === 'yy' ? KEYS.reviews : moduleKey(module, 'reviews');
+}
+
+function setupReviewPage(){
+  var cfg = MODULE_CONFIG[currentReviewModule];
+  document.getElementById('review-page-title').textContent = cfg.title + ' · 复盘笔记';
+  document.getElementById('review-page-desc').textContent = cfg.title + '阶段性复盘：学习总结、薄弱题型、错题分析与改进计划';
+  var sel = document.getElementById('review-weak-type');
+  sel.innerHTML = '<option value="">无</option>';
+  (cfg.reviewWeakTypes || []).forEach(function(t){
+    var o = document.createElement('option');
+    o.value = t;
+    o.textContent = t;
+    sel.appendChild(o);
+  });
+}
+
 function saveError(){
+  var cfg = MODULE_CONFIG[currentPhotoModule];
   var question = document.getElementById('err-question').value.trim();
   if(!question){
     showToast('请输入题干内容');
@@ -2260,16 +2345,17 @@ function saveError(){
     image:uploadedImage,
     reviewed:false,
     redoCount:0,
-    createdAt:todayStr()
+    createdAt:todayStr(),
+    module: currentPhotoModule
   };
 
-  var errors = loadData(KEYS.errors);
+  var errors = loadData(KEYS[cfg.errorKey]);
   errors.unshift(err);
-  saveData(KEYS.errors, errors);
+  saveData(KEYS[cfg.errorKey], errors);
 
-  // 提取词语到积累库
+  // 提取词语到积累库（仅言语理解）
   var extractWord = document.getElementById('err-extract-word').value.trim();
-  if(extractWord){
+  if(cfg.showExtractWord && extractWord){
     var words = loadData(KEYS.words);
     var newWord = {
       id:uid(), word:extractWord, category:'其他', source:err.sourceDetail || err.source,
@@ -2284,7 +2370,7 @@ function saveError(){
   }
 
   clearErrorForm();
-  switchPage('errorbook');
+  switchPage(cfg.photoRedirect);
 }
 
 function clearErrorForm(){
@@ -2302,9 +2388,10 @@ function clearErrorForm(){
   removeImage();
 }
 
-/* ========== 错题本管理 ========== */
+/* ========== 错题本管理（言语/资料/判断共用） ========== */
 function renderErrors(){
-  var errors = loadActive(KEYS.errors);
+  var cfg = MODULE_CONFIG[currentErrorbookModule];
+  var errors = loadActive(KEYS[cfg.errorKey]);
   var search = document.getElementById('err-search').value.toLowerCase();
   var filterType = document.getElementById('err-filter-type').value;
   var filterStatus = document.getElementById('err-filter-status').value;
@@ -2320,11 +2407,11 @@ function renderErrors(){
 
   var list = document.getElementById('error-list');
   if(filtered.length === 0){
-    list.innerHTML = '<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><p>暂无错题记录</p><button class="btn btn-primary" onclick="switchPage(\'photo\')">去录入错题</button></div>';
+    list.innerHTML = '<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><p>暂无错题记录</p><button class="btn btn-primary" onclick="' + cfg.emptyBtnAction + '">' + cfg.emptyBtnText + '</button></div>';
     return;
   }
 
-  var typeClass = { '逻辑填空':'zt', '片段阅读':'py', '语句排序':'pc', '下文推断':'xw', '细节理解':'xj' };
+  var typeClass = cfg.typeClass;
 
   var html = '';
   filtered.forEach(function(e){
@@ -2380,47 +2467,58 @@ function renderErrors(){
     html += '</div>';
   });
   list.innerHTML = html;
+
+  /* 更新导航角标 */
+  var badgeId = currentErrorbookModule === 'yy' ? 'nav-error-count' : ('nav-' + currentErrorbookModule + '-error-count');
+  var badge = document.getElementById(badgeId);
+  if(badge){ badge.textContent = errors.length; badge.style.display = errors.length > 0 ? 'inline-flex' : 'none'; }
 }
 
 function toggleReview(id){
-  var errors = loadData(KEYS.errors);
+  var cfg = MODULE_CONFIG[currentErrorbookModule];
+  var errors = loadData(KEYS[cfg.errorKey]);
+  var target = null;
   errors.forEach(function(e){
     if(e.id === id){
       e.reviewed = !e.reviewed;
       if(e.reviewed) e.lastReviewedAt = todayStr();
+      target = e;
     }
   });
-  saveData(KEYS.errors, errors);
+  saveData(KEYS[cfg.errorKey], errors);
   renderErrors();
-  showToast(e.reviewed ? '已标记为已复盘' : '已标记为未复盘');
+  showToast(target && target.reviewed ? '已标记为已复盘' : '已标记为未复盘');
 }
 
 function redoError(id){
-  var errors = loadData(KEYS.errors);
+  var cfg = MODULE_CONFIG[currentErrorbookModule];
+  var errors = loadData(KEYS[cfg.errorKey]);
   errors.forEach(function(e){
     if(e.id === id){
       e.redoCount = (e.redoCount || 0) + 1;
       e.reviewed = false;
     }
   });
-  saveData(KEYS.errors, errors);
+  saveData(KEYS[cfg.errorKey], errors);
   renderErrors();
   showToast('已标记重做');
 }
 
 function deleteError(id){
+  var cfg = MODULE_CONFIG[currentErrorbookModule];
   showConfirm('删除错题', '确定删除这道错题吗？删除后不可恢复。', function(){
-    var errors = loadData(KEYS.errors);
+    var errors = loadData(KEYS[cfg.errorKey]);
     var e = errors.find(function(x){ return x.id === id; });
-    if(e){ e.deleted = true; e.deletedAt = new Date().toISOString(); saveData(KEYS.errors, errors); }
+    if(e){ e.deleted = true; e.deletedAt = new Date().toISOString(); saveData(KEYS[cfg.errorKey], errors); }
     renderErrors();
-    renderDashboard();
+    if(currentErrorbookModule === 'yy') renderDashboard();
     showToast('已删除');
   });
 }
 
 function viewImage(id){
-  var errors = loadData(KEYS.errors);
+  var cfg = MODULE_CONFIG[currentErrorbookModule];
+  var errors = loadData(KEYS[cfg.errorKey]);
   var err = errors.find(function(e){ return e.id === id; });
   if(err && err.image){
     var w = window.open('', '_blank');
@@ -2800,7 +2898,8 @@ function saveReview(){
     return;
   }
   var editId = document.getElementById('review-edit-id').value;
-  var reviews = loadData(KEYS.reviews);
+  var rkey = getReviewKey(currentReviewModule);
+  var reviews = loadData(rkey);
 
   var data = {
     date:document.getElementById('review-date').value.trim() || todayStr(),
@@ -2823,7 +2922,7 @@ function saveReview(){
     showToast('复盘已保存');
   }
 
-  saveData(KEYS.reviews, reviews);
+  saveData(rkey, reviews);
   clearReviewForm();
   renderReviews();
 }
@@ -2839,7 +2938,7 @@ function clearReviewForm(){
 }
 
 function renderReviews(){
-  var reviews = loadActive(KEYS.reviews);
+  var reviews = loadActive(getReviewKey(currentReviewModule));
   var list = document.getElementById('review-list');
   if(reviews.length === 0){
     list.innerHTML = '<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11H3v10h6V11zM9 3H3v6h6V3zM21 3h-6v18h6V3zM21 11h-6v10h6v-10z"/></svg><p>暂无复盘记录</p></div>';
@@ -2871,7 +2970,7 @@ function renderReviews(){
 }
 
 function editReview(id){
-  var reviews = loadData(KEYS.reviews);
+  var reviews = loadData(getReviewKey(currentReviewModule));
   var r = reviews.find(function(x){ return x.id === id; });
   if(r){
     document.getElementById('review-edit-id').value = r.id;
@@ -2887,9 +2986,10 @@ function editReview(id){
 
 function deleteReview(id){
   showConfirm('删除复盘', '确定删除这条复盘记录吗？', function(){
-    var reviews = loadData(KEYS.reviews);
+    var rkey = getReviewKey(currentReviewModule);
+    var reviews = loadData(rkey);
     var r = reviews.find(function(x){ return x.id === id; });
-    if(r){ r.deleted = true; r.deletedAt = new Date().toISOString(); saveData(KEYS.reviews, reviews); }
+    if(r){ r.deleted = true; r.deletedAt = new Date().toISOString(); saveData(rkey, reviews); }
     renderReviews();
     showToast('已删除');
   });
@@ -3233,71 +3333,53 @@ function deleteModuleNote(module, id){
 }
 
 /* ---------- 复盘笔记 ---------- */
-function saveModuleReview(module){
-  var dateInput = document.getElementById(module + '-review-date');
-  var contentInput = document.getElementById(module + '-review-content');
-  var date = dateInput.value || todayStr();
-  var content = contentInput.value.trim();
-  if(!content){ showToast('请输入复盘内容'); return; }
-  var list = loadData(moduleKey(module, 'reviews')) || [];
-  list.unshift({
-    id: uid(),
-    date: date,
-    content: content,
-    createdAt: new Date().toISOString(),
-    lastModified: new Date().toISOString()
-  });
-  saveData(moduleKey(module, 'reviews'), list);
-  contentInput.value = '';
-  renderModuleReviews(module);
-  showToast('已保存复盘');
-}
-function renderModuleReviews(module){
-  var key = moduleKey(module, 'reviews');
-  var listEl = document.getElementById(module + '-review-list');
-  if(!listEl) return;
-  var list = loadActive(key);
-  if(list.length === 0){
-    listEl.innerHTML = '<div class="empty-state"><p>暂无复盘记录</p></div>';
-    return;
-  }
-  var html = '<div class="review-list">';
-  list.forEach(function(r){
-    html += '<div class="review-card"><div class="review-date">' + escapeHtml(r.date || '') + '</div><div class="review-content">' + escapeHtml(r.content).replace(/\n/g, '<br>') + '</div>';
-    html += '<div style="margin-top:10px;"><button class="btn btn-danger btn-sm" onclick="deleteModuleReview(\'' + module + '\', \'' + r.id + '\')">删除</button></div></div>';
-  });
-  html += '</div>';
-  listEl.innerHTML = html;
-}
-function deleteModuleReview(module, id){
-  showConfirm('删除复盘', '确定删除吗？', function(){
-    var key = moduleKey(module, 'reviews');
-    var list = loadData(key).map(function(x){ return x.id === id ? Object.assign({}, x, {deleted:true, deletedAt:new Date().toISOString(), lastModified:new Date().toISOString()}) : x; });
-    saveData(key, list);
-    renderModuleReviews(module);
-  });
-}
+/* 模块复盘已并入共用复盘页（getReviewKey + page-review），以下函数废弃 */
 
 /* ========== 模考记录 ========== */
 function saveMock(){
   var name = document.getElementById('mock-name').value.trim();
   if(!name){ showToast('请输入模考名称'); return; }
-  var getNum = function(id){ var v = parseFloat(document.getElementById(id).value); return isNaN(v) ? 0 : v; };
+  var getNum = function(id){ var el = document.getElementById(id); var v = el ? parseFloat(el.value) : NaN; return isNaN(v) ? 0 : v; };
+  var getVal = function(id){ var el = document.getElementById(id); return el ? el.value.trim() : ''; };
+  var parseFrac = function(frac){
+    var correct = 0, total = 0, accuracy = 0;
+    frac = (frac || '').trim();
+    if(frac){
+      var parts = frac.split('/');
+      if(parts.length === 2){
+        correct = parseFloat(parts[0]) || 0;
+        total = parseFloat(parts[1]) || 0;
+        if(total > 0) accuracy = Math.round(correct / total * 100);
+      } else {
+        correct = parseFloat(frac) || 0;
+      }
+    }
+    return { correct: correct, total: total, accuracy: accuracy };
+  };
+  var buildSec = function(code){
+    var f = parseFrac(getVal('mock-' + code + '-frac'));
+    var sc = getVal('mock-' + code + '-score');
+    var score = sc === '' ? null : (parseFloat(sc) || 0);
+    return { correct: f.correct, total: f.total, accuracy: f.accuracy, score: score };
+  };
   var exam = {
     id: uid(),
     name: name,
     date: document.getElementById('mock-date').value || todayStr(),
     total: getNum('mock-total'),
     sections: {
-      yy: { score: getNum('mock-yy-score'), accuracy: getNum('mock-yy-acc') },
-      data: { score: getNum('mock-data-score'), accuracy: getNum('mock-data-acc') },
-      judge: { score: getNum('mock-judge-score'), accuracy: getNum('mock-judge-acc') }
+      yy: buildSec('yy'),
+      data: buildSec('data'),
+      judge: buildSec('judge'),
+      politics: buildSec('politics'),
+      common: buildSec('common')
     },
     judgeDetails: {
       figure: { score: getNum('mock-judge-fig-score'), accuracy: getNum('mock-judge-fig-acc') },
       definition: { score: getNum('mock-judge-def-score'), accuracy: getNum('mock-judge-def-acc') },
       analogy: { score: getNum('mock-judge-ana-score'), accuracy: getNum('mock-judge-ana-acc') }
     },
+    summary: document.getElementById('mock-summary').value.trim(),
     createdAt: new Date().toISOString(),
     lastModified: new Date().toISOString()
   };
@@ -3309,7 +3391,12 @@ function saveMock(){
   showToast('模考记录已保存');
 }
 function clearMockForm(){
-  ['mock-name','mock-date','mock-total','mock-yy-score','mock-yy-acc','mock-data-score','mock-data-acc','mock-judge-score','mock-judge-acc','mock-judge-fig-score','mock-judge-fig-acc','mock-judge-def-score','mock-judge-def-acc','mock-judge-ana-score','mock-judge-ana-acc'].forEach(function(id){ var el = document.getElementById(id); if(el) el.value = ''; });
+  ['mock-name','mock-date','mock-total','mock-summary',
+   'mock-yy-frac','mock-yy-score','mock-data-frac','mock-data-score',
+   'mock-judge-frac','mock-judge-score','mock-politics-frac','mock-politics-score',
+   'mock-common-frac','mock-common-score',
+   'mock-judge-fig-score','mock-judge-fig-acc','mock-judge-def-score','mock-judge-def-acc',
+   'mock-judge-ana-score','mock-judge-ana-acc'].forEach(function(id){ var el = document.getElementById(id); if(el) el.value = ''; });
 }
 function renderMock(){
   var listEl = document.getElementById('mock-list');
@@ -3319,21 +3406,40 @@ function renderMock(){
     listEl.innerHTML = '<div class="empty-state"><p>暂无模考记录</p></div>';
     return;
   }
+  var ROW = 'display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-bottom:1px solid var(--border);font-size:14px;';
+  var fmtSec = function(s){
+    if(!s) return '—';
+    var correct = Number(s.correct) || 0;
+    var total = Number(s.total) || 0;
+    var accuracy = Number(s.accuracy) || 0;
+    if(total > 0) return '【' + correct + '】【' + accuracy + '%】';
+    if(s.score != null && s.score !== '' && Number(s.score) !== 0) return '【' + s.score + '分】';
+    if(accuracy > 0) return '【' + accuracy + '%】';
+    return '—';
+  };
+  var secRow = function(label, valHtml){
+    return '<div style="' + ROW + '"><span>' + label + '</span><strong>' + valHtml + '</strong></div>';
+  };
   var html = '<div class="mock-list">';
   list.forEach(function(m){
+    var secs = m.sections || {};
+    var jd = m.judgeDetails || {};
     html += '<div class="mock-card">';
     html += '<div class="mock-header"><div><strong>' + escapeHtml(m.name) + '</strong><span class="mock-date">' + escapeHtml(m.date || '') + '</span></div><div class="mock-total">' + (m.total || 0) + '分</div></div>';
-    html += '<div class="mock-sections">';
-    html += '<div class="mock-sec"><span>言语</span><strong>' + (m.sections.yy.score || 0) + '</strong><small>' + (m.sections.yy.accuracy || 0) + '%</small></div>';
-    html += '<div class="mock-sec"><span>资料</span><strong>' + (m.sections.data.score || 0) + '</strong><small>' + (m.sections.data.accuracy || 0) + '%</small></div>';
-    html += '<div class="mock-sec mock-sec-judge" onclick="toggleMockDetail(\'' + m.id + '\')"><span>判断 ▼</span><strong>' + (m.sections.judge.score || 0) + '</strong><small>' + (m.sections.judge.accuracy || 0) + '%</small></div>';
-    html += '</div>';
+    html += '<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:10px;">';
+    html += secRow('言语理解', fmtSec(secs.yy));
+    html += secRow('资料分析', fmtSec(secs.data));
+    html += '<div style="' + ROW + ' cursor:pointer;color:var(--accent);" onclick="toggleMockDetail(\'' + m.id + '\')"><span>判断推理</span><strong>' + fmtSec(secs.judge) + ' <span style="font-size:12px;">▼</span></strong></div>';
     html += '<div class="mock-judge-detail" id="mock-detail-' + m.id + '" style="display:none;">';
-    html += '<div class="mock-detail-row"><span>图形推理</span><strong>' + (m.judgeDetails.figure.score || 0) + '</strong><small>' + (m.judgeDetails.figure.accuracy || 0) + '%</small></div>';
-    html += '<div class="mock-detail-row"><span>定义判断</span><strong>' + (m.judgeDetails.definition.score || 0) + '</strong><small>' + (m.judgeDetails.definition.accuracy || 0) + '%</small></div>';
-    html += '<div class="mock-detail-row"><span>类比推理</span><strong>' + (m.judgeDetails.analogy.score || 0) + '</strong><small>' + (m.judgeDetails.analogy.accuracy || 0) + '%</small></div>';
+    html += '<div class="mock-detail-row"><span>图形推理</span><strong>' + (jd.figure && jd.figure.score || 0) + '</strong><small>' + (jd.figure && jd.figure.accuracy || 0) + '%</small></div>';
+    html += '<div class="mock-detail-row"><span>定义判断</span><strong>' + (jd.definition && jd.definition.score || 0) + '</strong><small>' + (jd.definition && jd.definition.accuracy || 0) + '%</small></div>';
+    html += '<div class="mock-detail-row"><span>类比推理</span><strong>' + (jd.analogy && jd.analogy.score || 0) + '</strong><small>' + (jd.analogy && jd.analogy.accuracy || 0) + '%</small></div>';
     html += '</div>';
-    html += '<div style="margin-top:10px;"><button class="btn btn-danger btn-sm" onclick="deleteMock(\'' + m.id + '\')">删除</button></div>';
+    html += secRow('政治理论', fmtSec(secs.politics));
+    html += secRow('常识', fmtSec(secs.common));
+    html += '</div>';
+    if(m.summary) html += '<div style="font-size:13px;color:var(--text-secondary);padding:2px 2px 10px;line-height:1.6;">总结：' + escapeHtml(m.summary).replace(/\n/g, '<br>') + '</div>';
+    html += '<div style="margin-top:6px;"><button class="btn btn-danger btn-sm" onclick="deleteMock(\'' + m.id + '\')">删除</button></div>';
     html += '</div>';
   });
   html += '</div>';
