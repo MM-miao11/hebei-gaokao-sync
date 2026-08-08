@@ -124,25 +124,42 @@ app.get('/api/data', (req, res) => {
   res.json(data);
 });
 
-// 保存数据（后端智能合并，防止任何客户端覆盖丢失）
+// 保存数据
+// mode: 'merge'   （默认）双向智能合并，防止任何一端覆盖丢失
+// mode: 'replace' 纯上传覆盖：云端直接替换为客户端数据（本地是什么云端就是什么）
 app.post('/api/data', (req, res) => {
   const incoming = req.body;
   if (!incoming || typeof incoming !== 'object') {
     return res.status(400).json({ ok: false, error: 'Invalid payload' });
   }
 
+  const mode = incoming.mode || 'merge';
   const current = readData();
 
-  // 按 ID 合并四类数据
-  const merged = {
-    version: incoming.version || current.version || '1.0',
-    words: mergeById(current.words, incoming.words),
-    errors: mergeById(current.errors, incoming.errors),
-    reviews: mergeById(current.reviews, incoming.reviews),
-    practice: mergeById(current.practice, incoming.practice),
-    lastModified: new Date().toISOString(),
-    device: incoming.device || current.device || 'unknown'
-  };
+  let merged;
+  if (mode === 'replace') {
+    // 纯上传覆盖：云端直接用本地数据替换（含软删除标记）
+    merged = {
+      version: incoming.version || '1.0',
+      words: incoming.words || [],
+      errors: incoming.errors || [],
+      reviews: incoming.reviews || [],
+      practice: incoming.practice || [],
+      lastModified: new Date().toISOString(),
+      device: incoming.device || 'unknown'
+    };
+  } else {
+    // 合并模式（默认，保留旧行为兼容）
+    merged = {
+      version: incoming.version || current.version || '1.0',
+      words: mergeById(current.words, incoming.words),
+      errors: mergeById(current.errors, incoming.errors),
+      reviews: mergeById(current.reviews, incoming.reviews),
+      practice: mergeById(current.practice, incoming.practice),
+      lastModified: new Date().toISOString(),
+      device: incoming.device || current.device || 'unknown'
+    };
+  }
 
   // 记录合并摘要（统计活跃数据，排除已删除）
   const countActive = (arr) => (arr || []).filter(x => !x.deleted).length;

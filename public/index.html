@@ -107,11 +107,47 @@ input[type="file"]{display:none;}
 .sidebar-footer button:hover{background:var(--sidebar-hover);color:#fff;}
 .sidebar-footer svg{width:14px;height:14px;}
 
-/* ========== 同步指示器 ========== */
+/* ========== 同步控制区 ========== */
 .sync-bar{
-  padding:8px 20px;border-top:1px solid rgba(255,255,255,0.08);
-  display:flex;align-items:center;gap:6px;
+  padding:8px 12px;border-top:1px solid rgba(255,255,255,0.08);
+  display:flex;flex-direction:column;gap:8px;
   font-size:11px;color:var(--sidebar-text);
+}
+.sync-status-row{
+  display:flex;align-items:center;gap:6px;
+  padding:0 8px;
+}
+.sync-actions{
+  display:flex;gap:8px;
+}
+.sync-actions button{
+  flex:1;
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:6px;
+  color:var(--sidebar-text);
+  font-size:11px;
+  padding:6px 4px;
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  gap:4px;
+  transition:background .2s,border-color .2s;
+}
+.sync-actions button:hover{
+  background:rgba(255,255,255,0.16);
+  border-color:rgba(255,255,255,0.25);
+}
+.sync-actions button:disabled{
+  opacity:.5;cursor:not-allowed;
+}
+.sync-actions button.primary{
+  background:var(--sidebar-active);border-color:var(--sidebar-active);color:#fff;
+}
+.sync-actions button.primary:hover{
+  opacity:.88;
+}
+.sync-actions svg{
+  width:12px;height:12px;
 }
 .sync-dot{
   display:inline-flex;align-items:center;justify-content:center;
@@ -564,8 +600,20 @@ input[type="file"]{display:none;}
       导入恢复
     </button>
   </div>
-  <div class="sync-bar" id="sync-status" onclick="syncPull()" title="点击立即同步">
-    <span class="sync-dot">☁</span><span>自动同步</span>
+  <div class="sync-bar" id="sync-bar">
+    <div class="sync-status-row" id="sync-status">
+      <span class="sync-dot">☁</span><span>手动同步</span>
+    </div>
+    <div class="sync-actions">
+      <button onclick="syncPush()" id="sync-btn-push" class="primary" title="上传当前数据到云端">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        保存到云端
+      </button>
+      <button onclick="syncPull()" id="sync-btn-pull" title="从云端拉取最新数据">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/></svg>
+        从云端同步
+      </button>
+    </div>
   </div>
 </aside>
 
@@ -1236,7 +1284,6 @@ function loadActive(key){
 function saveData(key, data){
   try{
     localStorage.setItem(key, JSON.stringify(data));
-    if(typeof scheduleSyncPush === 'function') scheduleSyncPush();
     return true;
   }catch(e){
     showToast('存储空间不足，建议导出备份后清理');
@@ -2667,7 +2714,7 @@ initExampleData();
 document.getElementById('review-date').value = todayStr();
 renderDashboard();
 
-/* ========== 云端自动同步引擎 ========== */
+/* ========== 云端手动同步引擎 ========== */
 var SYNC_API    = 'https://hebei-gaokao-sync-production.up.railway.app/api/data';
 var SYNC_HEALTH = 'https://hebei-gaokao-sync-production.up.railway.app/health';
 var SYNC_META   = STORAGE_PREFIX + 'sync_meta';
@@ -2755,108 +2802,107 @@ function _mergeArr(local, cloud){
   return Object.values(map);
 }
 
-/* 智能同步：合并本地+云端 → 保存到本地 → 上传到云端 */
-function syncMerge(){
-  if(_syncBusy){ _syncTimer = setTimeout(syncMerge, 5000); return; }
+/* ========== 纯上传：本地 → 云端（覆盖） ==========
+   本地是什么，云端就变成什么。不会从云端拉数据回来。
+   例：本地清空为 0 条 → 云端也变成 0 条。
+*/
+function syncPush(){
+  if(_syncBusy){ return; }
   _syncBusy = true;
-  if(_syncTimer){ clearTimeout(_syncTimer); _syncTimer = null; }
-  _setSyncUI('downloading');
+  _setSyncUI('busy', '上传中…');
 
-  fetch(SYNC_API, { headers:{'Accept':'application/json'} })
+  var now = new Date().toISOString();
+  var payload = {
+    version:'1.0',
+    mode:'replace',                 // 纯上传覆盖，不做合并
+    words:    loadData(KEYS.words)    || [],
+    errors:   loadData(KEYS.errors)   || [],
+    reviews:  loadData(KEYS.reviews)  || [],
+    practice: loadData(KEYS.practice) || [],
+    lastModified: now,
+    device: getDeviceId()
+  };
+
+  fetch(SYNC_API, {
+    method:'POST',
+    headers:{'Content-Type':'application/json','Accept':'application/json'},
+    body: JSON.stringify(payload)
+  })
   .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
-  .then(function(cloud){
-    var localWords = loadData(KEYS.words) || [];
-    var localErrors = loadData(KEYS.errors) || [];
-    var localReviews = loadData(KEYS.reviews) || [];
-    var localPractice = loadData(KEYS.practice) || [];
-
-    var cloudWords = cloud.words || [];
-    var cloudErrors = cloud.errors || [];
-    var cloudReviews = cloud.reviews || [];
-    var cloudPractice = cloud.practice || [];
-
-    var mergedWords = _mergeArr(localWords, cloudWords);
-    var mergedErrors = _mergeArr(localErrors, cloudErrors);
-    var mergedReviews = _mergeArr(localReviews, cloudReviews);
-    var mergedPractice = _mergeArr(localPractice, cloudPractice);
-
-    /* 检测是否有云端新增数据 */
-    var cloudAdded = (mergedWords.length > localWords.length) ||
-                      (mergedErrors.length > localErrors.length) ||
-                      (mergedReviews.length > localReviews.length) ||
-                      (mergedPractice.length > localPractice.length);
-
-    /* 保存合并后的数据到本地 */
-    _syncLoading = true;
-    saveData(KEYS.words, mergedWords);
-    saveData(KEYS.errors, mergedErrors);
-    saveData(KEYS.reviews, mergedReviews);
-    saveData(KEYS.practice, mergedPractice);
-    localStorage.setItem(KEYS.initialized, '1');
-    _syncLoading = false;
-
-    /* 上传合并后的数据到云端 */
-    var now = new Date().toISOString();
-    var payload = {
-      version:'1.0',
-      words: mergedWords,
-      errors: mergedErrors,
-      reviews: mergedReviews,
-      practice: mergedPractice,
-      lastModified: now,
-      device: getDeviceId()
-    };
-    _setSyncUI('uploading');
-    return fetch(SYNC_API, {
-      method:'POST',
-      headers:{'Content-Type':'application/json','Accept':'application/json'},
-      body: JSON.stringify(payload)
-    })
-    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
-    .then(function(){
-      var m = getSyncMeta();
-      m.lastModified = now;
-      m.lastSyncedAt = now;
-      setSyncMeta(m);
-      _setSyncUI('synced');
-      if(cloudAdded){
-        var nav = document.querySelector('.nav-item.active');
-        switchPage(nav ? nav.getAttribute('data-page') : 'dashboard');
-        showToast('已从云端合并 ' + (mergedWords.length - localWords.length) + ' 条新数据');
-      }
-    });
+  .then(function(){
+    var m = getSyncMeta();
+    m.lastModified = now;
+    m.lastSyncedAt = now;
+    setSyncMeta(m);
+    _setSyncUI('synced');
+    showToast('已保存到云端（本地 ' + payload.words.length + ' 条词语）');
   })
   .catch(function(e){
-    console.warn('[sync] merge error:', e.message);
+    console.warn('[sync] push error:', e.message);
     _setSyncUI('error');
   })
   .finally(function(){ _syncBusy = false; });
 }
 
-/* 延迟同步（防抖3秒） */
-function scheduleSyncPush(){
-  if(_syncLoading) return;
-  if(_syncTimer){ clearTimeout(_syncTimer); }
-  _syncTimer = setTimeout(syncMerge, 3000);
+/* ========== 纯下载：云端 → 本地（覆盖） ==========
+   云端是什么，本地就变成什么。不会把本地数据推上去。
+   例：云端有 103 条 → 本地也变成 103 条。
+*/
+function syncPull(){
+  if(_syncBusy){ return; }
+  _syncBusy = true;
+  _setSyncUI('busy', '下载中…');
+
+  fetch(SYNC_API, { headers:{'Accept':'application/json'} })
+  .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+  .then(function(cloud){
+    /* 本地直接替换为云端数据（含软删除标记，前端会自动过滤） */
+    _syncLoading = true;
+    saveData(KEYS.words,    cloud.words    || []);
+    saveData(KEYS.errors,   cloud.errors   || []);
+    saveData(KEYS.reviews,  cloud.reviews  || []);
+    saveData(KEYS.practice, cloud.practice || []);
+    localStorage.setItem(KEYS.initialized, '1');
+    _syncLoading = false;
+
+    var now = new Date().toISOString();
+    var m = getSyncMeta();
+    m.lastModified = cloud.lastModified || now;
+    m.lastSyncedAt = now;
+    setSyncMeta(m);
+    _setSyncUI('synced');
+
+    var activeCount = (cloud.words || []).filter(function(w){ return !w.deleted; }).length;
+    showToast('已从云端同步（' + activeCount + ' 条词语）');
+    /* 刷新当前页面显示 */
+    var nav = document.querySelector('.nav-item.active');
+    switchPage(nav ? nav.getAttribute('data-page') : 'dashboard');
+  })
+  .catch(function(e){
+    console.warn('[sync] pull error:', e.message);
+    _setSyncUI('error');
+  })
+  .finally(function(){ _syncBusy = false; });
 }
 
-/* 手动触发同步 */
-function syncPull(){ syncMerge(); }
-function syncPush(){ syncMerge(); }
+/* 自动同步已禁用（手动模式） */
+function scheduleSyncPush(){ /* 手动模式：不自动同步 */ }
 
 /* 同步状态指示器 */
-function _setSyncUI(state){
+function _setSyncUI(state, label){
   var el = document.getElementById('sync-status');
   if(!el) return;
   var map = {
-    idle:       ['☁','自动同步',''],
-    uploading:  ['⟳','同步中…','spin'],
-    downloading:['⟳','同步中…','spin'],
+    idle:       ['☁','手动同步',''],
+    busy:       ['⟳', label || '同步中…','spin'],
     synced:     ['✓','已同步','ok'],
     error:      ['✗','同步失败','err']
   };
   var s = map[state] || map.idle;
   el.innerHTML = '<span class="sync-dot '+s[2]+'">'+s[0]+'</span><span>'+s[1]+'</span>';
+  /* 同步进行中禁用按钮 */
+  var btns = document.querySelectorAll('.sync-actions button');
+  for(var i=0; i<btns.length; i++){ btns[i].disabled = (state === 'busy'); }
   if(state === 'synced'){
     setTimeout(function(){
       var si = map.idle;
@@ -2865,21 +2911,9 @@ function _setSyncUI(state){
   }
 }
 
-/* 初始化同步 */
+/* 初始化同步（手动模式，不自动同步） */
 function initSync(){
   _setSyncUI('idle');
-  setTimeout(syncMerge, 1500);           // 启动1.5秒后首次同步
-  setInterval(syncMerge, 30000);         // 每30秒自动同步（更频繁）
-  document.addEventListener('visibilitychange', function(){
-    if(!document.hidden) syncMerge();     // 切回标签页时立即同步
-  });
-  // 监听其他标签页的 storage 变化（同一浏览器多标签页同步）
-  window.addEventListener('storage', function(e){
-    if(e.key && e.key.indexOf('heb_') === 0){
-      console.log('[sync] storage changed in another tab', e.key);
-      syncMerge();
-    }
-  });
 }
 
 initSync();
