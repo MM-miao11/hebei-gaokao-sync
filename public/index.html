@@ -1476,20 +1476,20 @@ input[type="file"]{display:none;}
       <div class="form-row">
         <div class="form-group">
           <label class="form-label">图形推理</label>
-          <input type="number" id="mock-judge-fig-score" placeholder="得分" min="0">
-          <input type="number" id="mock-judge-fig-acc" placeholder="正确率%" min="0" max="100" style="margin-top:6px;">
+          <input type="text" id="mock-judge-fig-frac" placeholder="如 8/10">
+          <input type="number" id="mock-judge-fig-score" placeholder="得分(选填)" min="0" style="margin-top:6px;">
           <input type="number" id="mock-judge-fig-time" placeholder="用时(分)" min="0" style="margin-top:6px;">
         </div>
         <div class="form-group">
           <label class="form-label">定义判断</label>
-          <input type="number" id="mock-judge-def-score" placeholder="得分" min="0">
-          <input type="number" id="mock-judge-def-acc" placeholder="正确率%" min="0" max="100" style="margin-top:6px;">
+          <input type="text" id="mock-judge-def-frac" placeholder="如 8/10">
+          <input type="number" id="mock-judge-def-score" placeholder="得分(选填)" min="0" style="margin-top:6px;">
           <input type="number" id="mock-judge-def-time" placeholder="用时(分)" min="0" style="margin-top:6px;">
         </div>
         <div class="form-group">
           <label class="form-label">类比推理</label>
-          <input type="number" id="mock-judge-ana-score" placeholder="得分" min="0">
-          <input type="number" id="mock-judge-ana-acc" placeholder="正确率%" min="0" max="100" style="margin-top:6px;">
+          <input type="text" id="mock-judge-ana-frac" placeholder="如 8/10">
+          <input type="number" id="mock-judge-ana-score" placeholder="得分(选填)" min="0" style="margin-top:6px;">
           <input type="number" id="mock-judge-ana-time" placeholder="用时(分)" min="0" style="margin-top:6px;">
         </div>
       </div>
@@ -3384,6 +3384,14 @@ function saveMock(){
     var time = tm === '' ? null : (parseFloat(tm) || 0);
     return { correct: f.correct, total: f.total, accuracy: f.accuracy, score: score, time: time };
   };
+  var buildSub = function(code){
+    var f = parseFrac(getVal('mock-judge-' + code + '-frac'));
+    var sc = getVal('mock-judge-' + code + '-score');
+    var tm = getVal('mock-judge-' + code + '-time');
+    var score = sc === '' ? null : (parseFloat(sc) || 0);
+    var time = tm === '' ? null : (parseFloat(tm) || 0);
+    return { correct: f.correct, total: f.total, accuracy: f.accuracy, score: score, time: time };
+  };
   var editId = document.getElementById('mock-edit-id').value;
   var exam = {
     name: name,
@@ -3399,9 +3407,9 @@ function saveMock(){
       common: buildSec('common')
     },
     judgeDetails: {
-      figure: { score: getNum('mock-judge-fig-score'), accuracy: getNum('mock-judge-fig-acc'), time: getNum('mock-judge-fig-time') || null },
-      definition: { score: getNum('mock-judge-def-score'), accuracy: getNum('mock-judge-def-acc'), time: getNum('mock-judge-def-time') || null },
-      analogy: { score: getNum('mock-judge-ana-score'), accuracy: getNum('mock-judge-ana-acc'), time: getNum('mock-judge-ana-time') || null }
+      figure: buildSub('fig'),
+      definition: buildSub('def'),
+      analogy: buildSub('ana')
     },
     summary: document.getElementById('mock-summary').value.trim(),
     lastModified: new Date().toISOString()
@@ -3436,9 +3444,9 @@ function clearMockForm(){
    'mock-quant-frac','mock-quant-score','mock-quant-time',
    'mock-politics-frac','mock-politics-score','mock-politics-time',
    'mock-common-frac','mock-common-score','mock-common-time',
-   'mock-judge-fig-score','mock-judge-fig-acc','mock-judge-fig-time',
-   'mock-judge-def-score','mock-judge-def-acc','mock-judge-def-time',
-   'mock-judge-ana-score','mock-judge-ana-acc','mock-judge-ana-time'].forEach(function(id){ var el = document.getElementById(id); if(el) el.value = ''; });
+   'mock-judge-fig-frac','mock-judge-fig-score','mock-judge-fig-time',
+   'mock-judge-def-frac','mock-judge-def-score','mock-judge-def-time',
+   'mock-judge-ana-frac','mock-judge-ana-score','mock-judge-ana-time'].forEach(function(id){ var el = document.getElementById(id); if(el) el.value = ''; });
   document.getElementById('mock-form-title').textContent = '新增模考';
   document.getElementById('mock-save-btn').textContent = '保存模考记录';
   document.getElementById('mock-cancel-btn').style.display = 'none';
@@ -3470,12 +3478,15 @@ function renderMock(){
   };
   var fmtSub = function(s){
     if(!s) return '—';
-    var score = (s.score != null && s.score !== '') ? Number(s.score) : 0;
+    var correct = Number(s.correct) || 0;
+    var total = Number(s.total) || 0;
     var accuracy = Number(s.accuracy) || 0;
+    var score = (s.score != null && s.score !== '') ? Number(s.score) : 0;
     var time = (s.time != null && s.time !== '') ? Number(s.time) : 0;
     var parts = [];
+    if(total > 0) parts.push('【' + correct + '】【' + accuracy + '%】');
+    else if(accuracy > 0) parts.push('【' + accuracy + '%】');
     if(score > 0) parts.push('【' + score + '分】');
-    if(accuracy > 0) parts.push('【' + accuracy + '%】');
     if(time > 0) parts.push('【' + time + '分钟】');
     return parts.length ? '<span style="' + VAL_STYLE + '">' + parts.join('') + '</span>' : '—';
   };
@@ -3538,8 +3549,15 @@ function editMock(id){
   };
   var setSub = function(code, sub){
     if(!sub) sub = {};
+    var fracIn = document.getElementById('mock-judge-' + code + '-frac');
+    if(sub.total > 0 && sub.correct > 0){
+      fracIn.value = sub.correct + '/' + sub.total;
+    } else if(sub.correct > 0){
+      fracIn.value = String(sub.correct);
+    } else {
+      fracIn.value = '';
+    }
     document.getElementById('mock-judge-' + code + '-score').value = sub.score != null ? sub.score : '';
-    document.getElementById('mock-judge-' + code + '-acc').value = sub.accuracy != null ? sub.accuracy : '';
     document.getElementById('mock-judge-' + code + '-time').value = sub.time != null ? sub.time : '';
   };
   var secs = m.sections || {};
