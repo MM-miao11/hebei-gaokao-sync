@@ -318,6 +318,8 @@ input[type="file"]{display:none;}
 .btn-danger{background:var(--danger);color:#fff;}
 .btn-danger:hover{background:#dc2626;}
 .btn-success{background:var(--success);color:#fff;}
+.btn-warning{background:#f59e0b;color:#fff;}
+.btn-warning:hover{background:#d97706;}
 .btn-ghost{background:transparent;color:var(--text-secondary);padding:6px 12px;}
 .btn-ghost:hover{background:var(--main-bg);}
 .btn-sm{padding:6px 14px;font-size:13px;}
@@ -1100,7 +1102,7 @@ input[type="file"]{display:none;}
     </select>
     <button class="btn btn-primary btn-sm" onclick="startQuiz()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-      随机抽查
+      开始复习
     </button>
     <button class="btn btn-outline btn-sm" onclick="showAddWordForm()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
@@ -1535,13 +1537,17 @@ input[type="file"]{display:none;}
       <div class="qc-text quiz-hidden" id="quiz-examples" onclick="revealQuiz(&#39;examples&#39;)">点击查看例句</div>
     </div>
     <div class="quiz-actions">
-      <button class="btn btn-danger btn-sm" onclick="answerQuiz(false)">
+      <button class="btn btn-danger btn-sm" onclick="answerQuiz('forget')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-        没记住
+        忘记
       </button>
-      <button class="btn btn-success btn-sm" onclick="answerQuiz(true)">
+      <button class="btn btn-warning btn-sm" onclick="answerQuiz('fuzzy')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+        模糊
+      </button>
+      <button class="btn btn-success btn-sm" onclick="answerQuiz('know')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-        记住了
+        认识
       </button>
       <button class="btn btn-ghost btn-sm" onclick="closeQuiz()">退出</button>
     </div>
@@ -2386,7 +2392,7 @@ function saveError(){
     var newWord = {
       id:uid(), word:extractWord, category:'其他', source:err.sourceDetail || err.source,
       explanation:'', example1:'', example2:'', example3:'',
-      starred:false, reviewLevel:0, lastReview:null, nextReview:dateOffset(1), createdAt:todayStr()
+      starred:false, reviewLevel:0, lastReview:null, nextReview:dateOffset(1), easeFactor:2.5, reps:0, createdAt:todayStr()
     };
     words.unshift(newWord);
     saveData(KEYS.words, words);
@@ -2620,6 +2626,8 @@ function saveWord(){
     wordData.reviewLevel = 0;
     wordData.lastReview = null;
     wordData.nextReview = dateOffset(1);
+    wordData.easeFactor = 2.5;
+    wordData.reps = 0;
     wordData.createdAt = todayStr();
     words.unshift(wordData);
     showToast('词语已添加');
@@ -2745,13 +2753,34 @@ function startQuiz(){
     return;
   }
 
-  // 随机选 N 个
-  var shuffled = words.slice().sort(function(){ return Math.random() - 0.5; });
-  quizWords = shuffled.slice(0, Math.min(rs.quizCount, shuffled.length));
+  // 优先到期 + 全量兜底的 SRS 调度
+  quizWords = scheduleQuizWords(words, rs.quizCount);
+
+  if(quizWords.length === 0){
+    showToast('暂无可复习词语');
+    return;
+  }
   quizIndex = 0;
   quizRevealed = { explanation:false, examples:false };
   document.getElementById('quiz-overlay').classList.add('show');
   renderQuiz();
+}
+
+/* 按艾宾浩斯 / SM-2 间隔算法调度复习列表
+ * - 优先：今日到期（nextReview <= 今天）的词语
+ * - 兜底：无到期词时，取全部词语按上次复习时间升序补齐 */
+function scheduleQuizWords(words, limit){
+  var today = todayStr();
+  var due = words.filter(function(w){ return w.nextReview && w.nextReview <= today; });
+  var rest = words.filter(function(w){ return !(w.nextReview && w.nextReview <= today); });
+  rest.sort(function(a,b){
+    var ta = a.lastReview || '0000-00-00';
+    var tb = b.lastReview || '0000-00-00';
+    return ta < tb ? -1 : (ta > tb ? 1 : 0);
+  });
+  var picked = due.concat(rest).slice(0, Math.min(limit, due.length + rest.length));
+  // 到期词在前，整体保持相对稳定顺序即可（不打乱到期集合本身）
+  return picked;
 }
 
 /* 自由选择复习词语 */
@@ -2888,21 +2917,39 @@ function revealQuiz(type){
   quizRevealed[type] = true;
 }
 
-function answerQuiz(correct){
+function answerQuiz(grade){
   var w = quizWords[quizIndex];
   var words = loadData(KEYS.words);
 
   words.forEach(function(x){
     if(x.id === w.id){
-      if(correct){
-        x.reviewLevel = Math.min(5, (x.reviewLevel||0) + 1);
+      // 初始化 SM-2 参数（兼容旧数据）
+      if(typeof x.easeFactor !== 'number') x.easeFactor = 2.5;
+      if(typeof x.reps !== 'number') x.reps = 0; // 连续"认识"次数
+
+      if(grade === 'know'){
+        // 认识：难度下降、间隔拉长
+        x.easeFactor = Math.max(1.3, x.easeFactor - 0.0 + 0.0); // 保持易度
+        x.reps += 1;
+        x.reviewLevel = Math.min(5, (x.reviewLevel || 0) + 1);
+        // 间隔：首日1天，之后按易度因子递增（SM-2 简化版）
+        if(x.reps === 1) x.nextReview = dateOffset(1);
+        else if(x.reps === 2) x.nextReview = dateOffset(3);
+        else x.nextReview = dateOffset(Math.round((x.reviewLevel >= 2 ? 6 : 3) * x.easeFactor));
+      } else if(grade === 'fuzzy'){
+        // 模糊：小幅降低易度，缩短间隔，连续成功清零
+        x.easeFactor = Math.max(1.3, x.easeFactor - 0.15);
+        x.reps = 0;
+        x.reviewLevel = Math.max(0, (x.reviewLevel || 0) - 1);
+        x.nextReview = dateOffset(1); // 明天再见面
       } else {
+        // 忘记：易度大幅降低，进度重置，当天重来
+        x.easeFactor = Math.max(1.3, x.easeFactor - 0.3);
+        x.reps = 0;
         x.reviewLevel = 0;
+        x.nextReview = dateOffset(0); // 当天再出现
       }
       x.lastReview = todayStr();
-      // 根据等级设置下次复习时间
-      var days = [1, 2, 4, 7, 15, 30];
-      x.nextReview = dateOffset(days[x.reviewLevel] || 30);
       x.lastModified = new Date().toISOString();
     }
   });
