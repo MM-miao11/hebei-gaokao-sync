@@ -324,6 +324,18 @@ input[type="file"]{display:none;}
 .btn-ghost:hover{background:var(--main-bg);}
 .btn-sm{padding:6px 14px;font-size:13px;}
 
+/* ========== 词语统计栏 ========== */
+.word-statbar{
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--card-bg);border-radius:var(--radius);
+  padding:14px 18px;margin-bottom:14px;
+  box-shadow:var(--shadow);border:1px solid var(--border-color);
+}
+.word-today-due{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.word-today-label{font-size:14px;font-weight:600;color:var(--text-primary);}
+#word-due-count{font-size:18px;color:var(--accent);}
+.word-today-hint{font-size:12px;color:var(--text-tertiary);}
+
 /* ========== 词语卡片 ========== */
 .word-card{
   background:var(--card-bg);border-radius:var(--radius);padding:18px;
@@ -1107,6 +1119,18 @@ input[type="file"]{display:none;}
   <div class="page-header">
     <div class="page-title">词语积累库</div>
     <div class="page-desc">言语易错词语专项积累：填空+释义+三例句</div>
+  </div>
+
+  <div class="word-statbar">
+    <div class="word-today-due">
+      <span class="word-today-label">今日待复习</span>
+      <strong id="word-due-count">0/0</strong>
+      <span class="word-today-hint">今日已复习 / 今日需复习</span>
+    </div>
+    <button class="btn btn-ghost btn-sm" onclick="cycleWordSort()" id="word-sort-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      排序：添加时间
+    </button>
   </div>
 
   <div class="toolbar">
@@ -2723,6 +2747,20 @@ function saveWord(){
   renderWords();
 }
 
+var wordSortMode = 'time'; // time | pinyin | level
+
+function cycleWordSort(){
+  var order = ['time','pinyin','level'];
+  var idx = order.indexOf(wordSortMode);
+  wordSortMode = order[(idx + 1) % order.length];
+  var labels = { time:'添加时间', pinyin:'拼音', level:'熟练度' };
+  var btn = document.getElementById('word-sort-btn');
+  if(btn){
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>排序：' + labels[wordSortMode];
+  }
+  renderWords();
+}
+
 function renderWords(){
   var words = loadActive(KEYS.words);
   var search = document.getElementById('word-search').value.toLowerCase();
@@ -2730,12 +2768,37 @@ function renderWords(){
   var filterStar = document.getElementById('word-filter-star').value;
   var today = todayStr();
 
+  // 今日待复习统计：已复习数 / 今日需复习总数
+  var todayDue = words.filter(function(w){ return w.nextReview && w.nextReview <= today; });
+  var todayReviewed = todayDue.filter(function(w){ return w.lastReview === today; }).length;
+  var dueCountEl = document.getElementById('word-due-count');
+  if(dueCountEl) dueCountEl.textContent = todayReviewed + '/' + todayDue.length;
+
   var filtered = words.filter(function(w){
     if(search && w.word.toLowerCase().indexOf(search) === -1 && w.explanation.toLowerCase().indexOf(search) === -1) return false;
     if(filterCat && w.category !== filterCat) return false;
     if(filterStar === 'starred' && !w.starred) return false;
     if(filterStar === 'due' && !(w.nextReview && w.nextReview <= today)) return false;
     return true;
+  });
+
+  // 排序
+  filtered.sort(function(a,b){
+    if(wordSortMode === 'time'){
+      var ta = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+      var tb = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+      return tb - ta; // 新的在前
+    }
+    if(wordSortMode === 'pinyin'){
+      return (a.word || '').localeCompare(b.word || '', 'zh-CN');
+    }
+    if(wordSortMode === 'level'){
+      var la = (a.reviewLevel || 0), lb = (b.reviewLevel || 0);
+      if(la !== lb) return lb - la; // 熟练度高的在前
+      var pa = a.word || '', pb = b.word || '';
+      return pa.localeCompare(pb, 'zh-CN');
+    }
+    return 0;
   });
 
   var list = document.getElementById('word-list');
