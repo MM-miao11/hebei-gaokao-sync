@@ -3382,6 +3382,38 @@ function escapeHtml(str){
   return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
 }
 
+/* ========== 模块1：每日学习记录表 —— 常量（必须在初始化 renderStudyLog 调用之前声明，避免变量提升导致 JSON.parse(undefined)） ========== */
+var STUDY_SUBJECTS = ['资料分析','判断推理','言语理解','数量关系','时政','申论'];
+var DEFAULT_STUDY_COLUMNS = {
+  '资料分析': [
+    {id:'col_zl_haihai', name:'海海刷'},
+    {id:'col_zl_chaobei', name:'超大杯'}
+  ],
+  '判断推理': [
+    {id:'col_pd_tuxing', name:'图形推理'},
+    {id:'col_pd_dingyi', name:'定义判断'},
+    {id:'col_pd_leibi',  name:'类比推理'},
+    {id:'col_pd_luoji',  name:'逻辑判断'}
+  ],
+  '言语理解': [
+    {id:'col_yy_luoji',    name:'逻辑填空'},
+    {id:'col_yy_pianduan', name:'片段阅读'}
+  ],
+  '数量关系': [
+    {id:'col_sl_shuli', name:'数学运算'},
+    {id:'col_sl_zhili', name:'数字推理'}
+  ],
+  '时政': [
+    {id:'col_sz_zhengce', name:'政策热点'}
+  ],
+  '申论': [
+    {id:'col_slun_tigang',  name:'提纲'},
+    {id:'col_slun_article', name:'大作文'}
+  ]
+};
+
+var studyLogMonth = getCurrentMonthKey();
+
 /* ========== 初始化 ========== */
 initExampleData();
 document.getElementById('review-date').value = todayStr();
@@ -3971,41 +4003,11 @@ function initSync(){
 }
 
 initSync();
-/* ========== 模块1：每日学习记录表 ========== */
-var STUDY_SUBJECTS = ['资料分析','判断推理','言语理解','数量关系','时政','申论'];
-var DEFAULT_STUDY_COLUMNS = {
-  '资料分析': [
-    {id:'col_zl_haihai', name:'海海刷'},
-    {id:'col_zl_chaobei', name:'超大杯'}
-  ],
-  '判断推理': [
-    {id:'col_pd_tuxing', name:'图形推理'},
-    {id:'col_pd_dingyi', name:'定义判断'},
-    {id:'col_pd_leibi',  name:'类比推理'},
-    {id:'col_pd_luoji',  name:'逻辑判断'}
-  ],
-  '言语理解': [
-    {id:'col_yy_luoji',    name:'逻辑填空'},
-    {id:'col_yy_pianduan', name:'片段阅读'}
-  ],
-  '数量关系': [
-    {id:'col_sl_shuli', name:'数学运算'},
-    {id:'col_sl_zhili', name:'数字推理'}
-  ],
-  '时政': [
-    {id:'col_sz_zhengce', name:'政策热点'}
-  ],
-  '申论': [
-    {id:'col_slun_tigang',  name:'提纲'},
-    {id:'col_slun_article', name:'大作文'}
-  ]
-};
 
 function getCurrentMonthKey(){
   var d = new Date();
   return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
 }
-var studyLogMonth = getCurrentMonthKey();
 
 function getStudyColumns(){
   var cols = loadData(KEYS.studyColumns);
