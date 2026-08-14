@@ -221,51 +221,6 @@ input[type="file"]{display:none;}
 .page-title{font-size:22px;font-weight:700;color:var(--text-primary);}
 .page-desc{font-size:14px;color:var(--text-secondary);margin-top:4px;}
 
-/* ========== 今天要处理 ========== */
-.today-box{
-  background:linear-gradient(135deg,#fff5f5,#fff);
-  border:1px solid #fecaca;border-radius:var(--radius);
-  padding:20px;margin-bottom:24px;
-}
-.today-box-header{display:flex;align-items:center;gap:8px;margin-bottom:16px;}
-.today-box-header svg{width:22px;height:22px;color:var(--danger);}
-.today-box-header h3{font-size:16px;font-weight:700;color:var(--text-primary);}
-.today-box-header .count{
-  margin-left:auto;background:var(--danger);color:#fff;
-  font-size:12px;padding:2px 10px;border-radius:12px;font-weight:600;
-}
-.today-list{display:flex;flex-direction:column;gap:10px;}
-.today-item{
-  display:flex;align-items:center;gap:12px;padding:12px 14px;
-  background:#fff;border:1px solid var(--border);border-radius:var(--radius-sm);
-  transition:box-shadow .2s;
-}
-.today-item:hover{box-shadow:var(--shadow-md);}
-.today-item.overdue{border-left:3px solid var(--danger);}
-.today-item .ti-icon{
-  width:36px;height:36px;border-radius:8px;
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
-}
-.today-item .ti-icon svg{width:18px;height:18px;}
-.ti-icon.err{background:var(--danger-light);color:var(--danger);}
-.ti-icon.word{background:var(--warning-light);color:var(--warning);}
-.ti-icon.prac{background:var(--accent-light);color:var(--accent);}
-.today-item .ti-content{flex:1;min-width:0;}
-.today-item .ti-title{font-size:14px;font-weight:600;color:var(--text-primary);}
-.today-item .ti-title .tag-overdue{
-  display:inline-block;background:var(--danger);color:#fff;
-  font-size:11px;padding:1px 6px;border-radius:4px;margin-left:6px;font-weight:500;
-}
-.today-item .ti-desc{font-size:12px;color:var(--text-secondary);margin-top:2px;}
-.today-item .ti-btn{
-  padding:6px 14px;border-radius:6px;font-size:13px;font-weight:600;
-  background:var(--accent);color:#fff;white-space:nowrap;flex-shrink:0;
-  transition:background .2s;
-}
-.today-item .ti-btn:hover{background:var(--accent-dark);}
-.today-empty{text-align:center;padding:20px;color:var(--text-tertiary);font-size:14px;}
-.today-empty svg{width:40px;height:40px;margin-bottom:8px;opacity:.4;}
-
 /* ========== 统计卡片 ========== */
 .stats-grid{
   display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;
@@ -874,16 +829,6 @@ input[type="file"]{display:none;}
       <table class="studylog-table" id="studylog-table"></table>
     </div>
     <div class="studylog-hint">提示：表格内直接填写「完成情况」和「正确率(%)」实时保存；正确率≥80%绿色、60%-80%黄色、&lt;60%红色。鼠标悬停在日期、阶段标题或分隔线上会出现 ✕，点击可删除该行。</div>
-  </div>
-
-  <!-- 今天要处理 -->
-  <div class="today-box" id="today-box">
-    <div class="today-box-header">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-      <h3>今天要处理</h3>
-      <span class="count" id="today-count">0</span>
-    </div>
-    <div class="today-list" id="today-list"><div class="today-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg><p>今天的任务都完成啦，继续保持！</p></div></div>
   </div>
 
   <!-- 统计卡片 -->
@@ -2022,9 +1967,6 @@ function renderDashboard(){
     navBadge.style.display = 'none';
   }
 
-  // 今天要处理
-  renderTodayTasks(words, errors, practice);
-
   // 近7日刷题趋势
   renderPracticeChart(practice);
 }
@@ -2067,91 +2009,6 @@ function openWordProgress(){
 function closeWordProgress(){
   var el = document.getElementById('word-progress-overlay');
   if(el) el.classList.remove('show');
-}
-
-function renderTodayTasks(words, errors, practice){
-  var today = todayStr();
-  var tasks = [];
-
-  // 逾期未复盘错题
-  errors.forEach(function(e){
-    if(!e.reviewed){
-      var created = new Date(e.createdAt);
-      var daysAgo = Math.floor((new Date() - created) / (1000*60*60*24));
-      var isOverdue = daysAgo >= 2;
-      tasks.push({
-        type:'error',
-        overdue:isOverdue,
-        title:'错题未复盘：' + (e.question ? e.question.substring(0,30) : '未命名') + '...',
-        desc:e.type + ' / ' + (e.sourceDetail || e.source) + (isOverdue ? ' / 已逾期' + daysAgo + '天' : ''),
-        action:'去复盘',
-        onclick:function(){ switchPage('errorbook'); }
-      });
-    }
-  });
-
-  // 词语待复习
-  words.forEach(function(w){
-    if(w.nextReview && w.nextReview <= today){
-      tasks.push({
-        type:'word',
-        overdue:w.nextReview < today,
-        title:'词语待复习：' + w.word,
-        desc:w.category + (w.source ? ' / ' + w.source : '') + (w.nextReview < today ? ' / 已逾期' : ''),
-        action:'去复习',
-        onclick:function(){ startQuiz(); }
-      });
-    }
-  });
-
-  // 今日未刷题
-  var todayPrac = practice.filter(function(p){ return p.date === today; });
-  if(todayPrac.length === 0){
-    tasks.push({
-      type:'practice',
-      overdue:false,
-      title:'今日尚未刷题',
-      desc:'点击开始今日言语练习',
-      action:'去刷题',
-      onclick:function(){ switchPage('practice'); }
-    });
-  }
-
-  var list = document.getElementById('today-list');
-  document.getElementById('today-count').textContent = tasks.length;
-
-  if(tasks.length === 0){
-    list.innerHTML = '<div class="today-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><p>今天的任务都完成啦，继续保持！</p></div>';
-    return;
-  }
-
-  var html = '';
-  tasks.forEach(function(t){
-    var iconHtml = '';
-    if(t.type === 'error'){
-      iconHtml = '<div class="ti-icon err"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>';
-    } else if(t.type === 'word'){
-      iconHtml = '<div class="ti-icon word"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></div>';
-    } else {
-      iconHtml = '<div class="ti-icon prac"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>';
-    }
-    html += '<div class="today-item' + (t.overdue ? ' overdue' : '') + '">' +
-      iconHtml +
-      '<div class="ti-content"><div class="ti-title">' + escapeHtml(t.title) + (t.overdue ? '<span class="tag-overdue">逾期</span>' : '') + '</div>' +
-      '<div class="ti-desc">' + escapeHtml(t.desc) + '</div></div>' +
-      '<button class="ti-btn" onclick="handleTodayTask(' + tasks.indexOf(t) + ')">' + t.action + '</button>' +
-    '</div>';
-  });
-  list.innerHTML = html;
-
-  // 存储tasks供onclick使用
-  window._todayTasks = tasks;
-}
-
-function handleTodayTask(idx){
-  if(window._todayTasks && window._todayTasks[idx]){
-    window._todayTasks[idx].onclick();
-  }
 }
 
 function renderPracticeChart(practice){
@@ -3529,6 +3386,7 @@ function escapeHtml(str){
 initExampleData();
 document.getElementById('review-date').value = todayStr();
 renderDashboard();
+renderStudyLog();
 
 
 /* ========== 新模块：错题/知识库/复盘（资料分析、判断推理共用） ========== */
