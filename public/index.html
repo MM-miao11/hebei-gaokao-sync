@@ -612,27 +612,38 @@ input[type="file"]{display:none;}
 .studylog-month{display:flex;align-items:center;gap:8px;}
 .studylog-month-label{font-size:15px;font-weight:700;color:var(--text-primary);min-width:96px;text-align:center;}
 .studylog-actions{display:flex;gap:8px;flex-wrap:wrap;}
-.studylog-wrap{overflow-x:auto;border:1px solid var(--border-color);border-radius:var(--radius);background:var(--card-bg);}
-.studylog-table{border-collapse:collapse;width:100%;font-size:13px;min-width:760px;}
+.studylog-wrap{overflow-x:auto;border:1px solid var(--border-color);border-radius:var(--radius);background:var(--card-bg);box-shadow:var(--shadow);}
+.studylog-table{border-collapse:separate;border-spacing:0;width:100%;font-size:13px;min-width:760px;}
 .studylog-table th,.studylog-table td{border:1px solid var(--border-color);padding:6px 8px;text-align:center;white-space:nowrap;color:var(--text-primary);}
 .studylog-table thead th{background:var(--bg-secondary);position:sticky;top:0;z-index:2;font-weight:600;}
-.studylog-table .sl-sticky{position:sticky;left:0;z-index:3;background:var(--bg-secondary);}
+.studylog-table .sl-sticky{position:sticky;left:0;z-index:3;background:var(--bg-secondary);box-shadow:2px 0 4px rgba(0,0,0,0.05);}
 .studylog-table thead .sl-sticky{background:var(--bg-secondary);}
-.studylog-table .sl-subject{background:var(--accent-light);color:var(--accent);font-size:13px;}
+.studylog-table tbody .sl-sticky{background:#f8fafc;}
+.studylog-table .sl-subject{font-size:13px;font-weight:700;letter-spacing:0.5px;}
+.studylog-table thead tr:nth-child(2) th{background:#f1f5f9;}
 .studylog-table .sl-col{font-weight:500;color:var(--text-secondary);font-size:12px;}
 .studylog-table .sl-weekday{color:var(--text-secondary);}
+.studylog-table .sl-weekend{color:#dc2626;font-weight:700;}
 .studylog-table .sl-datecell{display:flex;align-items:center;gap:4px;}
-.studylog-table .sl-input{width:64px;max-width:84px;padding:4px 6px;border:1px solid var(--border-color);border-radius:5px;background:var(--main-bg);color:var(--text-primary);font-size:13px;text-align:center;}
+.studylog-table .sl-input{width:64px;max-width:84px;padding:4px 6px;border:1px solid var(--border-color);border-radius:5px;background:var(--main-bg);color:var(--text-primary);font-size:13px;text-align:center;transition:border-color .15s,box-shadow .15s;}
 .studylog-table .sl-input.sl-date{width:130px;text-align:left;}
-.studylog-table .sl-input:focus{outline:2px solid var(--accent);border-color:var(--accent);}
+.studylog-table .sl-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px rgba(79,125,243,0.15);}
 .studylog-table .acc-green{background:#dcfce7 !important;color:#166534;font-weight:600;}
 .studylog-table .acc-yellow{background:#fef9c3 !important;color:#854d0e;font-weight:600;}
 .studylog-table .acc-red{background:#fee2e2 !important;color:#991b1b;font-weight:600;}
-.studylog-table .sl-del-btn{margin-left:4px;border:none;background:transparent;color:var(--text-tertiary);cursor:pointer;font-size:13px;padding:0 2px;line-height:1;}
-.studylog-table .sl-del-btn:hover{color:var(--danger);}
+.studylog-table .sl-del-btn{margin-left:4px;border:none;background:transparent;color:var(--text-tertiary);cursor:pointer;font-size:13px;padding:0 2px;line-height:1;opacity:0.7;transition:opacity .15s,color .15s;}
+.studylog-table .sl-del-btn:hover{color:var(--danger);opacity:1;}
+.studylog-table .sl-stage-row,.studylog-table .sl-sep-row{position:relative;}
+.studylog-table .sl-stage-row .sl-del-btn,.studylog-table .sl-sep-row .sl-del-btn{opacity:0;}
+.studylog-table .sl-stage-row:hover .sl-del-btn,.studylog-table .sl-sep-row:hover .sl-del-btn{opacity:0.8;}
 .studylog-table .sl-stage{background:var(--accent);color:#fff;font-weight:700;font-size:14px;letter-spacing:2px;text-align:center;padding:8px;}
-.studylog-table .sl-sep{background:var(--bg-secondary);color:var(--text-secondary);font-size:12px;text-align:left;padding:5px 10px;border-top:2px solid var(--border);}
+.studylog-table .sl-stage span{vertical-align:middle;}
+.studylog-table .sl-sep{background:linear-gradient(90deg,#f8fafc,#e2e8f0);color:var(--text-secondary);font-size:12px;text-align:left;padding:5px 10px;border-top:2px solid var(--border);font-weight:600;}
+.studylog-table .sl-sep span{vertical-align:middle;}
 .studylog-table .sl-empty{color:var(--text-tertiary);padding:24px;text-align:center;}
+.studylog-table tbody tr.sl-data-row:nth-child(even){background:rgba(248,250,252,0.55);}
+.studylog-table tbody tr.sl-data-row:hover{background:rgba(79,125,243,0.05);}
+.studylog-table tbody tr.sl-data-row:hover .sl-sticky{background:#eef2ff;}
 .studylog-table tfoot .sl-stat-row{background:var(--bg-secondary);font-weight:600;}
 .studylog-table tfoot .sl-stat-label{text-align:right;font-weight:700;}
 .studylog-table tfoot .sl-stat{font-size:12px;}
@@ -642,6 +653,38 @@ input[type="file"]{display:none;}
 .study-cols-editor .sce-list{display:flex;flex-direction:column;gap:6px;margin-bottom:6px;}
 .study-cols-editor .sce-item{display:flex;gap:6px;align-items:center;}
 .study-cols-editor .sce-item .sl-input{width:100%;text-align:left;}
+
+/* 学科分组色带 */
+.studylog-table .sl-subject-idx-0{background:#e0f2fe;color:#075985;}
+.studylog-table .sl-subject-idx-1{background:#f3e8ff;color:#6b21a8;}
+.studylog-table .sl-subject-idx-2{background:#dcfce7;color:#166534;}
+.studylog-table .sl-subject-idx-3{background:#ffedd5;color:#9a3412;}
+.studylog-table .sl-subject-idx-4{background:#fef9c3;color:#854d0e;}
+.studylog-table .sl-subject-idx-5{background:#ffe4e6;color:#9f1239;}
+.studylog-table thead tr:nth-child(2) th.sl-subject-idx-0{background:#e0f2fe80;}
+.studylog-table thead tr:nth-child(2) th.sl-subject-idx-1{background:#f3e8ff80;}
+.studylog-table thead tr:nth-child(2) th.sl-subject-idx-2{background:#dcfce780;}
+.studylog-table thead tr:nth-child(2) th.sl-subject-idx-3{background:#ffedd580;}
+.studylog-table thead tr:nth-child(2) th.sl-subject-idx-4{background:#fef9c380;}
+.studylog-table thead tr:nth-child(2) th.sl-subject-idx-5{background:#ffe4e680;}
+.studylog-table tbody td.sl-subject-idx-0{background:rgba(224,242,254,0.18);}
+.studylog-table tbody td.sl-subject-idx-1{background:rgba(243,232,255,0.18);}
+.studylog-table tbody td.sl-subject-idx-2{background:rgba(220,252,231,0.18);}
+.studylog-table tbody td.sl-subject-idx-3{background:rgba(255,237,213,0.18);}
+.studylog-table tbody td.sl-subject-idx-4{background:rgba(254,249,195,0.18);}
+.studylog-table tbody td.sl-subject-idx-5{background:rgba(255,228,230,0.18);}
+.studylog-table tfoot td.sl-subject-idx-0{background:#e0f2fe66;}
+.studylog-table tfoot td.sl-subject-idx-1{background:#f3e8ff66;}
+.studylog-table tfoot td.sl-subject-idx-2{background:#dcfce766;}
+.studylog-table tfoot td.sl-subject-idx-3{background:#ffedd566;}
+.studylog-table tfoot td.sl-subject-idx-4{background:#fef9c366;}
+.studylog-table tfoot td.sl-subject-idx-5{background:#ffe4e666;}
+.studylog-table tbody td.sl-subject-idx-0 .sl-input{background:rgba(255,255,255,0.85);}
+.studylog-table tbody td.sl-subject-idx-1 .sl-input{background:rgba(255,255,255,0.85);}
+.studylog-table tbody td.sl-subject-idx-2 .sl-input{background:rgba(255,255,255,0.85);}
+.studylog-table tbody td.sl-subject-idx-3 .sl-input{background:rgba(255,255,255,0.85);}
+.studylog-table tbody td.sl-subject-idx-4 .sl-input{background:rgba(255,255,255,0.85);}
+.studylog-table tbody td.sl-subject-idx-5 .sl-input{background:rgba(255,255,255,0.85);}
 </style>
 </head>
 <body>
@@ -830,7 +873,7 @@ input[type="file"]{display:none;}
     <div class="studylog-wrap">
       <table class="studylog-table" id="studylog-table"></table>
     </div>
-    <div class="studylog-hint">提示：在表格里直接填写「完成情况」和「正确率(%)」即可实时保存；正确率≥80%绿色、60%-80%黄色、&lt;60%红色。鼠标移到日期上的 ✕ 可删除整行。</div>
+    <div class="studylog-hint">提示：表格内直接填写「完成情况」和「正确率(%)」实时保存；正确率≥80%绿色、60%-80%黄色、&lt;60%红色。鼠标悬停在日期、阶段标题或分隔线上会出现 ✕，点击可删除该行。</div>
   </div>
 
   <!-- 今天要处理 -->
@@ -881,32 +924,6 @@ input[type="file"]{display:none;}
         <div class="stat-label">未复盘错题</div>
       </div>
     </div>
-  </div>
-
-  <!-- 言语积累复习 -->
-  <div class="card" style="margin-top:16px;">
-    <div class="card-title">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
-      言语积累复习
-    </div>
-    <div style="display:flex;gap:24px;flex-wrap:wrap;align-items:center;margin-bottom:14px;">
-      <div>
-        <div style="font-size:30px;font-weight:800;color:var(--accent);" id="dash-review-today">0</div>
-        <div style="font-size:12px;color:var(--text-secondary);">今天预计复习（词）</div>
-      </div>
-      <div>
-        <div style="font-size:30px;font-weight:800;color:var(--success);" id="dash-review-mastered">0</div>
-        <div style="font-size:12px;color:var(--text-secondary);">已掌握 100%</div>
-      </div>
-      <div>
-        <div style="font-size:30px;font-weight:800;color:var(--text-primary);" id="dash-review-total">0</div>
-        <div style="font-size:12px;color:var(--text-secondary);">累计积累</div>
-      </div>
-    </div>
-    <button class="btn btn-primary" onclick="openWordProgress()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
-      言语积累词学习情况
-    </button>
   </div>
 
   <!-- 快捷入口 -->
@@ -4234,19 +4251,19 @@ function renderStudyLog(){
   var head = '<thead><tr>'
     + '<th class="sl-sticky" rowspan="2">日期</th>'
     + '<th class="sl-sticky" rowspan="2">星期</th>';
-  STUDY_SUBJECTS.forEach(function(s){
+  STUDY_SUBJECTS.forEach(function(s, si){
     var list = cols[s]||[];
     var span = Math.max(list.length*2, 2);
-    head += '<th colspan="'+span+'" class="sl-subject">'+s+'</th>';
+    head += '<th colspan="'+span+'" class="sl-subject sl-subject-idx-'+si+'">'+s+'</th>';
   });
   head += '</tr><tr>';
-  STUDY_SUBJECTS.forEach(function(s){
+  STUDY_SUBJECTS.forEach(function(s, si){
     var list = cols[s]||[];
     if(list.length===0){
-      head += '<th class="sl-col"></th><th class="sl-col"></th>';
+      head += '<th class="sl-col sl-subject-idx-'+si+'"></th><th class="sl-col sl-subject-idx-'+si+'"></th>';
     } else {
       list.forEach(function(c){
-        head += '<th class="sl-col">'+escapeHtml(c.name)+'<br>完成</th><th class="sl-col">正确率</th>';
+        head += '<th class="sl-col sl-subject-idx-'+si+'">'+escapeHtml(c.name)+'<br>完成</th><th class="sl-col sl-subject-idx-'+si+'">正确率</th>';
       });
     }
   });
@@ -4256,26 +4273,28 @@ function renderStudyLog(){
   if(filtered.length===0){
     body += '<tr><td colspan="'+totalCols+'" class="sl-empty">本月暂无记录，点上方「添加记录」开始填写</td></tr>';
   }
-  filtered.forEach(function(r){
+  filtered.forEach(function(r, idx){
     if(r.kind==='stage'){
-      body += '<tr><td colspan="'+totalCols+'" class="sl-stage">'+(escapeHtml(r.title||'阶段')||'阶段')+'</td></tr>';
+      body += '<tr class="sl-stage-row"><td colspan="'+totalCols+'" class="sl-stage"><span>'+(escapeHtml(r.title||'阶段')||'阶段')+'</span><button class="sl-del-btn" title="删除阶段标题" onclick="studyLogDeleteRow(\''+r.id+'\')">✕</button></td></tr>';
     } else if(r.kind==='separator'){
-      body += '<tr><td colspan="'+totalCols+'" class="sl-sep">'+(escapeHtml(r.label||''))+'</td></tr>';
+      body += '<tr class="sl-sep-row"><td colspan="'+totalCols+'" class="sl-sep"><span>'+(escapeHtml(r.label||''))+'</span><button class="sl-del-btn" title="删除分隔线" onclick="studyLogDeleteRow(\''+r.id+'\')">✕</button></td></tr>';
     } else {
-      body += '<tr>';
+      var wk = weekdayOf(r.date);
+      var wkCls = (wk==='周六'||wk==='周日') ? 'sl-weekend' : 'sl-weekday';
+      body += '<tr class="sl-data-row">';
       body += '<td class="sl-sticky sl-datecell"><input type="date" class="sl-input sl-date" value="'+(r.date||'')+'" onchange="studyLogSetDate(\''+r.id+'\',this.value)"><button class="sl-del-btn" title="删除此行" onclick="studyLogDeleteRow(\''+r.id+'\')">✕</button></td>';
-      body += '<td class="sl-weekday">'+weekdayOf(r.date)+'</td>';
-      STUDY_SUBJECTS.forEach(function(s){
+      body += '<td class="'+wkCls+'">'+wk+'</td>';
+      STUDY_SUBJECTS.forEach(function(s, si){
         var list = cols[s]||[];
         if(list.length===0){
-          body += '<td></td><td></td>';
+          body += '<td class="sl-subject-idx-'+si+'"></td><td class="sl-subject-idx-'+si+'"></td>';
         } else {
           list.forEach(function(c){
             var cell = (r.cells && r.cells[c.id]) || {};
             var done = cell.done!=null ? cell.done : '';
             var acc = (cell.acc===undefined||cell.acc===null||cell.acc==='') ? '' : cell.acc;
-            body += '<td><input type="text" class="sl-input" value="'+escapeHtml(done)+'" placeholder="-" onchange="studyLogSetCell(\''+r.id+'\',\''+c.id+'\',\'done\',this.value)"></td>';
-            body += '<td><input type="number" class="sl-input '+accColorClass(acc)+'" value="'+escapeHtml(acc)+'" placeholder="-" min="0" max="100" onchange="studyLogSetCell(\''+r.id+'\',\''+c.id+'\',\'acc\',this.value)"></td>';
+            body += '<td class="sl-subject-idx-'+si+'"><input type="text" class="sl-input" value="'+escapeHtml(done)+'" placeholder="-" onchange="studyLogSetCell(\''+r.id+'\',\''+c.id+'\',\'done\',this.value)"></td>';
+            body += '<td class="sl-subject-idx-'+si+'"><input type="number" class="sl-input '+accColorClass(acc)+'" value="'+escapeHtml(acc)+'" placeholder="-" min="0" max="100" onchange="studyLogSetCell(\''+r.id+'\',\''+c.id+'\',\'acc\',this.value)"></td>';
           });
         }
       });
@@ -4286,16 +4305,16 @@ function renderStudyLog(){
 
   var stats = studyLogMonthStats(rm, cols);
   var foot = '<tfoot><tr class="sl-stat-row"><td colspan="2" class="sl-stat-label">当月各学科</td>';
-  STUDY_SUBJECTS.forEach(function(s){
+  STUDY_SUBJECTS.forEach(function(s, si){
     var list = cols[s]||[];
     if(list.length===0){
-      foot += '<td class="sl-stat">-</td><td class="sl-stat">-</td>';
+      foot += '<td class="sl-stat sl-subject-idx-'+si+'">-</td><td class="sl-stat sl-subject-idx-'+si+'">-</td>';
     } else {
       list.forEach(function(){
         var st = stats[s];
         var avg = st.accCount>0 ? (st.accSum/st.accCount).toFixed(1) : '-';
-        foot += '<td class="sl-stat">'+st.sets+'套</td>';
-        foot += '<td class="sl-stat '+accColorClass(avg)+'">'+(avg==='-'?'-':avg+'%')+'</td>';
+        foot += '<td class="sl-stat sl-subject-idx-'+si+'">'+st.sets+'套</td>';
+        foot += '<td class="sl-stat '+accColorClass(avg)+' sl-subject-idx-'+si+'">'+(avg==='-'?'-':avg+'%')+'</td>';
       });
     }
   });
