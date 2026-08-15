@@ -565,7 +565,8 @@ input[type="file"]{display:none;}
 /* ========== 模块1：每日学习记录表 ========== */
 .studylog-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px;}
 .studylog-month{display:flex;align-items:center;gap:8px;}
-.studylog-month-label{font-size:15px;font-weight:700;color:var(--text-primary);min-width:96px;text-align:center;}
+.studylog-month-label{font-size:15px;font-weight:700;color:var(--text-primary);min-width:96px;text-align:center;display:flex;align-items:center;justify-content:center;gap:8px;}
+.studylog-month-label .sl-today-badge{font-size:12px;font-weight:600;color:var(--accent);background:rgba(79,125,243,0.1);border:1px solid rgba(79,125,243,0.2);border-radius:999px;padding:2px 10px;white-space:nowrap;}
 .studylog-actions{display:flex;gap:8px;flex-wrap:wrap;}
 .studylog-wrap{overflow-x:auto;border:1px solid var(--border-color);border-radius:var(--radius);background:var(--card-bg);box-shadow:var(--shadow);}
 .studylog-table{border-collapse:separate;border-spacing:0;width:100%;font-size:13px;min-width:760px;}
@@ -4099,7 +4100,10 @@ function renderStudyLog(){
   var ml = document.getElementById('studylog-month-label');
   if(ml){
     var p = studyLogMonth.split('-');
-    ml.textContent = p[0]+'年'+Number(p[1])+'月';
+    var today = todayStr();
+    var todayNum = Number(today.split('-')[2]);
+    var todayWk = weekdayOf(today);
+    ml.innerHTML = '<span>'+p[0]+'年'+Number(p[1])+'月</span><span class="sl-today-badge">'+todayNum+'日 '+todayWk+'</span>';
   }
   var filtered = rm.filter(function(r){ return r.monthKey===studyLogMonth; })
                    .sort(function(a,b){ return (a.date||'').localeCompare(b.date||''); });
@@ -4213,7 +4217,16 @@ function studyLogDeleteRow(id){
 function studyLogAddRow(){
   var rows = getStudyRows();
   var def = studyLogMonth + '-01';
-  if(studyLogMonth === getCurrentMonthKey()) def = todayStr();
+  var monthRecs = rows.filter(function(r){ return r.kind==='record' && r.date && monthKeyOf(r.date)===studyLogMonth; })
+                      .sort(function(a,b){ return a.date.localeCompare(b.date); });
+  if(monthRecs.length > 0){
+    var last = monthRecs[monthRecs.length-1].date;
+    var d = new Date(last + 'T00:00:00');
+    d.setDate(d.getDate() + 1);
+    def = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  } else if(studyLogMonth === getCurrentMonthKey()){
+    def = todayStr();
+  }
   rows.push({ id:uid(), kind:'record', date:def, cells:{}, createdAt:new Date().toISOString() });
   saveStudyRows(rows);
   renderStudyLog();
