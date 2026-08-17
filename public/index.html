@@ -606,6 +606,27 @@ input[type="file"]{display:none;}
 .studylog-table tfoot .sl-stat-label{text-align:right;font-weight:700;}
 .studylog-table tfoot .sl-stat{font-size:12px;}
 .studylog-hint{font-size:12px;color:var(--text-tertiary);margin-top:10px;line-height:1.6;}
+
+/* 模块2：模考记录表（每场模考为一列） */
+.studylog-table .sl-corner{background:var(--bg-secondary);font-weight:700;}
+.studylog-table thead th.sl-exam-head{background:var(--accent);color:#fff;font-weight:700;vertical-align:middle;min-width:120px;padding:6px 8px;position:relative;}
+.studylog-table thead th.sl-exam-head .sl-exam-name{width:84px;border:1px solid rgba(255,255,255,0.5);background:rgba(255,255,255,0.15);color:#fff;font-size:13px;text-align:center;border-radius:5px;padding:3px 4px;}
+.studylog-table thead th.sl-exam-head .sl-exam-name::placeholder{color:rgba(255,255,255,0.7);}
+.studylog-table thead th.sl-exam-head .sl-del-btn{color:rgba(255,255,255,0.85);margin-left:2px;}
+.studylog-table thead th.sl-exam-head .sl-del-btn:hover{color:#fff;}
+.studylog-table .sl-subject-cell{background:var(--bg-secondary);font-weight:700;text-align:left;vertical-align:middle;padding:8px 10px;}
+.studylog-table .sl-subject-cell .sl-subj-name{font-size:14px;}
+.studylog-table .sl-expand-btn{display:block;margin-top:6px;border:1px solid var(--border);background:#fff;color:var(--accent);font-size:11px;padding:2px 8px;border-radius:999px;cursor:pointer;font-weight:600;}
+.studylog-table .sl-expand-btn:hover{background:var(--accent);color:#fff;}
+.studylog-table .sl-field-cell{text-align:left;color:var(--text-secondary);font-size:12px;background:#f8fafc;font-weight:600;}
+.studylog-table tbody td.sl-field-cell.sl-sub{color:var(--text-tertiary);padding-left:18px;}
+.studylog-table .sl-subj-0 .sl-subj-name{color:#075985;}
+.studylog-table .sl-subj-1 .sl-subj-name{color:#6b21a8;}
+.studylog-table .sl-subj-2 .sl-subj-name{color:#166534;}
+.studylog-table .sl-subj-3 .sl-subj-name{color:#9a3412;}
+.studylog-table .sl-subj-4 .sl-subj-name{color:#854d0e;}
+.studylog-table .sl-subj-5 .sl-subj-name{color:#9f1239;}
+.studylog-table tbody tr:hover .sl-sticky{background:#eef2ff;}
 .study-cols-editor .sce-subject{margin-bottom:14px;}
 .study-cols-editor .sce-subject-name{font-weight:700;color:var(--text-primary);margin-bottom:6px;font-size:14px;}
 .study-cols-editor .sce-list{display:flex;flex-direction:column;gap:6px;margin-bottom:6px;}
@@ -842,17 +863,8 @@ input[type="file"]{display:none;}
     </div>
 
     <div class="studylog-toolbar">
-      <div class="studylog-month">
-        <button class="btn btn-ghost btn-sm" onclick="mockStudyLogPrevMonth()" title="上一月">‹</button>
-        <span class="studylog-month-label" id="mocklog-month-label">—</span>
-        <button class="btn btn-ghost btn-sm" onclick="mockStudyLogNextMonth()" title="下一月">›</button>
-        <button class="btn btn-outline btn-sm" onclick="mockStudyLogToToday()">回到本月</button>
-      </div>
       <div class="studylog-actions">
-        <button class="btn btn-primary btn-sm" onclick="mockStudyLogAddRow()">+ 添加记录</button>
-        <button class="btn btn-outline btn-sm" onclick="mockStudyLogAddStage()">+ 阶段标题</button>
-        <button class="btn btn-outline btn-sm" onclick="mockStudyLogAddSeparator()">+ 分隔线</button>
-        <button class="btn btn-outline btn-sm" onclick="openMockColumns()">管理模考项</button>
+        <button class="btn btn-primary btn-sm" onclick="mockAddExam()">+ 添加模考</button>
         <button class="btn btn-outline btn-sm" onclick="exportMockStudyCSV()">导出CSV</button>
       </div>
     </div>
@@ -860,7 +872,7 @@ input[type="file"]{display:none;}
     <div class="studylog-wrap">
       <table class="studylog-table" id="mocklog-table"></table>
     </div>
-    <div class="studylog-hint">提示：表格内直接填写「完成情况」和「正确率(%)」实时保存；正确率≥80%绿色、60%-80%黄色、&lt;60%红色。鼠标悬停在日期、阶段标题或分隔线上会出现 ✕，点击可删除该行。</div>
+    <div class="studylog-hint">提示：每一列是一场模考（第一次、第二次…），新模考自动排到最右侧；点列头 ✕ 可删除整场模考，列头名称可直接修改。判断推理、言语理解科目行内有「展开▼」按钮，可展开为细分板块。正确率≥80%绿色、60%-80%黄色、&lt;60%红色。</div>
   </div>
 
   <!-- 统计卡片 -->
@@ -1700,19 +1712,6 @@ input[type="file"]{display:none;}
     </div>
   </div>
 </div>
-<!-- ========== 模考记录表·模考项管理 ========== -->
-<div class="modal-overlay" id="mock-cols-overlay">
-  <div class="modal" style="max-width:560px;max-height:86vh;display:flex;flex-direction:column;">
-    <div class="modal-header" style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border-color);">
-      <h3 style="margin:0;">管理模考项</h3>
-      <button class="modal-close" style="border:none;background:transparent;font-size:20px;cursor:pointer;color:var(--text-secondary);" onclick="closeMockColumns()">✕</button>
-    </div>
-    <div class="modal-body" id="mock-cols-body" style="flex:1;overflow-y:auto;padding:16px 20px;"></div>
-    <div class="modal-actions" style="padding:12px 20px;border-top:1px solid var(--border-color);display:flex;justify-content:flex-end;">
-      <button class="btn btn-primary" onclick="closeMockColumns()">完成</button>
-    </div>
-  </div>
-</div>
 
 <!-- Toast -->
 <div class="toast" id="toast"></div>
@@ -1741,7 +1740,8 @@ var KEYS = {
   // 每日学习记录表
   studyColumns: STORAGE_PREFIX + 'study_columns',
   studyRows: STORAGE_PREFIX + 'study_rows',
-  // 模块2：模考记录表
+  // 模块2：模考记录表（每场模考为列）
+  mockSheetExams: STORAGE_PREFIX + 'mock_sheet_exams',
   mockStudyColumns: STORAGE_PREFIX + 'mock_study_columns',
   mockStudyRows: STORAGE_PREFIX + 'mock_study_rows',
   // 其他
@@ -3463,34 +3463,7 @@ var DEFAULT_STUDY_COLUMNS = {
 var studyLogMonth = getCurrentMonthKey();
 
 /* ========== 模块2：模考记录表 常量 ========== */
-var MOCK_SUBJECTS = ['资料分析','判断推理','言语理解','数量关系','时政','申论'];
-var DEFAULT_MOCK_COLUMNS = {
-  '资料分析': [
-    {id:'mock_col_zl_haihai', name:'海海刷'},
-    {id:'mock_col_zl_chaobei', name:'超大杯'}
-  ],
-  '判断推理': [
-    {id:'mock_col_pd_tuxing', name:'图形推理'},
-    {id:'mock_col_pd_dingyi', name:'定义判断'},
-    {id:'mock_col_pd_leibi',  name:'类比推理'},
-    {id:'mock_col_pd_luoji',  name:'逻辑判断'}
-  ],
-  '言语理解': [
-    {id:'mock_col_yy_luoji',    name:'逻辑填空'},
-    {id:'mock_col_yy_pianduan', name:'片段阅读'}
-  ],
-  '数量关系': [
-    {id:'mock_col_sl_shuli', name:'数学运算'},
-    {id:'mock_col_sl_zhili', name:'数字推理'}
-  ],
-  '时政': [
-    {id:'mock_col_sz_zhengce', name:'政策热点'}
-  ],
-  '申论': [
-    {id:'mock_col_slun_tigang',  name:'提纲'},
-    {id:'mock_col_slun_article', name:'大作文'}
-  ]
-};
+var MOCK_SUBJECTS = ['资料分析','判断推理','言语理解','数量关系','政治','常识'];
 
 var mockStudyMonth = getCurrentMonthKey();
 
@@ -3977,8 +3950,7 @@ function syncPush(){
     mock_exams:       loadData(KEYS.mock_exams)       || [],
     studyColumns:     loadData(KEYS.studyColumns)     || {},
     studyRows:        loadData(KEYS.studyRows)        || [],
-    mockStudyColumns: loadData(KEYS.mockStudyColumns) || {},
-    mockStudyRows:    loadData(KEYS.mockStudyRows)    || [],
+    mockSheetExams:   loadData(KEYS.mockSheetExams)   || [],
     lastModified: now,
     device: getDeviceId()
   };
@@ -4031,8 +4003,7 @@ function syncPull(){
     saveData(KEYS.mock_exams,       cloud.mock_exams       || []);
     saveData(KEYS.studyColumns,     cloud.studyColumns     || {});
     saveData(KEYS.studyRows,        cloud.studyRows        || []);
-    saveData(KEYS.mockStudyColumns, cloud.mockStudyColumns || {});
-    saveData(KEYS.mockStudyRows,    cloud.mockStudyRows    || []);
+    saveData(KEYS.mockSheetExams,   cloud.mockSheetExams   || []);
     localStorage.setItem(KEYS.initialized, '1');
     _syncLoading = false;
 
@@ -4424,328 +4395,172 @@ function exportStudyCSV(){
 }
 
 
-/* ========== 模块2：模考记录表（结构与模块1对称） ========== */
-function getMockColumns(){
-  var cols = loadData(KEYS.mockStudyColumns);
-  if(!cols || Object.keys(cols).length === 0){
-    cols = JSON.parse(JSON.stringify(DEFAULT_MOCK_COLUMNS));
-    saveData(KEYS.mockStudyColumns, cols);
-  }
-  MOCK_SUBJECTS.forEach(function(s){ if(!cols[s]) cols[s] = []; });
-  return cols;
+/* ========== 模块2：模考记录表（每场模考为一列，科目为行） ========== */
+var MOCK_EXPAND = {
+  '判断推理': ['图推','定义','类比','逻辑'],
+  '言语理解': ['片段','阅读','接语']
+};
+var MOCK_FIELDS = [
+  { key:'time',    label:'时间'   },
+  { key:'correct', label:'正确数' },
+  { key:'acc',     label:'正确率' }
+];
+var mockExpandState = { '判断推理': false, '言语理解': false };
+var MOCK_CN = ['零','一','二','三','四','五','六','七','八','九','十'];
+function mockCn(n){
+  if(n<=10) return MOCK_CN[n];
+  if(n<20) return '十'+(n%10===0?'':MOCK_CN[n%10]);
+  if(n<100){ var t=Math.floor(n/10), o=n%10; return MOCK_CN[t]+'十'+(o===0?'':MOCK_CN[o]); }
+  return String(n);
 }
-function saveMockColumns(cols){ saveData(KEYS.mockStudyColumns, cols); }
-function getMockRows(){ return loadData(KEYS.mockStudyRows); }
-function saveMockRows(rows){ saveData(KEYS.mockStudyRows, rows); }
-
-
-
-
-
-/* 给非记录行计算归属月份：跟随其后第一条记录；若无则用之前最后一条；再无则用当前月 */
-function mockRowsWithMonth(rows){
-  var result = [];
-  var lastMonth = mockStudyMonth;
-  var pending = [];
-  rows.forEach(function(r){
-    if(r.kind === 'record'){
-      var mk = monthKeyOf(r.date) || lastMonth;
-      pending.forEach(function(p){ result.push(Object.assign({}, p, {monthKey: mk})); });
-      pending = [];
-      lastMonth = mk;
-      result.push(Object.assign({}, r, {monthKey: mk}));
-    } else {
-      pending.push(r);
-    }
+function defaultMockData(){
+  var d = {};
+  MOCK_SUBJECTS.forEach(function(s){
+    d[s] = {time:'', correct:'', acc:''};
+    if(MOCK_EXPAND[s]) MOCK_EXPAND[s].forEach(function(sub){ d[sub] = {time:'', correct:'', acc:''}; });
   });
-  pending.forEach(function(p){ result.push(Object.assign({}, p, {monthKey: lastMonth})); });
-  return result;
+  return d;
 }
-
-function mockStudyLogPrevMonth(){
-  var p = mockStudyMonth.split('-'); var y=+p[0], m=+p[1]; m--; if(m<1){m=12;y--;}
-  mockStudyMonth = y+'-'+String(m).padStart(2,'0'); renderMockStudyLog();
-}
-function mockStudyLogNextMonth(){
-  var p = mockStudyMonth.split('-'); var y=+p[0], m=+p[1]; m++; if(m>12){m=1;y++;}
-  mockStudyMonth = y+'-'+String(m).padStart(2,'0'); renderMockStudyLog();
-}
-function mockStudyLogToToday(){ mockStudyMonth = getCurrentMonthKey(); renderMockStudyLog(); }
-
-
-
-function mockStudyLogMonthStats(rowsWithMonth, cols){
-  var stats = {};
-  MOCK_SUBJECTS.forEach(function(s){ stats[s] = {sets:0, correctSum:0, accSum:0, accCount:0}; });
-  rowsWithMonth.filter(function(r){ return r.kind==='record' && r.monthKey===mockStudyMonth; }).forEach(function(r){
-    MOCK_SUBJECTS.forEach(function(s){
-      (cols[s]||[]).forEach(function(c){
-        var cell = (r.cells && r.cells[c.id]) || {};
-        if(cell.done!==undefined && cell.done!==null && String(cell.done).trim()!=='') stats[s].sets++;
-        if(cell.correct!==undefined && cell.correct!==null && cell.correct!==''){
-          var cv=Number(cell.correct);
-          if(!isNaN(cv)) stats[s].correctSum += cv;
-        }
-        if(cell.acc!==undefined && cell.acc!==null && cell.acc!==''){
-          var v=Number(cell.acc);
-          if(!isNaN(v)){ stats[s].accSum+=v; stats[s].accCount++; }
-        }
-      });
-    });
-  });
-  return stats;
-}
+function getMockExams(){ return loadData(KEYS.mockSheetExams) || []; }
+function saveMockExams(list){ saveData(KEYS.mockSheetExams, list); }
 
 function renderMockStudyLog(){
-  var cols = getMockColumns();
-  var rows = getMockRows();
-  var rm = mockRowsWithMonth(rows);
-  var ml = document.getElementById('mocklog-month-label');
-  if(ml){
-    var p = mockStudyMonth.split('-');
-    var today = todayStr();
-    var todayNum = Number(today.split('-')[2]);
-    var todayWk = weekdayOf(today);
-    ml.innerHTML = '<span>'+p[0]+'年'+Number(p[1])+'月</span><span class="sl-today-badge">'+todayNum+'日 '+todayWk+'</span>';
-  }
-  var filtered = rm.filter(function(r){ return r.monthKey===mockStudyMonth; })
-                   .sort(function(a,b){ return (a.date||'').localeCompare(b.date||''); });
+  var exams = getMockExams();
   var table = document.getElementById('mocklog-table');
   if(!table) return;
 
-  var totalCols = totalMockColsOf(cols);
-
   var head = '<thead><tr>'
-    + '<th class="sl-sticky" rowspan="2">日期</th>'
-    + '<th class="sl-sticky" rowspan="2">星期</th>'
-    + '<th class="sl-sticky" rowspan="2">总分</th>';
-  MOCK_SUBJECTS.forEach(function(s, si){
-    var list = cols[s]||[];
-    var span = Math.max(list.length*3, 3);
-    head += '<th colspan="'+span+'" class="sl-subject sl-subject-idx-'+si+'">'+s+'</th>';
-  });
-  head += '</tr><tr>';
-  MOCK_SUBJECTS.forEach(function(s, si){
-    var list = cols[s]||[];
-    if(list.length===0){
-      head += '<th class="sl-col sl-subject-idx-'+si+'"></th><th class="sl-col sl-subject-idx-'+si+'"></th><th class="sl-col sl-subject-idx-'+si+'"></th>';
-    } else {
-      list.forEach(function(c){
-        head += '<th class="sl-col sl-subject-idx-'+si+'">'+escapeHtml(c.name)+'<br>完成</th>';
-        head += '<th class="sl-col sl-subject-idx-'+si+'">正确数</th>';
-        head += '<th class="sl-col sl-subject-idx-'+si+'">正确率</th>';
-      });
-    }
+    + '<th class="sl-sticky sl-corner" rowspan="2">科目＼模考</th>'
+    + '<th class="sl-proj-head" rowspan="2">项目</th>';
+  exams.forEach(function(ex){
+    head += '<th class="sl-exam-head">'
+      + '<input class="sl-exam-name" value="'+escapeHtml(ex.name)+'" onchange="mockRenameExam(\''+ex.id+'\',this.value)">'
+      + '<button class="sl-del-btn" title="删除这次模考" onclick="mockDeleteExam(\''+ex.id+'\')">✕</button></th>';
   });
   head += '</tr></thead>';
 
   var body = '<tbody>';
-  if(filtered.length===0){
-    body += '<tr><td colspan="'+totalCols+'" class="sl-empty">本月暂无模考记录，点上方「添加记录」开始填写</td></tr>';
-  }
-  filtered.forEach(function(r, idx){
-    if(r.kind==='stage'){
-      body += '<tr class="sl-stage-row"><td colspan="'+totalCols+'" class="sl-stage"><span>'+(escapeHtml(r.title||'阶段')||'阶段')+'</span><button class="sl-del-btn" title="删除阶段标题" onclick="mockStudyLogDeleteRow(\''+r.id+'\')">✕</button></td></tr>';
-    } else if(r.kind==='separator'){
-      body += '<tr class="sl-sep-row"><td colspan="'+totalCols+'" class="sl-sep"><span>'+(escapeHtml(r.label||''))+'</span><button class="sl-del-btn" title="删除分隔线" onclick="mockStudyLogDeleteRow(\''+r.id+'\')">✕</button></td></tr>';
-    } else {
-      var wk = weekdayOf(r.date);
-      var wkCls = (wk==='周六'||wk==='周日') ? 'sl-weekend' : 'sl-weekday';
-      var total = (r.total===undefined||r.total===null||r.total==='') ? '' : r.total;
-      body += '<tr class="sl-data-row">';
-      body += '<td class="sl-sticky sl-datecell"><input type="date" class="sl-input sl-date" value="'+(r.date||'')+'" onchange="mockStudyLogSetDate(\''+r.id+'\',this.value)"><button class="sl-del-btn" title="删除此行" onclick="mockStudyLogDeleteRow(\''+r.id+'\')">✕</button></td>';
-      body += '<td class="'+wkCls+'">'+wk+'</td>';
-      body += '<td class="sl-total-cell"><input type="number" class="sl-input" value="'+escapeHtml(total)+'" placeholder="-" onchange="mockStudyLogSetTotal(\''+r.id+'\',this.value)"></td>';
-      MOCK_SUBJECTS.forEach(function(s, si){
-        var list = cols[s]||[];
-        if(list.length===0){
-          body += '<td class="sl-subject-idx-'+si+'"></td><td class="sl-subject-idx-'+si+'"></td><td class="sl-subject-idx-'+si+'"></td>';
-        } else {
-          list.forEach(function(c){
-            var cell = (r.cells && r.cells[c.id]) || {};
-            var done = cell.done!=null ? cell.done : '';
-            var correct = (cell.correct===undefined||cell.correct===null||cell.correct==='') ? '' : cell.correct;
-            var acc = (cell.acc===undefined||cell.acc===null||cell.acc==='') ? '' : cell.acc;
-            body += '<td class="sl-subject-idx-'+si+'"><input type="text" class="sl-input" value="'+escapeHtml(done)+'" placeholder="-" onchange="mockStudyLogSetCell(\''+r.id+'\',\''+c.id+'\',\'done\',this.value)"></td>';
-            body += '<td class="sl-subject-idx-'+si+'"><input type="number" class="sl-input" value="'+escapeHtml(correct)+'" placeholder="-" min="0" onchange="mockStudyLogSetCell(\''+r.id+'\',\''+c.id+'\',\'correct\',this.value)"></td>';
-            body += '<td class="sl-subject-idx-'+si+'"><input type="number" class="sl-input '+accColorClass(acc)+'" value="'+escapeHtml(acc)+'" placeholder="-" min="0" max="100" onchange="mockStudyLogSetCell(\''+r.id+'\',\''+c.id+'\',\'acc\',this.value)"></td>';
-          });
-        }
+  if(exams.length===0){
+    body += '<tr><td colspan="2" class="sl-empty">还没有模考记录，点上方「+ 添加模考」开始（新模考自动排到最右侧）</td></tr>';
+  } else {
+    MOCK_SUBJECTS.forEach(function(s, si){
+      var expandable = MOCK_EXPAND[s];
+      var rows = [];
+      MOCK_FIELDS.forEach(function(f){ rows.push({sub:null, field:f}); });
+      var spanned = MOCK_FIELDS.length;
+      if(expandable && mockExpandState[s]){
+        expandable.forEach(function(sub){
+          MOCK_FIELDS.forEach(function(f){ rows.push({sub:sub, field:f}); });
+          spanned += MOCK_FIELDS.length;
+        });
+      }
+      var subjCell = '<td class="sl-sticky sl-subject-cell sl-subj-'+si+'" rowspan="'+spanned+'">'
+        + '<span class="sl-subj-name">'+escapeHtml(s)+'</span>';
+      if(expandable){
+        subjCell += '<button class="sl-expand-btn" onclick="mockToggleExpand(\''+s+'\')">'+(mockExpandState[s]?'收起▲':'展开▼')+'</button>';
+      }
+      subjCell += '</td>';
+
+      rows.forEach(function(r, i){
+        if(i===0) body += '<tr>' + subjCell;
+        else body += '<tr>';
+        body += '<td class="sl-field-cell">'+(r.sub?escapeHtml(r.sub)+'·':'')+r.field.label+'</td>';
+        exams.forEach(function(ex){
+          var key = r.sub || s;
+          var cell = (ex.data && ex.data[key]) || {};
+          var val = cell[r.field.key] != null ? cell[r.field.key] : '';
+          if(r.field.key==='acc'){
+            body += '<td class="'+accColorClass(val)+'"><input type="number" class="sl-input" value="'+escapeHtml(val)+'" placeholder="-" min="0" max="100" onchange="mockSetCell(\''+ex.id+'\',\''+key+'\',\''+r.field.key+'\',this.value)"></td>';
+          } else {
+            body += '<td><input type="'+(r.field.key==='time'?'text':'number')+'" class="sl-input" value="'+escapeHtml(val)+'" placeholder="-" onchange="mockSetCell(\''+ex.id+'\',\''+key+'\',\''+r.field.key+'\',this.value)"></td>';
+          }
+        });
+        body += '</tr>';
       });
-      body += '</tr>';
-    }
-  });
+    });
+  }
   body += '</tbody>';
 
-  var stats = mockStudyLogMonthStats(rm, cols);
-  var foot = '<tfoot><tr class="sl-stat-row"><td colspan="3" class="sl-stat-label">当月各学科</td>';
-  MOCK_SUBJECTS.forEach(function(s, si){
-    var list = cols[s]||[];
-    if(list.length===0){
-      foot += '<td class="sl-stat sl-subject-idx-'+si+'">-</td><td class="sl-stat sl-subject-idx-'+si+'">-</td><td class="sl-stat sl-subject-idx-'+si+'">-</td>';
-    } else {
-      list.forEach(function(){
-        var st = stats[s];
-        var avg = st.accCount>0 ? (st.accSum/st.accCount).toFixed(1) : '-';
-        foot += '<td class="sl-stat sl-subject-idx-'+si+'">'+st.sets+'套</td>';
-        foot += '<td class="sl-stat sl-subject-idx-'+si+'">'+(st.correctSum>0?st.correctSum:'-')+'</td>';
-        foot += '<td class="sl-stat '+accColorClass(avg)+' sl-subject-idx-'+si+'">'+(avg==='-'?'-':avg+'%')+'</td>';
+  var foot = '<tfoot><tr class="sl-stat-row"><td class="sl-sticky sl-stat-label" colspan="2">本场平均正确率</td>';
+  exams.forEach(function(ex){
+    var sum=0, cnt=0;
+    MOCK_SUBJECTS.forEach(function(s){
+      var keys = [s];
+      if(MOCK_EXPAND[s]) keys = keys.concat(MOCK_EXPAND[s]);
+      keys.forEach(function(k){
+        var cell = (ex.data && ex.data[k]) || {};
+        if(cell.acc!==undefined && cell.acc!==null && cell.acc!==''){ var v=Number(cell.acc); if(!isNaN(v)){ sum+=v; cnt++; } }
       });
-    }
+    });
+    var avg = cnt>0 ? (sum/cnt).toFixed(1) : '-';
+    foot += '<td class="sl-stat '+accColorClass(avg)+'">'+(avg==='-'?'-':avg+'%')+'</td>';
   });
   foot += '</tr></tfoot>';
 
   table.innerHTML = head + body + foot;
 }
 
-function mockStudyLogSetDate(id, val){
-  var rows = getMockRows();
-  rows.forEach(function(r){ if(r.id===id){ r.date = val; r.lastModified = new Date().toISOString(); } });
-  saveMockRows(rows);
+function mockToggleExpand(subject){
+  mockExpandState[subject] = !mockExpandState[subject];
   renderMockStudyLog();
 }
-function mockStudyLogSetCell(id, colId, field, val){
-  var rows = getMockRows();
-  rows.forEach(function(r){
-    if(r.id===id){
-      if(!r.cells) r.cells = {};
-      if(!r.cells[colId]) r.cells[colId] = {};
-      r.cells[colId][field] = (field==='acc' || field==='correct') ? (val==='' ? '' : Number(val)) : val;
-      r.lastModified = new Date().toISOString();
+function mockSetCell(examId, key, field, val){
+  var exams = getMockExams();
+  exams.forEach(function(e){
+    if(e.id===examId){
+      if(!e.data) e.data = {};
+      if(!e.data[key]) e.data[key] = {};
+      e.data[key][field] = (field==='acc' || field==='correct') ? (val==='' ? '' : Number(val)) : val;
     }
   });
-  saveMockRows(rows);
+  saveMockExams(exams);
   renderMockStudyLog();
 }
-function mockStudyLogSetTotal(id, val){
-  var rows = getMockRows();
-  rows.forEach(function(r){
-    if(r.id===id){
-      r.total = (val==='' ? '' : Number(val));
-      r.lastModified = new Date().toISOString();
-    }
-  });
-  saveMockRows(rows);
-  renderMockStudyLog();
+function mockRenameExam(id, val){
+  var exams = getMockExams();
+  exams.forEach(function(e){ if(e.id===id) e.name = val; });
+  saveMockExams(exams);
 }
-function mockStudyLogDeleteRow(id){
-  showConfirm('删除记录', '确定删除这一行吗？此操作不可撤销。', function(){
-    var rows = getMockRows().filter(function(r){ return r.id!==id; });
-    saveMockRows(rows);
+function mockDeleteExam(id){
+  showConfirm('删除模考', '确定删除这次模考记录吗？此操作不可撤销。', function(){
+    var exams = getMockExams().filter(function(e){ return e.id!==id; });
+    saveMockExams(exams);
     renderMockStudyLog();
     showToast('已删除');
   });
 }
-function mockStudyLogAddRow(){
-  var rows = getMockRows();
-  var def = mockStudyMonth + '-01';
-  var monthRecs = rows.filter(function(r){ return r.kind==='record' && r.date && monthKeyOf(r.date)===mockStudyMonth; })
-                      .sort(function(a,b){ return a.date.localeCompare(b.date); });
-  if(monthRecs.length > 0){
-    var last = monthRecs[monthRecs.length-1].date;
-    var d = new Date(last + 'T00:00:00');
-    d.setDate(d.getDate() + 1);
-    def = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
-  } else if(mockStudyMonth === getCurrentMonthKey()){
-    def = todayStr();
-  }
-  rows.push({ id:uid(), kind:'record', date:def, cells:{}, createdAt:new Date().toISOString() });
-  saveMockRows(rows);
+function mockAddExam(){
+  var exams = getMockExams();
+  var n = exams.length + 1;
+  exams.push({ id:uid(), name:'第'+mockCn(n)+'次', data:defaultMockData() });
+  saveMockExams(exams);
   renderMockStudyLog();
-  showToast('已新增一条模考记录，直接在表格内填写即可');
+  showToast('已新增模考「第'+mockCn(n)+'次」，排在最右侧');
 }
-function mockStudyLogAddStage(){
-  var title = window.prompt('请输入阶段标题（如：基础阶段 / 强化阶段 / 冲刺阶段）：', '阶段');
-  if(title===null) return;
-  title = title.trim();
-  if(!title) return;
-  var rows = getMockRows();
-  rows.push({ id:uid(), kind:'stage', title:title });
-  saveMockRows(rows);
-  renderMockStudyLog();
-}
-function mockStudyLogAddSeparator(){
-  var label = window.prompt('请输入分隔文字（如：第3周 / 8月下旬 / 第一阶段结束）：', '分隔');
-  if(label===null) return;
-  label = label.trim();
-  if(!label) return;
-  var rows = getMockRows();
-  rows.push({ id:uid(), kind:'separator', label:label });
-  saveMockRows(rows);
-  renderMockStudyLog();
-}
-
-function openMockColumns(){
-  var cols = getMockColumns();
-  var html = '';
-  MOCK_SUBJECTS.forEach(function(s){
-    html += '<div class="sce-subject"><div class="sce-subject-name">'+s+'</div><div class="sce-list">';
-    (cols[s]||[]).forEach(function(c){
-      html += '<div class="sce-item"><input class="sl-input" value="'+escapeHtml(c.name)+'" onchange="mockColRename(\''+s+'\',\''+c.id+'\',this.value)"><button class="sl-del-btn" onclick="mockColRemove(\''+s+'\',\''+c.id+'\')" title="删除">✕</button></div>';
-    });
-    html += '</div><button class="btn btn-ghost btn-sm" onclick="mockColAdd(\''+s+'\')">+ 添加子栏目</button></div>';
-  });
-  var body_el = document.getElementById('mock-cols-body');
-  if(body_el) body_el.innerHTML = html;
-  var ov = document.getElementById('mock-cols-overlay');
-  if(ov) ov.classList.add('show');
-}
-function closeMockColumns(){
-  var ov = document.getElementById('mock-cols-overlay');
-  if(ov) ov.classList.remove('show');
-}
-function mockColRename(sub, id, val){
-  var cols = getMockColumns();
-  (cols[sub]||[]).forEach(function(c){ if(c.id===id) c.name = val; });
-  saveMockColumns(cols);
-  renderMockStudyLog();
-}
-function mockColRemove(sub, id){
-  var cols = getMockColumns();
-  cols[sub] = (cols[sub]||[]).filter(function(c){ return c.id!==id; });
-  saveMockColumns(cols);
-  openMockColumns();
-  renderMockStudyLog();
-}
-function mockColAdd(sub){
-  var cols = getMockColumns();
-  if(!cols[sub]) cols[sub] = [];
-  cols[sub].push({ id:'col_'+uid(), name:'新模考项' });
-  saveMockColumns(cols);
-  openMockColumns();
-  renderMockStudyLog();
-}
-
 function exportMockStudyCSV(){
-  var cols = getMockColumns();
-  var rows = getMockRows();
-  var rm = mockRowsWithMonth(rows);
+  var exams = getMockExams();
   var csv = '﻿';
-  var h1 = ['日期','星期','总分'];
+  var h = ['科目','项目'];
+  exams.forEach(function(ex){ h.push(ex.name); });
+  csv += h.map(function(c){ return '"'+String(c).replace(/"/g,'""')+'"'; }).join(',') + '\n';
+
   MOCK_SUBJECTS.forEach(function(s){
-    (cols[s]||[]).forEach(function(c){ h1.push(s+'/'+c.name+'·完成', s+'/'+c.name+'·正确数', s+'/'+c.name+'·正确率'); });
-  });
-  csv += h1.map(function(c){ return '"'+String(c).replace(/"/g,'""')+'"'; }).join(',') + '\n';
-  rm.forEach(function(r){
-    if(r.kind==='stage'){
-      var arr = ['【阶段】'+(r.title||''),'',''];
-      MOCK_SUBJECTS.forEach(function(s){ (cols[s]||[]).forEach(function(){ arr.push('','',''); }); });
-      csv += arr.map(function(c){ return '"'+String(c).replace(/"/g,'""')+'"'; }).join(',') + '\n';
-    } else if(r.kind==='separator'){
-      var arr2 = ['—'+(r.label||'')+'—','',''];
-      MOCK_SUBJECTS.forEach(function(s){ (cols[s]||[]).forEach(function(){ arr2.push('','',''); }); });
-      csv += arr2.map(function(c){ return '"'+String(c).replace(/"/g,'""')+'"'; }).join(',') + '\n';
-    } else {
-      var arr3 = [r.date||'', weekdayOf(r.date), r.total===undefined?'':r.total];
-      MOCK_SUBJECTS.forEach(function(s){
-        (cols[s]||[]).forEach(function(c){
-          var cell = (r.cells && r.cells[c.id]) || {};
-          arr3.push(cell.done!=null?cell.done:'', cell.correct===undefined?'':cell.correct, cell.acc===undefined?'':cell.acc);
-        });
-      });
-      csv += arr3.map(function(c){ return '"'+String(c).replace(/"/g,'""')+'"'; }).join(',') + '\n';
+    var fieldRows = MOCK_FIELDS.map(function(f){ return {sub:null, field:f}; });
+    if(MOCK_EXPAND[s] && mockExpandState[s]){
+      MOCK_EXPAND[s].forEach(function(sub){ MOCK_FIELDS.forEach(function(f){ fieldRows.push({sub:sub, field:f}); }); });
     }
+    fieldRows.forEach(function(r){
+      var label = (r.sub ? r.sub+'·' : '') + r.field.label;
+      var arr = [s, label];
+      exams.forEach(function(ex){
+        var key = r.sub || s;
+        var cell = (ex.data && ex.data[key]) || {};
+        arr.push(cell[r.field.key] != null ? cell[r.field.key] : '');
+      });
+      csv += arr.map(function(c){ return '"'+String(c).replace(/"/g,'""')+'"'; }).join(',') + '\n';
+    });
   });
+
   var blob = new Blob([csv], { type:'text/csv;charset=utf-8' });
   var url = URL.createObjectURL(blob);
   var a = document.createElement('a');
