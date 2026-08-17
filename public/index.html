@@ -4513,8 +4513,8 @@ function renderMockStudyLog(){
       var spanned = MOCK_FIELDS.length;
       if(expandable && mockExpandState[s]){
         expandable.forEach(function(sub){
-          MOCK_FIELDS.forEach(function(f){ rows.push({sub:sub, field:f}); });
-          spanned += MOCK_FIELDS.length;
+          rows.push({sub:sub, field:MOCK_FIELDS[1]});
+          spanned += 1;
         });
       }
       var subjCell = '<td class="sl-sticky sl-subject-cell sl-subj-'+si+'" rowspan="'+spanned+'">'
@@ -4619,7 +4619,7 @@ function exportMockStudyCSV(){
   MOCK_SUBJECTS.forEach(function(s){
     var fieldRows = MOCK_FIELDS.map(function(f){ return {sub:null, field:f}; });
     if(MOCK_EXPAND[s] && mockExpandState[s]){
-      MOCK_EXPAND[s].forEach(function(sub){ MOCK_FIELDS.forEach(function(f){ fieldRows.push({sub:sub, field:f}); }); });
+      MOCK_EXPAND[s].forEach(function(sub){ fieldRows.push({sub:sub, field:MOCK_FIELDS[1]}); });
     }
     fieldRows.forEach(function(r){
       var label = (r.sub ? r.sub+'·' : '') + r.field.label;
