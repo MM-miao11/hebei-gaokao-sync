@@ -624,10 +624,11 @@ input[type="file"]{display:none;}
 .studylog-table .sl-field-cell{text-align:left;color:var(--text-secondary);font-size:12px;background:#f8fafc;font-weight:600;}
 .studylog-table tbody td.sl-field-cell.sl-sub{color:var(--text-tertiary);padding-left:18px;}
 
-/* 模块2输入框与单位 */
-.studylog-table tbody tr.sl-subj-row td .sl-cell-wrap{display:flex;align-items:center;justify-content:center;gap:3px;min-width:76px;}
-.studylog-table tbody tr.sl-subj-row td .sl-input{width:44px;min-width:44px;max-width:54px;padding:3px 4px;font-size:12px;text-align:center;}
-.studylog-table tbody tr.sl-subj-row td .sl-unit{font-size:11px;color:var(--text-tertiary);white-space:nowrap;user-select:none;}
+/* 模块2输入框与单位：数字右对齐、单位固定宽度左对齐，确保列内上下对齐 */
+.studylog-table tbody tr.sl-subj-row td .sl-cell-wrap{display:flex;align-items:center;justify-content:flex-end;gap:2px;width:86px;min-width:86px;padding:0 8px;box-sizing:border-box;}
+.studylog-table tbody tr.sl-subj-row td .sl-input{flex:1 1 auto;min-width:0;width:auto;padding:3px 2px 3px 4px;font-size:12px;text-align:right;background:transparent;border:none;box-shadow:none;}
+.studylog-table tbody tr.sl-subj-row td .sl-input:focus{background:#fff;box-shadow:0 0 0 1px var(--accent);border-radius:3px;}
+.studylog-table tbody tr.sl-subj-row td .sl-unit{flex:0 0 26px;width:26px;font-size:11px;color:var(--text-tertiary);text-align:left;white-space:nowrap;user-select:none;}
 .studylog-table .sl-subj-0 .sl-subj-name{color:#075985;}
 .studylog-table .sl-subj-1 .sl-subj-name{color:#6b21a8;}
 .studylog-table .sl-subj-2 .sl-subj-name{color:#166534;}
@@ -4456,7 +4457,7 @@ function exportStudyCSV(){
 /* ========== 模块2：模考记录表（每场模考为一列，科目为行） ========== */
 var MOCK_EXPAND = {
   '判断推理': ['图推','定义','类比','逻辑'],
-  '言语理解': ['片段','阅读','接语']
+  '言语理解': ['填空','片段','接语']
 };
 var MOCK_FIELDS = [
   { key:'time',    label:'时间'   },
@@ -4464,9 +4465,9 @@ var MOCK_FIELDS = [
   { key:'acc',     label:'正确率' }
 ];
 var MOCK_TOTALS = {
-  '资料分析':20,'判断推理':35,'言语理解':30,'数量关系':15,'政治':20,'常识':15,
+  '资料分析':20,'判断推理':35,'言语理解':30,'数量关系':10,'政治':20,'常识':15,
   '图推':10,'定义':10,'逻辑':10,'类比':5,
-  '阅读':15,'片段':10,'接语':5
+  '填空':15,'片段':10,'接语':5
 };
 var mockExpandState = { '判断推理': false, '言语理解': false };
 var MOCK_CN = ['零','一','二','三','四','五','六','七','八','九','十'];
