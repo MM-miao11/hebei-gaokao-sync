@@ -3475,7 +3475,8 @@ initExampleData();
 document.getElementById('review-date').value = todayStr();
 renderDashboard();
 renderStudyLog();
-renderMockStudyLog();
+/* 注意：renderMockStudyLog() 依赖下方模块2常量(MOCK_EXPAND等)，
+   定义在同文件靠后处，故其初始化渲染移至模块2定义之后(见文末)。 */
 
 
 /* ========== 新模块：错题/知识库/复盘（资料分析、判断推理共用） ========== */
@@ -4573,6 +4574,9 @@ function exportMockStudyCSV(){
   URL.revokeObjectURL(url);
   showToast('CSV已导出');
 }
+
+/* ========== 模块2 初始化渲染（在所有模块2常量/函数定义之后） ========== */
+renderMockStudyLog();
 
 </script>
 
