@@ -629,6 +629,25 @@ input[type="file"]{display:none;}
 .studylog-table .sl-subj-3 .sl-subj-name{color:#9a3412;}
 .studylog-table .sl-subj-4 .sl-subj-name{color:#854d0e;}
 .studylog-table .sl-subj-5 .sl-subj-name{color:#9f1239;}
+
+/* 模块2科目区块背景色（含展开子项） */
+.studylog-table tbody tr.sl-subj-row-0{background:#e0f2fe;}
+.studylog-table tbody tr.sl-subj-row-1{background:#f3e8ff;}
+.studylog-table tbody tr.sl-subj-row-2{background:#dcfce7;}
+.studylog-table tbody tr.sl-subj-row-3{background:#ffedd5;}
+.studylog-table tbody tr.sl-subj-row-4{background:#fef9c3;}
+.studylog-table tbody tr.sl-subj-row-5{background:#ffe4e6;}
+.studylog-table tbody tr.sl-subj-row-0 .sl-sticky{background:#e0f2fe;}
+.studylog-table tbody tr.sl-subj-row-1 .sl-sticky{background:#f3e8ff;}
+.studylog-table tbody tr.sl-subj-row-2 .sl-sticky{background:#dcfce7;}
+.studylog-table tbody tr.sl-subj-row-3 .sl-sticky{background:#ffedd5;}
+.studylog-table tbody tr.sl-subj-row-4 .sl-sticky{background:#fef9c3;}
+.studylog-table tbody tr.sl-subj-row-5 .sl-sticky{background:#ffe4e6;}
+.studylog-table tbody tr.sl-subj-row .sl-field-cell{background:rgba(255,255,255,0.5);}
+.studylog-table tbody tr.sl-subj-row:hover{background:rgba(79,125,243,0.1);}
+.studylog-table tbody tr.sl-subj-row:hover .sl-sticky{background:#eef2ff;}
+.studylog-table tbody tr.sl-subj-row:hover .sl-field-cell{background:rgba(255,255,255,0.7);}
+
 .studylog-table tbody tr:hover .sl-sticky{background:#eef2ff;}
 .study-cols-editor .sce-subject{margin-bottom:14px;}
 .study-cols-editor .sce-subject-name{font-weight:700;color:var(--text-primary);margin-bottom:6px;font-size:14px;}
@@ -4466,8 +4485,8 @@ function renderMockStudyLog(){
       subjCell += '</td>';
 
       rows.forEach(function(r, i){
-        if(i===0) body += '<tr>' + subjCell;
-        else body += '<tr>';
+        if(i===0) body += '<tr class="sl-subj-row sl-subj-row-'+si+'">' + subjCell;
+        else body += '<tr class="sl-subj-row sl-subj-row-'+si+'">';
         body += '<td class="sl-field-cell">'+(r.sub?escapeHtml(r.sub)+'·':'')+r.field.label+'</td>';
         exams.forEach(function(ex){
           var key = r.sub || s;
