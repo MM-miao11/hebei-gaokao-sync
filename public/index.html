@@ -612,8 +612,8 @@ input[type="file"]{display:none;}
 
 /* 模块2：模考记录表（每场模考为一列） */
 .studylog-table .sl-corner{background:var(--bg-secondary);font-weight:700;}
-.studylog-table thead th.sl-exam-head{background:var(--accent);color:#fff;font-weight:700;vertical-align:middle;min-width:120px;padding:6px 8px;position:relative;}
-.studylog-table thead th.sl-exam-head .sl-exam-name{width:84px;border:1px solid rgba(255,255,255,0.5);background:rgba(255,255,255,0.15);color:#fff;font-size:13px;text-align:center;border-radius:5px;padding:3px 4px;}
+.studylog-table thead th.sl-exam-head{background:var(--accent);color:#fff;font-weight:700;vertical-align:middle;width:110px;min-width:110px;padding:6px 4px;position:relative;}
+.studylog-table thead th.sl-exam-head .sl-exam-name{width:78px;border:1px solid rgba(255,255,255,0.5);background:rgba(255,255,255,0.15);color:#fff;font-size:13px;text-align:center;border-radius:5px;padding:3px 4px;}
 .studylog-table thead th.sl-exam-head .sl-exam-name::placeholder{color:rgba(255,255,255,0.7);}
 .studylog-table thead th.sl-exam-head .sl-del-btn{color:rgba(255,255,255,0.85);margin-left:2px;}
 .studylog-table thead th.sl-exam-head .sl-del-btn:hover{color:#fff;}
@@ -624,11 +624,21 @@ input[type="file"]{display:none;}
 .studylog-table .sl-field-cell{text-align:left;color:var(--text-secondary);font-size:12px;background:#f8fafc;font-weight:600;}
 .studylog-table tbody td.sl-field-cell.sl-sub{color:var(--text-tertiary);padding-left:18px;}
 
-/* 模块2输入框与单位：数字右对齐、单位固定宽度左对齐，确保列内上下对齐 */
-.studylog-table tbody tr.sl-subj-row td .sl-cell-wrap{display:flex;align-items:center;justify-content:flex-end;gap:2px;width:86px;min-width:86px;padding:0 8px;box-sizing:border-box;}
-.studylog-table tbody tr.sl-subj-row td .sl-input{flex:1 1 auto;min-width:0;width:auto;padding:3px 2px 3px 4px;font-size:12px;text-align:right;background:transparent;border:none;box-shadow:none;}
+/* 模块2输入框与单位：严格垂直居中、数字单位同一基线、列宽统一 */
+#mocklog-table tbody td{height:34px;padding:0;vertical-align:middle;text-align:center;}
+#mocklog-table tbody td.sl-field-cell{padding-left:10px;text-align:left;}
+#mocklog-table tbody td.sl-field-cell.sl-sub{padding-left:18px;}
+#mocklog-table tbody td.acc-green,
+#mocklog-table tbody td.acc-red,
+#mocklog-table tbody td.acc-yellow{padding:0;}
+#mocklog-table tbody td:not(.sl-sticky):not(.sl-field-cell){width:110px;min-width:110px;max-width:110px;}
+#mocklog-table input[type=number]::-webkit-inner-spin-button,
+#mocklog-table input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0;}
+#mocklog-table input[type=number]{-moz-appearance:textfield;}
+.studylog-table tbody tr.sl-subj-row td .sl-cell-wrap{display:inline-flex;align-items:center;justify-content:center;gap:3px;width:100%;height:100%;padding:0 4px;box-sizing:border-box;}
+.studylog-table tbody tr.sl-subj-row td .sl-input{flex:0 1 auto;min-width:0;width:auto;height:22px;line-height:22px;padding:0 2px;font-size:12px;text-align:right;background:transparent;border:none;box-shadow:none;border-radius:0;}
 .studylog-table tbody tr.sl-subj-row td .sl-input:focus{background:#fff;box-shadow:0 0 0 1px var(--accent);border-radius:3px;}
-.studylog-table tbody tr.sl-subj-row td .sl-unit{flex:0 0 26px;width:26px;font-size:11px;color:var(--text-tertiary);text-align:left;white-space:nowrap;user-select:none;}
+.studylog-table tbody tr.sl-subj-row td .sl-unit{flex:0 0 auto;height:22px;line-height:22px;font-size:11px;color:var(--text-tertiary);text-align:left;white-space:nowrap;user-select:none;}
 .studylog-table .sl-subj-0 .sl-subj-name{color:#075985;}
 .studylog-table .sl-subj-1 .sl-subj-name{color:#6b21a8;}
 .studylog-table .sl-subj-2 .sl-subj-name{color:#166534;}
