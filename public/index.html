@@ -583,6 +583,8 @@ input[type="file"]{display:none;}
 .studylog-table .sl-datecell{display:flex;align-items:center;gap:4px;}
 .studylog-table .sl-input{width:64px;max-width:84px;padding:4px 6px;border:1px solid var(--border-color);border-radius:5px;background:var(--main-bg);color:var(--text-primary);font-size:13px;text-align:center;transition:border-color .15s,box-shadow .15s;}
 .studylog-table .sl-input.sl-date{width:200px;min-width:200px;max-width:220px;text-align:left;padding:4px 8px;box-sizing:border-box;}
+.studylog-table .sl-total-cell{background:#f0fdfa;font-weight:600;}
+.studylog-table .sl-total-cell .sl-input{width:72px;background:#fff;}
 .studylog-table .sl-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px rgba(79,125,243,0.15);}
 .studylog-table .acc-green{background:#dcfce7 !important;color:#166534;font-weight:600;}
 .studylog-table .acc-yellow{background:#fef9c3 !important;color:#854d0e;font-weight:600;}
@@ -4118,6 +4120,11 @@ function totalColsOf(cols){
     return acc + Math.max((cols[s]||[]).length*2, 2);
   }, 0);
 }
+function totalMockColsOf(cols){
+  return 3 + MOCK_SUBJECTS.reduce(function(acc,s){
+    return acc + Math.max((cols[s]||[]).length*3, 3);
+  }, 0);
+}
 
 /* 给非记录行计算归属月份：跟随其后第一条记录；若无则用之前最后一条；再无则用当前月 */
 function studyRowsWithMonth(rows){
@@ -4469,12 +4476,16 @@ function mockStudyLogToToday(){ mockStudyMonth = getCurrentMonthKey(); renderMoc
 
 function mockStudyLogMonthStats(rowsWithMonth, cols){
   var stats = {};
-  MOCK_SUBJECTS.forEach(function(s){ stats[s] = {sets:0, accSum:0, accCount:0}; });
+  MOCK_SUBJECTS.forEach(function(s){ stats[s] = {sets:0, correctSum:0, accSum:0, accCount:0}; });
   rowsWithMonth.filter(function(r){ return r.kind==='record' && r.monthKey===mockStudyMonth; }).forEach(function(r){
     MOCK_SUBJECTS.forEach(function(s){
       (cols[s]||[]).forEach(function(c){
         var cell = (r.cells && r.cells[c.id]) || {};
         if(cell.done!==undefined && cell.done!==null && String(cell.done).trim()!=='') stats[s].sets++;
+        if(cell.correct!==undefined && cell.correct!==null && cell.correct!==''){
+          var cv=Number(cell.correct);
+          if(!isNaN(cv)) stats[s].correctSum += cv;
+        }
         if(cell.acc!==undefined && cell.acc!==null && cell.acc!==''){
           var v=Number(cell.acc);
           if(!isNaN(v)){ stats[s].accSum+=v; stats[s].accCount++; }
@@ -4502,24 +4513,27 @@ function renderMockStudyLog(){
   var table = document.getElementById('mocklog-table');
   if(!table) return;
 
-  var totalCols = totalColsOf(cols);
+  var totalCols = totalMockColsOf(cols);
 
   var head = '<thead><tr>'
     + '<th class="sl-sticky" rowspan="2">日期</th>'
-    + '<th class="sl-sticky" rowspan="2">星期</th>';
+    + '<th class="sl-sticky" rowspan="2">星期</th>'
+    + '<th class="sl-sticky" rowspan="2">总分</th>';
   MOCK_SUBJECTS.forEach(function(s, si){
     var list = cols[s]||[];
-    var span = Math.max(list.length*2, 2);
+    var span = Math.max(list.length*3, 3);
     head += '<th colspan="'+span+'" class="sl-subject sl-subject-idx-'+si+'">'+s+'</th>';
   });
   head += '</tr><tr>';
   MOCK_SUBJECTS.forEach(function(s, si){
     var list = cols[s]||[];
     if(list.length===0){
-      head += '<th class="sl-col sl-subject-idx-'+si+'"></th><th class="sl-col sl-subject-idx-'+si+'"></th>';
+      head += '<th class="sl-col sl-subject-idx-'+si+'"></th><th class="sl-col sl-subject-idx-'+si+'"></th><th class="sl-col sl-subject-idx-'+si+'"></th>';
     } else {
       list.forEach(function(c){
-        head += '<th class="sl-col sl-subject-idx-'+si+'">'+escapeHtml(c.name)+'<br>完成</th><th class="sl-col sl-subject-idx-'+si+'">正确率</th>';
+        head += '<th class="sl-col sl-subject-idx-'+si+'">'+escapeHtml(c.name)+'<br>完成</th>';
+        head += '<th class="sl-col sl-subject-idx-'+si+'">正确数</th>';
+        head += '<th class="sl-col sl-subject-idx-'+si+'">正确率</th>';
       });
     }
   });
@@ -4537,19 +4551,23 @@ function renderMockStudyLog(){
     } else {
       var wk = weekdayOf(r.date);
       var wkCls = (wk==='周六'||wk==='周日') ? 'sl-weekend' : 'sl-weekday';
+      var total = (r.total===undefined||r.total===null||r.total==='') ? '' : r.total;
       body += '<tr class="sl-data-row">';
       body += '<td class="sl-sticky sl-datecell"><input type="date" class="sl-input sl-date" value="'+(r.date||'')+'" onchange="mockStudyLogSetDate(\''+r.id+'\',this.value)"><button class="sl-del-btn" title="删除此行" onclick="mockStudyLogDeleteRow(\''+r.id+'\')">✕</button></td>';
       body += '<td class="'+wkCls+'">'+wk+'</td>';
+      body += '<td class="sl-total-cell"><input type="number" class="sl-input" value="'+escapeHtml(total)+'" placeholder="-" onchange="mockStudyLogSetTotal(\''+r.id+'\',this.value)"></td>';
       MOCK_SUBJECTS.forEach(function(s, si){
         var list = cols[s]||[];
         if(list.length===0){
-          body += '<td class="sl-subject-idx-'+si+'"></td><td class="sl-subject-idx-'+si+'"></td>';
+          body += '<td class="sl-subject-idx-'+si+'"></td><td class="sl-subject-idx-'+si+'"></td><td class="sl-subject-idx-'+si+'"></td>';
         } else {
           list.forEach(function(c){
             var cell = (r.cells && r.cells[c.id]) || {};
             var done = cell.done!=null ? cell.done : '';
+            var correct = (cell.correct===undefined||cell.correct===null||cell.correct==='') ? '' : cell.correct;
             var acc = (cell.acc===undefined||cell.acc===null||cell.acc==='') ? '' : cell.acc;
             body += '<td class="sl-subject-idx-'+si+'"><input type="text" class="sl-input" value="'+escapeHtml(done)+'" placeholder="-" onchange="mockStudyLogSetCell(\''+r.id+'\',\''+c.id+'\',\'done\',this.value)"></td>';
+            body += '<td class="sl-subject-idx-'+si+'"><input type="number" class="sl-input" value="'+escapeHtml(correct)+'" placeholder="-" min="0" onchange="mockStudyLogSetCell(\''+r.id+'\',\''+c.id+'\',\'correct\',this.value)"></td>';
             body += '<td class="sl-subject-idx-'+si+'"><input type="number" class="sl-input '+accColorClass(acc)+'" value="'+escapeHtml(acc)+'" placeholder="-" min="0" max="100" onchange="mockStudyLogSetCell(\''+r.id+'\',\''+c.id+'\',\'acc\',this.value)"></td>';
           });
         }
@@ -4560,16 +4578,17 @@ function renderMockStudyLog(){
   body += '</tbody>';
 
   var stats = mockStudyLogMonthStats(rm, cols);
-  var foot = '<tfoot><tr class="sl-stat-row"><td colspan="2" class="sl-stat-label">当月各学科</td>';
+  var foot = '<tfoot><tr class="sl-stat-row"><td colspan="3" class="sl-stat-label">当月各学科</td>';
   MOCK_SUBJECTS.forEach(function(s, si){
     var list = cols[s]||[];
     if(list.length===0){
-      foot += '<td class="sl-stat sl-subject-idx-'+si+'">-</td><td class="sl-stat sl-subject-idx-'+si+'">-</td>';
+      foot += '<td class="sl-stat sl-subject-idx-'+si+'">-</td><td class="sl-stat sl-subject-idx-'+si+'">-</td><td class="sl-stat sl-subject-idx-'+si+'">-</td>';
     } else {
       list.forEach(function(){
         var st = stats[s];
         var avg = st.accCount>0 ? (st.accSum/st.accCount).toFixed(1) : '-';
         foot += '<td class="sl-stat sl-subject-idx-'+si+'">'+st.sets+'套</td>';
+        foot += '<td class="sl-stat sl-subject-idx-'+si+'">'+(st.correctSum>0?st.correctSum:'-')+'</td>';
         foot += '<td class="sl-stat '+accColorClass(avg)+' sl-subject-idx-'+si+'">'+(avg==='-'?'-':avg+'%')+'</td>';
       });
     }
@@ -4591,7 +4610,18 @@ function mockStudyLogSetCell(id, colId, field, val){
     if(r.id===id){
       if(!r.cells) r.cells = {};
       if(!r.cells[colId]) r.cells[colId] = {};
-      r.cells[colId][field] = (field==='acc') ? (val==='' ? '' : Number(val)) : val;
+      r.cells[colId][field] = (field==='acc' || field==='correct') ? (val==='' ? '' : Number(val)) : val;
+      r.lastModified = new Date().toISOString();
+    }
+  });
+  saveMockRows(rows);
+  renderMockStudyLog();
+}
+function mockStudyLogSetTotal(id, val){
+  var rows = getMockRows();
+  rows.forEach(function(r){
+    if(r.id===id){
+      r.total = (val==='' ? '' : Number(val));
       r.lastModified = new Date().toISOString();
     }
   });
@@ -4691,26 +4721,26 @@ function exportMockStudyCSV(){
   var rows = getMockRows();
   var rm = mockRowsWithMonth(rows);
   var csv = '﻿';
-  var h1 = ['日期','星期'];
+  var h1 = ['日期','星期','总分'];
   MOCK_SUBJECTS.forEach(function(s){
-    (cols[s]||[]).forEach(function(c){ h1.push(s+'/'+c.name+'·完成', s+'/'+c.name+'·正确率'); });
+    (cols[s]||[]).forEach(function(c){ h1.push(s+'/'+c.name+'·完成', s+'/'+c.name+'·正确数', s+'/'+c.name+'·正确率'); });
   });
   csv += h1.map(function(c){ return '"'+String(c).replace(/"/g,'""')+'"'; }).join(',') + '\n';
   rm.forEach(function(r){
     if(r.kind==='stage'){
-      var arr = ['【阶段】'+(r.title||''),''];
-      MOCK_SUBJECTS.forEach(function(s){ (cols[s]||[]).forEach(function(){ arr.push('',''); }); });
+      var arr = ['【阶段】'+(r.title||''),'',''];
+      MOCK_SUBJECTS.forEach(function(s){ (cols[s]||[]).forEach(function(){ arr.push('','',''); }); });
       csv += arr.map(function(c){ return '"'+String(c).replace(/"/g,'""')+'"'; }).join(',') + '\n';
     } else if(r.kind==='separator'){
-      var arr2 = ['—'+(r.label||'')+'—',''];
-      MOCK_SUBJECTS.forEach(function(s){ (cols[s]||[]).forEach(function(){ arr2.push('',''); }); });
+      var arr2 = ['—'+(r.label||'')+'—','',''];
+      MOCK_SUBJECTS.forEach(function(s){ (cols[s]||[]).forEach(function(){ arr2.push('','',''); }); });
       csv += arr2.map(function(c){ return '"'+String(c).replace(/"/g,'""')+'"'; }).join(',') + '\n';
     } else {
-      var arr3 = [r.date||'', weekdayOf(r.date)];
+      var arr3 = [r.date||'', weekdayOf(r.date), r.total===undefined?'':r.total];
       MOCK_SUBJECTS.forEach(function(s){
         (cols[s]||[]).forEach(function(c){
           var cell = (r.cells && r.cells[c.id]) || {};
-          arr3.push(cell.done!=null?cell.done:'', cell.acc===undefined?'':cell.acc);
+          arr3.push(cell.done!=null?cell.done:'', cell.correct===undefined?'':cell.correct, cell.acc===undefined?'':cell.acc);
         });
       });
       csv += arr3.map(function(c){ return '"'+String(c).replace(/"/g,'""')+'"'; }).join(',') + '\n';
