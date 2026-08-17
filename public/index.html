@@ -623,6 +623,11 @@ input[type="file"]{display:none;}
 .studylog-table .sl-expand-btn:hover{background:var(--accent);color:#fff;}
 .studylog-table .sl-field-cell{text-align:left;color:var(--text-secondary);font-size:12px;background:#f8fafc;font-weight:600;}
 .studylog-table tbody td.sl-field-cell.sl-sub{color:var(--text-tertiary);padding-left:18px;}
+
+/* 模块2输入框与单位 */
+.studylog-table tbody tr.sl-subj-row td .sl-cell-wrap{display:flex;align-items:center;justify-content:center;gap:3px;min-width:76px;}
+.studylog-table tbody tr.sl-subj-row td .sl-input{width:44px;min-width:44px;max-width:54px;padding:3px 4px;font-size:12px;text-align:center;}
+.studylog-table tbody tr.sl-subj-row td .sl-unit{font-size:11px;color:var(--text-tertiary);white-space:nowrap;user-select:none;}
 .studylog-table .sl-subj-0 .sl-subj-name{color:#075985;}
 .studylog-table .sl-subj-1 .sl-subj-name{color:#6b21a8;}
 .studylog-table .sl-subj-2 .sl-subj-name{color:#166534;}
@@ -630,23 +635,53 @@ input[type="file"]{display:none;}
 .studylog-table .sl-subj-4 .sl-subj-name{color:#854d0e;}
 .studylog-table .sl-subj-5 .sl-subj-name{color:#9f1239;}
 
-/* 模块2科目区块背景色（含展开子项） */
-.studylog-table tbody tr.sl-subj-row-0{background:#e0f2fe;}
-.studylog-table tbody tr.sl-subj-row-1{background:#f3e8ff;}
-.studylog-table tbody tr.sl-subj-row-2{background:#dcfce7;}
-.studylog-table tbody tr.sl-subj-row-3{background:#ffedd5;}
-.studylog-table tbody tr.sl-subj-row-4{background:#fef9c3;}
-.studylog-table tbody tr.sl-subj-row-5{background:#ffe4e6;}
-.studylog-table tbody tr.sl-subj-row-0 .sl-sticky{background:#e0f2fe;}
-.studylog-table tbody tr.sl-subj-row-1 .sl-sticky{background:#f3e8ff;}
-.studylog-table tbody tr.sl-subj-row-2 .sl-sticky{background:#dcfce7;}
-.studylog-table tbody tr.sl-subj-row-3 .sl-sticky{background:#ffedd5;}
-.studylog-table tbody tr.sl-subj-row-4 .sl-sticky{background:#fef9c3;}
-.studylog-table tbody tr.sl-subj-row-5 .sl-sticky{background:#ffe4e6;}
-.studylog-table tbody tr.sl-subj-row .sl-field-cell{background:rgba(255,255,255,0.5);}
-.studylog-table tbody tr.sl-subj-row:hover{background:rgba(79,125,243,0.1);}
+/* 模块2科目视觉优化：柔和分区 + 色带标识 */
+/* 基础行：白色背景，输入框半透明融入 */
+.studylog-table tbody tr.sl-subj-row{background:#fff;}
+.studylog-table tbody tr.sl-subj-row .sl-field-cell{background:transparent;font-weight:500;}
+.studylog-table tbody tr.sl-subj-row .sl-input{background:rgba(255,255,255,0.85);border-color:rgba(0,0,0,0.08);box-shadow:inset 0 1px 2px rgba(0,0,0,0.03);}
+.studylog-table tbody tr.sl-subj-row .sl-input:focus{background:#fff;border-color:var(--accent);box-shadow:0 0 0 2px rgba(79,125,243,0.15);}
+
+/* 科目组顶部彩色分隔线 */
+.studylog-table tbody tr.sl-subj-first td{border-top:2px solid #cbd5e1;}
+.studylog-table tbody tr.sl-subj-row-0.sl-subj-first td{border-top-color:#38bdf8;}
+.studylog-table tbody tr.sl-subj-row-1.sl-subj-first td{border-top-color:#c084fc;}
+.studylog-table tbody tr.sl-subj-row-2.sl-subj-first td{border-top-color:#4ade80;}
+.studylog-table tbody tr.sl-subj-row-3.sl-subj-first td{border-top-color:#fb923c;}
+.studylog-table tbody tr.sl-subj-row-4.sl-subj-first td{border-top-color:#facc15;}
+.studylog-table tbody tr.sl-subj-row-5.sl-subj-first td{border-top-color:#fb7185;}
+
+/* 科目标签单元格：左侧色带 + 浅色背景 + 彩色文字 */
+.studylog-table tbody tr.sl-subj-row-0 .sl-subject-cell{border-left:5px solid #38bdf8;background:#f0f9ff;}
+.studylog-table tbody tr.sl-subj-row-1 .sl-subject-cell{border-left:5px solid #c084fc;background:#faf5ff;}
+.studylog-table tbody tr.sl-subj-row-2 .sl-subject-cell{border-left:5px solid #4ade80;background:#f0fdf4;}
+.studylog-table tbody tr.sl-subj-row-3 .sl-subject-cell{border-left:5px solid #fb923c;background:#fff7ed;}
+.studylog-table tbody tr.sl-subj-row-4 .sl-subject-cell{border-left:5px solid #facc15;background:#fefce8;}
+.studylog-table tbody tr.sl-subj-row-5 .sl-subject-cell{border-left:5px solid #fb7185;background:#fff1f2;}
+.studylog-table tbody tr.sl-subj-row .sl-subject-cell .sl-subj-name{font-size:13px;font-weight:700;}
+
+/* 父科目行（时间/正确数/正确率）保留极淡科目底色 */
+.studylog-table tbody tr.sl-subj-row-0:not(.sl-sub-row){background:#f0f9ff;}
+.studylog-table tbody tr.sl-subj-row-1:not(.sl-sub-row){background:#f3e8ff;}
+.studylog-table tbody tr.sl-subj-row-2:not(.sl-sub-row){background:#f0fdf4;}
+.studylog-table tbody tr.sl-subj-row-3:not(.sl-sub-row){background:#fff7ed;}
+.studylog-table tbody tr.sl-subj-row-4:not(.sl-sub-row){background:#fefce8;}
+.studylog-table tbody tr.sl-subj-row-5:not(.sl-sub-row){background:#fff1f2;}
+
+/* 展开子项行：中性浅灰背景，视觉弱化 */
+.studylog-table tbody tr.sl-subj-row.sl-sub-row{background:#f8fafc;}
+.studylog-table tbody tr.sl-subj-row.sl-sub-row .sl-field-cell{color:var(--text-tertiary);font-weight:400;}
+.studylog-table tbody tr.sl-subj-row.sl-sub-row .sl-input{background:rgba(255,255,255,0.65);}
+
+/* 判断推理：父行与子项加大区分度 */
+.studylog-table tbody tr.sl-subj-row-1:not(.sl-sub-row) .sl-subject-cell{background:#f3e8ff;border-left-color:#a855f7;}
+.studylog-table tbody tr.sl-subj-row-1.sl-sub-row{background:#fff;border-left:3px solid #d8b4fe;}
+.studylog-table tbody tr.sl-subj-row-1.sl-sub-row .sl-field-cell{background:#faf5ff;border-left:3px solid #d8b4fe;padding-left:20px;}
+.studylog-table tbody tr.sl-subj-row-1.sl-sub-row .sl-subj-name{color:#7e22ce;}
+
+/* hover 统一（不覆盖正确率色块） */
+.studylog-table tbody tr.sl-subj-row:hover{background:#eef2ff;}
 .studylog-table tbody tr.sl-subj-row:hover .sl-sticky{background:#eef2ff;}
-.studylog-table tbody tr.sl-subj-row:hover .sl-field-cell{background:rgba(255,255,255,0.7);}
 
 .studylog-table tbody tr:hover .sl-sticky{background:#eef2ff;}
 .study-cols-editor .sce-subject{margin-bottom:14px;}
@@ -4428,6 +4463,11 @@ var MOCK_FIELDS = [
   { key:'correct', label:'正确数' },
   { key:'acc',     label:'正确率' }
 ];
+var MOCK_TOTALS = {
+  '资料分析':20,'判断推理':35,'言语理解':30,'数量关系':15,'政治':20,'常识':15,
+  '图推':10,'定义':10,'逻辑':10,'类比':5,
+  '阅读':15,'片段':10,'接语':5
+};
 var mockExpandState = { '判断推理': false, '言语理解': false };
 var MOCK_CN = ['零','一','二','三','四','五','六','七','八','九','十'];
 function mockCn(n){
@@ -4485,18 +4525,27 @@ function renderMockStudyLog(){
       subjCell += '</td>';
 
       rows.forEach(function(r, i){
-        if(i===0) body += '<tr class="sl-subj-row sl-subj-row-'+si+'">' + subjCell;
-        else body += '<tr class="sl-subj-row sl-subj-row-'+si+'">';
-        body += '<td class="sl-field-cell">'+(r.sub?escapeHtml(r.sub)+'·':'')+r.field.label+'</td>';
+        var rowCls = 'sl-subj-row sl-subj-row-'+si + (i===0 ? ' sl-subj-first' : '') + (r.sub ? ' sl-sub-row' : '');
+        if(i===0) body += '<tr class="'+rowCls+'">' + subjCell;
+        else body += '<tr class="'+rowCls+'">';
+        body += '<td class="sl-field-cell '+(r.sub?'sl-sub':'')+'">'+(r.sub?escapeHtml(r.sub)+'·':'')+r.field.label+'</td>';
         exams.forEach(function(ex){
           var key = r.sub || s;
           var cell = (ex.data && ex.data[key]) || {};
           var val = cell[r.field.key] != null ? cell[r.field.key] : '';
-          if(r.field.key==='acc'){
-            body += '<td class="'+accColorClass(val)+'"><input type="number" class="sl-input" value="'+escapeHtml(val)+'" placeholder="-" min="0" max="100" onchange="mockSetCell(\''+ex.id+'\',\''+key+'\',\''+r.field.key+'\',this.value)"></td>';
-          } else {
-            body += '<td><input type="'+(r.field.key==='time'?'text':'number')+'" class="sl-input" value="'+escapeHtml(val)+'" placeholder="-" onchange="mockSetCell(\''+ex.id+'\',\''+key+'\',\''+r.field.key+'\',this.value)"></td>';
+          var unit = '', tdCls = '', inputType = 'number', inputAttr = '';
+          if(r.field.key==='time'){
+            unit = '<span class="sl-unit">min</span>';
+            inputType = 'text';
+          } else if(r.field.key==='correct'){
+            var total = MOCK_TOTALS[key];
+            if(total) unit = '<span class="sl-unit">/'+total+'</span>';
+          } else if(r.field.key==='acc'){
+            tdCls = accColorClass(val);
+            inputAttr = ' min="0" max="100"';
+            unit = '<span class="sl-unit">%</span>';
           }
+          body += '<td class="'+tdCls+'"><div class="sl-cell-wrap"><input type="'+inputType+'" class="sl-input" value="'+escapeHtml(val)+'" placeholder="-"'+inputAttr+' onchange="mockSetCell(\''+ex.id+'\',\''+key+'\',\''+r.field.key+'\',this.value)">'+unit+'</div></td>';
         });
         body += '</tr>';
       });
