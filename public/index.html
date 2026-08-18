@@ -636,7 +636,11 @@ input[type="file"]{display:none;}
 #mocklog-table input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0;}
 #mocklog-table input[type=number]{-moz-appearance:textfield;}
 .studylog-table tbody tr.sl-subj-row td .sl-cell-wrap{display:inline-flex;align-items:center;justify-content:center;gap:3px;width:100%;height:100%;padding:0 4px;box-sizing:border-box;}
-.studylog-table tbody tr.sl-subj-row td .sl-input{flex:0 1 auto;min-width:0;width:auto;height:22px;line-height:22px;padding:0 2px;font-size:12px;text-align:right;background:transparent;border:none;box-shadow:none;border-radius:0;}
+.studylog-table tbody tr.sl-subj-row td .sl-input{flex:0 1 auto;min-width:0;width:auto;height:22px;line-height:22px;padding:0 2px;font-size:12px;text-align:right;background:transparent;border:none;box-shadow:none;border-radius:0;vertical-align:middle;}
+/* 正确率单元格确保对齐：继承普通单元格样式，重置浏览器 number 差异 */
+#mocklog-table tbody td.acc-green .sl-cell-wrap,
+#mocklog-table tbody td.acc-yellow .sl-cell-wrap,
+#mocklog-table tbody td.acc-red .sl-cell-wrap{display:inline-flex;align-items:center;justify-content:center;gap:3px;width:100%;height:100%;padding:0 4px;box-sizing:border-box;}
 .studylog-table tbody tr.sl-subj-row td .sl-input:focus{background:#fff;box-shadow:0 0 0 1px var(--accent);border-radius:3px;}
 .studylog-table tbody tr.sl-subj-row td .sl-unit{flex:0 0 auto;height:22px;line-height:22px;font-size:11px;color:var(--text-tertiary);text-align:left;white-space:nowrap;user-select:none;}
 .studylog-table .sl-subj-0 .sl-subj-name{color:#075985;}
@@ -4553,7 +4557,8 @@ function renderMockStudyLog(){
             if(total) unit = '<span class="sl-unit">/'+total+'</span>';
           } else if(r.field.key==='acc'){
             tdCls = accColorClass(val);
-            inputAttr = ' min="0" max="100"';
+            inputType = 'text';
+            inputAttr = ' inputmode="numeric"';
             unit = '<span class="sl-unit">%</span>';
           }
           body += '<td class="'+tdCls+'"><div class="sl-cell-wrap"><input type="'+inputType+'" class="sl-input" value="'+escapeHtml(val)+'" placeholder="-"'+inputAttr+' onchange="mockSetCell(\''+ex.id+'\',\''+key+'\',\''+r.field.key+'\',this.value)">'+unit+'</div></td>';
