@@ -694,6 +694,13 @@ input[type="file"]{display:none;}
 .studylog-table tbody tr.sl-subj-row-1.sl-sub-row .sl-field-cell{background:#faf5ff;border-left:3px solid #d8b4fe;padding-left:20px;}
 .studylog-table tbody tr.sl-subj-row-1.sl-sub-row .sl-subj-name{color:#7e22ce;}
 
+/* 总分行：深色强调，置于最顶 */
+.studylog-table tbody tr.sl-subj-row.sl-total-row{background:#f8fafc;font-weight:700;}
+.studylog-table tbody tr.sl-subj-row.sl-total-row .sl-subject-cell{background:#eef2ff;border-left:5px solid var(--accent);}
+.studylog-table tbody tr.sl-subj-row.sl-total-row .sl-subj-name{color:var(--accent-dark);font-size:13px;}
+.studylog-table tbody tr.sl-subj-row.sl-total-row .sl-input{font-weight:700;color:var(--text-primary);background:transparent;opacity:1;cursor:default;}
+.studylog-table tbody tr.sl-subj-row.sl-total-row:hover{background:#e0e7ff;}
+
 /* hover 统一（不覆盖正确率色块） */
 .studylog-table tbody tr.sl-subj-row:hover{background:#eef2ff;}
 .studylog-table tbody tr.sl-subj-row:hover .sl-sticky{background:#eef2ff;}
@@ -4521,6 +4528,54 @@ function renderMockStudyLog(){
   if(exams.length===0){
     body += '<tr><td colspan="2" class="sl-empty">还没有模考记录，点上方「+ 添加模考」开始（新模考自动排到最右侧）</td></tr>';
   } else {
+
+    /* ---------- 总分（置于资料分析上方） ---------- */
+    var totalRows = MOCK_FIELDS.map(function(f){ return {field:f}; });
+    var totalCell = '<td class="sl-sticky sl-subject-cell sl-total-cell" rowspan="'+MOCK_FIELDS.length+'"><span class="sl-subj-name">总分</span></td>';
+    totalRows.forEach(function(r, i){
+      var rowCls = 'sl-subj-row sl-total-row' + (i===0 ? ' sl-subj-first' : '');
+      if(i===0) body += '<tr class="'+rowCls+'">' + totalCell;
+      else body += '<tr class="'+rowCls+'">';
+      body += '<td class="sl-field-cell">'+r.field.label+'</td>';
+      exams.forEach(function(ex){
+        var unit='', val='', tdCls='';
+        if(r.field.key==='time'){
+          var sum=0, has=false;
+          MOCK_SUBJECTS.forEach(function(s){
+            var cell=(ex.data && ex.data[s]) || {};
+            var v=parseFloat(cell.time);
+            if(!isNaN(v)){ sum += v; has = true; }
+          });
+          val = has ? sum : '';
+          unit = '<span class="sl-unit">min</span>';
+        } else if(r.field.key==='correct'){
+          var sumC=0, sumT=0, has=false;
+          MOCK_SUBJECTS.forEach(function(s){
+            var total=MOCK_TOTALS[s];
+            var cell=(ex.data && ex.data[s]) || {};
+            var v=Number(cell.correct);
+            if(total && !isNaN(v)){ sumC += v; sumT += total; has = true; }
+          });
+          val = has ? sumC : '';
+          unit = has ? '<span class="sl-unit">/'+sumT+'</span>' : '';
+        } else if(r.field.key==='acc'){
+          var sumC=0, sumT=0, has=false;
+          MOCK_SUBJECTS.forEach(function(s){
+            var total=MOCK_TOTALS[s];
+            var cell=(ex.data && ex.data[s]) || {};
+            var v=Number(cell.correct);
+            if(total && !isNaN(v)){ sumC += v; sumT += total; has = true; }
+          });
+          var avg = has && sumT>0 ? ((sumC/sumT)*100).toFixed(1) : '-';
+          tdCls = accColorClass(avg);
+          val = avg==='-' ? '' : avg;
+          unit = '<span class="sl-unit">%</span>';
+        }
+        body += '<td class="'+tdCls+'"><div class="sl-cell-wrap"><input type="text" class="sl-input" value="'+escapeHtml(val)+'" placeholder="-" disabled>'+unit+'</div></td>';
+      });
+      body += '</tr>';
+    });
+
     MOCK_SUBJECTS.forEach(function(s, si){
       var expandable = MOCK_EXPAND[s];
       var rows = [];
@@ -4631,6 +4686,28 @@ function exportMockStudyCSV(){
   var h = ['科目','项目'];
   exams.forEach(function(ex){ h.push(ex.name); });
   csv += h.map(function(c){ return '"'+String(c).replace(/"/g,'""')+'"'; }).join(',') + '\n';
+
+  // 总分
+  var totalFieldRows = MOCK_FIELDS.map(function(f){ return {field:f}; });
+  totalFieldRows.forEach(function(r){
+    var arr = ['总分', r.field.label];
+    exams.forEach(function(ex){
+      if(r.field.key==='time'){
+        var sum=0, has=false;
+        MOCK_SUBJECTS.forEach(function(s){ var cell=(ex.data&&ex.data[s])||{}; var v=parseFloat(cell.time); if(!isNaN(v)){sum+=v;has=true;} });
+        arr.push(has?sum:'');
+      } else if(r.field.key==='correct'){
+        var sumC=0, sumT=0, has=false;
+        MOCK_SUBJECTS.forEach(function(s){ var total=MOCK_TOTALS[s]; var cell=(ex.data&&ex.data[s])||{}; var v=Number(cell.correct); if(total&&!isNaN(v)){sumC+=v;sumT+=total;has=true;} });
+        arr.push(has?sumC+'/'+sumT:'');
+      } else {
+        var sumC=0, sumT=0, has=false;
+        MOCK_SUBJECTS.forEach(function(s){ var total=MOCK_TOTALS[s]; var cell=(ex.data&&ex.data[s])||{}; var v=Number(cell.correct); if(total&&!isNaN(v)){sumC+=v;sumT+=total;has=true;} });
+        var avg = has&&sumT>0?((sumC/sumT)*100).toFixed(1):'-'; arr.push(avg==='-'?'-':avg+'%');
+      }
+    });
+    csv += arr.map(function(c){ return '"'+String(c).replace(/"/g,'""')+'"'; }).join(',') + '\n';
+  });
 
   MOCK_SUBJECTS.forEach(function(s){
     var fieldRows = MOCK_FIELDS.map(function(f){ return {sub:null, field:f}; });
